@@ -43,7 +43,9 @@ final readonly class TransferPaymentDto implements PaymentDto
             $this->chamberCode,
             PaymentSegmentFactory::compose($this->paymentMethod, $paymentType, $this->optionalSegments),
             $optional,
-            $this->beneficiaryRegistrationNumber,
+            $this->beneficiaryRegistrationNumber !== ''
+                ? \CnabSispag\Domain\Shared\Service\DocumentNormalizer::normalizeRegistrationNumber($this->beneficiaryRegistrationNumber)
+                : '',
             $this->bankDocumentNumber,
         );
     }

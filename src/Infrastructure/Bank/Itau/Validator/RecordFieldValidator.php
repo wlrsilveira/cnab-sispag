@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace CnabSispag\Infrastructure\Bank\Itau\Validator;
 
 use CnabSispag\Application\Validation\Dto\Violation;
+use CnabSispag\Domain\Shared\Enum\PixKeyType;
+use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\ItauConstants;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout;
 use CnabSispag\Infrastructure\Cnab\Layout\FieldDefinition;
@@ -77,6 +79,11 @@ final class RecordFieldValidator
             }
         }
 
+        $violations = array_merge(
+            $violations,
+            $this->validateSemanticFields($lineNumber, $line, $definition),
+        );
+
         try {
             $this->parser->parse($definition, $line);
         } catch (\InvalidArgumentException) {
@@ -133,5 +140,43 @@ final class RecordFieldValidator
         }
 
         return trim((string) $value);
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validateSemanticFields(int $lineNumber, string $line, \CnabSispag\Infrastructure\Cnab\Layout\RecordDefinition $definition): array
+    {
+        if ($definition->name !== 'segmentBPix') {
+            return [];
+        }
+
+        $pixKey = trim(substr($line, 127, 100));
+
+        if ($pixKey === '') {
+            return [];
+        }
+
+        $pixKeyType = PixKeyType::tryFrom(trim(substr($line, 14, 2)));
+
+        if ($pixKeyType === null) {
+            return [];
+        }
+
+        if (DocumentNormalizer::isValidPixKey($pixKeyType, $pixKey)) {
+            return [];
+        }
+
+        return [
+            new Violation(
+                'invalid_pix_key_format',
+                MessageCatalog::get('validation.invalid_pix_key_format', [
+                    'line' => (string) $lineNumber,
+                    'field' => 'pixKey',
+                ]),
+                $lineNumber,
+                'pixKey',
+            ),
+        ];
     }
 }

@@ -311,6 +311,35 @@ final class RemittanceGenerationTest extends TestCase
         $this->assertSegmentCode($files[0]->content, 3, 'W');
     }
 
+    public function test_pix_cnpj_key_is_normalized_without_mask_in_segment_b(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            $this->company,
+            $this->debitAccount,
+            [
+                new PixKeyPaymentDto(
+                    companyDocumentNumber: 'PIX001',
+                    amount: 25.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'WAGNER LUIS RESTA QUIRINO SILV',
+                    pixKey: '27.263.527/0001-65',
+                    pixKeyType: PixKeyType::Cnpj,
+                    beneficiaryRegistrationType: 2,
+                    beneficiaryRegistrationNumber: '27.263.527/0001-65',
+                ),
+            ],
+            PaymentType::Various,
+            $this->generatedAt,
+        );
+
+        self::assertCount(1, $files);
+        $lines = array_values(array_filter(explode("\r\n", $files[0]->content), static fn (string $line): bool => $line !== ''));
+        $segmentB = $lines[3];
+
+        self::assertSame('27263527000165', substr($segmentB, 18, 14));
+        self::assertSame('27263527000165', trim(substr($segmentB, 127, 100)));
+    }
+
     private function assertValidRemittanceFile(string $content, int $expectedLineCount): void
     {
         self::assertStringEndsWith("\r\n", $content);

@@ -30,6 +30,7 @@ final class TaxSegmentBuilder
     public function build(TaxType $taxType, array $data): string
     {
         $layout = $this->resolveLayout($taxType);
+        $data = \CnabSispag\Domain\Shared\Service\DocumentNormalizer::normalizeTaxData($data);
 
         return $this->formatter->format(
             $layout->definition(),

@@ -137,6 +137,37 @@ final class LayoutValidationTest extends TestCase
         ));
     }
 
+    public function test_formatted_pix_cnpj_key_fails_validation(): void
+    {
+        $content = $this->generatePixRemittance();
+        $lines = $this->extractLines($content);
+        $segmentBIndex = null;
+
+        foreach ($lines as $index => $line) {
+            if (substr($line, 13, 1) === 'B') {
+                $segmentBIndex = $index;
+                break;
+            }
+        }
+
+        self::assertNotNull($segmentBIndex);
+        $lines[$segmentBIndex] = substr_replace(
+            $lines[$segmentBIndex],
+            str_pad('27.263.527/0001-65', 100, ' ', STR_PAD_RIGHT),
+            127,
+            100,
+        );
+        $lines[$segmentBIndex] = substr_replace($lines[$segmentBIndex], '02', 14, 2);
+
+        $result = $this->sispag->validateLayout(implode("\r\n", $lines) . "\r\n");
+
+        self::assertFalse($result->isValid());
+        self::assertNotEmpty(array_filter(
+            $result->violations,
+            static fn ($violation) => $violation->code === 'invalid_pix_key_format',
+        ));
+    }
+
     private function generateTedRemittance(): string
     {
         $files = $this->sispag->generateRemittance(

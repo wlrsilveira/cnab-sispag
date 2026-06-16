@@ -50,6 +50,7 @@ final class MessageCatalog
         'validation.invalid_layout_version' => 'Linha :line: versão de layout inválida (esperado :expected, encontrado :actual).',
         'validation.invalid_file_kind' => 'Linha :line: tipo de arquivo inválido (1=remessa, 2=retorno).',
         'validation.invalid_field_picture' => 'Linha :line: campo :field com formato inválido.',
+        'validation.invalid_pix_key_format' => 'Linha :line: chave PIX (:field) com formato inválido para o tipo informado.',
         'validation.invalid_fixed_field' => 'Linha :line: campo :field deveria ser :expected, encontrado :actual.',
         'validation.unparseable_record' => 'Linha :line: registro não pôde ser interpretado.',
         'validation.mixed_pix_file' => 'Pagamentos PIX e não-PIX não podem coexistir no mesmo arquivo.',

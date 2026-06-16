@@ -41,7 +41,7 @@ final readonly class PixKeyPaymentDto implements PaymentDto
             new Money($this->amount),
             CnabDate::fromDateTime($this->paymentDate),
             $this->beneficiaryName,
-            $this->pixKey,
+            \CnabSispag\Domain\Shared\Service\DocumentNormalizer::normalizePixKey($this->pixKeyType, $this->pixKey),
             $this->pixKeyType,
             PaymentSegmentFactory::compose(PaymentMethod::PixKey, $paymentType, $this->optionalSegments),
             $optional,
@@ -49,7 +49,7 @@ final readonly class PixKeyPaymentDto implements PaymentDto
             $this->beneficiaryBankCode,
             $this->chamberCode,
             $this->beneficiaryRegistrationType,
-            $this->beneficiaryRegistrationNumber,
+            \CnabSispag\Domain\Shared\Service\DocumentNormalizer::normalizeRegistrationNumber($this->beneficiaryRegistrationNumber),
             $this->userInformation,
             $this->bankDocumentNumber,
         );

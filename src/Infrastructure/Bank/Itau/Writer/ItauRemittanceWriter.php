@@ -18,6 +18,7 @@ use CnabSispag\Domain\Shared\Enum\BatchProfile;
 use CnabSispag\Domain\Shared\Enum\FileKind;
 use CnabSispag\Domain\Shared\Enum\PaymentMethod;
 use CnabSispag\Domain\Shared\Enum\SegmentType;
+use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
 use CnabSispag\Infrastructure\Bank\Itau\Builder\TaxSegmentBuilder;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\BatchHeaderBankSlipRecord;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\BatchHeaderTaxRecord;
@@ -237,9 +238,11 @@ final class ItauRemittanceWriter
             return [
                 'pixKeyType' => $payment->pixKeyType()->value,
                 'beneficiaryRegistrationType' => $payment->beneficiaryRegistrationType(),
-                'beneficiaryRegistrationNumber' => $payment->beneficiaryRegistrationNumber(),
+                'beneficiaryRegistrationNumber' => DocumentNormalizer::normalizeRegistrationNumber(
+                    $payment->beneficiaryRegistrationNumber(),
+                ),
                 'userInformation' => $payment->userInformation(),
-                'pixKey' => $payment->pixKey(),
+                'pixKey' => DocumentNormalizer::normalizePixKey($payment->pixKeyType(), $payment->pixKey()),
             ];
         }
 
@@ -296,7 +299,9 @@ final class ItauRemittanceWriter
                 'paymentDate' => $payment->paymentDate()->value,
                 'paymentAmount' => $payment->amount()->amount,
                 'bankDocumentNumber' => $payment->bankDocumentNumber(),
-                'beneficiaryRegistrationNumber' => $payment->beneficiaryRegistrationNumber(),
+                'beneficiaryRegistrationNumber' => DocumentNormalizer::normalizeRegistrationNumber(
+                    $payment->beneficiaryRegistrationNumber(),
+                ),
             ];
         }
 
@@ -310,7 +315,9 @@ final class ItauRemittanceWriter
                 'paymentDate' => $payment->paymentDate()->value,
                 'paymentAmount' => $payment->amount()->amount,
                 'bankDocumentNumber' => $payment->bankDocumentNumber(),
-                'beneficiaryRegistrationNumber' => $payment->beneficiaryRegistrationNumber(),
+                'beneficiaryRegistrationNumber' => DocumentNormalizer::normalizeRegistrationNumber(
+                    $payment->beneficiaryRegistrationNumber(),
+                ),
             ];
         }
 

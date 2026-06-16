@@ -35,7 +35,7 @@ final readonly class UtilityPaymentDto implements PaymentDto
             $this->companyDocumentNumber,
             new Money($this->amount),
             CnabDate::fromDateTime($this->paymentDate),
-            $this->barcode,
+            \CnabSispag\Domain\Shared\Service\DocumentNormalizer::normalizeBarcode($this->barcode),
             $this->payeeName,
             CnabDate::fromDateTime($this->dueDate),
             PaymentSegmentFactory::compose($this->paymentMethod, $paymentType, $this->optionalSegments),

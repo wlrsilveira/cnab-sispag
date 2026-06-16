@@ -39,7 +39,7 @@ final readonly class TaxPaymentDto implements PaymentDto
             $this->companyDocumentNumber,
             new Money($this->amount),
             CnabDate::fromDateTime($this->paymentDate),
-            $this->taxData,
+            \CnabSispag\Domain\Shared\Service\DocumentNormalizer::normalizeTaxData($this->taxData),
             PaymentSegmentFactory::compose($this->paymentMethod, $paymentType, $this->optionalSegments),
             $optional,
             $this->bankDocumentNumber,

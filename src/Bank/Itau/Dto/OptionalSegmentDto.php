@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CnabSispag\Bank\Itau\Dto;
 
 use CnabSispag\Domain\Remittance\ValueObject\OptionalSegmentData;
+use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
 
 final readonly class OptionalSegmentDto
 {
@@ -31,8 +32,8 @@ final readonly class OptionalSegmentDto
     public function toDomain(): OptionalSegmentData
     {
         return new OptionalSegmentData(
-            $this->segmentB,
-            $this->segmentBTax,
+            DocumentNormalizer::normalizeSegmentData($this->segmentB),
+            DocumentNormalizer::normalizeSegmentData($this->segmentBTax),
             $this->segmentC,
             $this->segmentD,
             $this->segmentE,
