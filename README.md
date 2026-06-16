@@ -1,4 +1,4 @@
-# cnab-sispag
+# CNAB SISPAG - Fornecedor
 
 Biblioteca PHP **framework-agnostic** para arquivos **SISPAG Itaú CNAB 240 v086** — remessa, retorno e validação.
 
