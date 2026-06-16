@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use CnabSispag\Bank\Itau\ItauSispag;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$file = $argv[1] ?? null;
+
+if (!is_string($file) || $file === '' || !is_readable($file)) {
+    fwrite(STDERR, "Uso: validate-itau <arquivo.cnab>\n");
+    exit(2);
+}
+
+$content = file_get_contents($file);
+
+if ($content === false) {
+    fwrite(STDERR, "Não foi possível ler o arquivo informado.\n");
+    exit(2);
+}
+
+$result = (new ItauSispag())->validateLayout($content);
+
+foreach ($result->violations as $violation) {
+    $prefix = $violation->line !== null ? 'Linha ' . $violation->line . ': ' : '';
+    fwrite(STDOUT, $prefix . $violation->message . "\n");
+}
+
+exit($result->isValid() ? 0 : 1);
