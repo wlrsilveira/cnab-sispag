@@ -51,6 +51,10 @@ php bin/validate-itau /caminho/arquivo.rem
 | Versão layout = 080 (header) | `invalid_layout_version` |
 | Valores fixos do layout (recordType, segmentCode…) | `invalid_fixed_field` |
 | Registro parseável | `unparseable_record` |
+| Chave PIX com formato inválido | `invalid_pix_key_format` |
+| Tipo de chave PIX inválido (Segmento B) | `invalid_pix_key_type` |
+| Identificação PIX ausente/inválida (Segmento A, câmara 009) | `invalid_pix_transfer_identification` |
+| Agência/conta obrigatória para PIX conta (01/PG/03) | `pix_account_required` |
 
 ### 3. Regras SISPAG
 
@@ -70,6 +74,14 @@ php bin/validate-itau /caminho/arquivo.rem
 | Sequência de detalhe (1, 2, 3…) | `detail_record_number_gap` |
 
 As regras de segmentos reutilizam `BatchSegmentRules` — as mesmas validadas na geração de remessa.
+
+### 4. Regras PIX por chave (forma 45)
+
+| Verificação | Código |
+|---|---|
+| Câmara 009 no Segmento A | `pix_requires_chamber_009` |
+| Identificação 04 (Chave Pix) no Segmento A | `pix_key_requires_transfer_code_04` |
+| Chave PIX obrigatória no Segmento B | `pix_key_required` |
 
 ## ValidationResult
 

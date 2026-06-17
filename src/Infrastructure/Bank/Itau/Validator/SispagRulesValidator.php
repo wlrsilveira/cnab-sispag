@@ -10,9 +10,12 @@ use CnabSispag\Domain\Remittance\ValueObject\PaymentDetail;
 use CnabSispag\Domain\Shared\Enum\BatchProfile;
 use CnabSispag\Domain\Shared\Enum\FileKind;
 use CnabSispag\Domain\Shared\Enum\PaymentMethod;
+use CnabSispag\Domain\Shared\Enum\PixKeyType;
 use CnabSispag\Domain\Shared\Enum\SegmentType;
 use CnabSispag\Domain\Shared\Exception\InvalidBatchException;
 use CnabSispag\Domain\Shared\Exception\InvalidPaymentException;
+use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
+use CnabSispag\Infrastructure\Bank\Itau\Layout\ItauConstants;
 use CnabSispag\Infrastructure\I18n\MessageCatalog;
 
 final class SispagRulesValidator
@@ -146,6 +149,7 @@ final class SispagRulesValidator
         }
 
         $violations = array_merge($violations, $this->validateDetailRecordNumbers($batch, $batchIndex));
+        $violations = array_merge($violations, $this->validatePixPayments($batch));
 
         return $violations;
     }
@@ -206,6 +210,119 @@ final class SispagRulesValidator
             }
 
             ++$expected;
+        }
+
+        return $violations;
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validatePixPayments(ValidationBatchContext $batch): array
+    {
+        if ($batch->paymentMethod !== PaymentMethod::PixKey) {
+            return [];
+        }
+
+        $violations = [];
+
+        foreach ($batch->paymentLines as $paymentIndex => $lines) {
+            $lineNumber = $batch->detailLines[$paymentIndex] ?? null;
+            $segmentA = $lines[0] ?? null;
+
+            if ($segmentA === null) {
+                continue;
+            }
+
+            if (trim(substr($segmentA, 17, 3)) !== ItauConstants::PIX_CHAMBER_CODE) {
+                $violations[] = new Violation(
+                    'pix_requires_chamber_009',
+                    MessageCatalog::get('validation.pix_requires_chamber_009', [
+                        'line' => (string) $lineNumber,
+                    ]),
+                    $lineNumber,
+                    'chamberCode',
+                );
+            }
+
+            if (trim(substr($segmentA, 112, 2)) !== ItauConstants::PIX_TRANSFER_KEY) {
+                $violations[] = new Violation(
+                    'pix_key_requires_transfer_code_04',
+                    MessageCatalog::get('validation.pix_key_requires_transfer_code_04', [
+                        'line' => (string) $lineNumber,
+                    ]),
+                    $lineNumber,
+                    'transferIdentification',
+                );
+            }
+
+            $segmentB = $lines[1] ?? null;
+
+            if ($segmentB === null || substr($segmentB, 13, 1) !== 'B') {
+                continue;
+            }
+
+            $segmentBLineNumber = $lineNumber !== null ? $lineNumber + 1 : null;
+            $pixKey = trim(substr($segmentB, 127, 100));
+
+            if ($pixKey === '') {
+                $violations[] = new Violation(
+                    'pix_key_required',
+                    MessageCatalog::get('validation.pix_key_required', [
+                        'line' => (string) $segmentBLineNumber,
+                    ]),
+                    $segmentBLineNumber,
+                    'pixKey',
+                );
+
+                continue;
+            }
+
+            $segmentCode = trim(substr($segmentB, 14, 2));
+
+            if (!in_array($segmentCode, ['01', '02', '03', '04'], true)) {
+                $violations[] = new Violation(
+                    'invalid_pix_key_type',
+                    MessageCatalog::get('validation.invalid_pix_key_type', [
+                        'line' => (string) $segmentBLineNumber,
+                    ]),
+                    $segmentBLineNumber,
+                    'pixKeyType',
+                );
+
+                continue;
+            }
+
+            if ($segmentCode === '03') {
+                if (!DocumentNormalizer::isValidPixKey(PixKeyType::Cpf, $pixKey)
+                    && !DocumentNormalizer::isValidPixKey(PixKeyType::Cnpj, $pixKey)) {
+                    $violations[] = new Violation(
+                        'invalid_pix_key_format',
+                        MessageCatalog::get('validation.invalid_pix_key_format', [
+                            'line' => (string) $segmentBLineNumber,
+                            'field' => 'pixKey',
+                        ]),
+                        $segmentBLineNumber,
+                        'pixKey',
+                    );
+                }
+
+                continue;
+            }
+
+            $pixKeyType = PixKeyType::tryFromSegmentCode($segmentCode);
+
+            if ($pixKeyType === null || !DocumentNormalizer::isValidPixKey($pixKeyType, $pixKey)) {
+                $violations[] = new Violation(
+                    'invalid_pix_key_format',
+                    MessageCatalog::get('validation.invalid_pix_key_format', [
+                        'line' => (string) $segmentBLineNumber,
+                        'field' => 'pixKey',
+                    ]),
+                    $segmentBLineNumber,
+                    'pixKey',
+                );
+            }
         }
 
         return $violations;

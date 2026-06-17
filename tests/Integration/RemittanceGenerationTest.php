@@ -72,6 +72,14 @@ final class RemittanceGenerationTest extends TestCase
         $this->assertRecordType($files[0]->content, 0, ItauConstants::RECORD_TYPE_FILE_HEADER);
         $this->assertSegmentCode($files[0]->content, 2, 'A');
         $this->assertSegmentCode($files[0]->content, 3, 'B');
+
+        $lines = array_values(array_filter(explode("\r\n", $files[0]->content), static fn (string $line): bool => $line !== ''));
+        $segmentA = $lines[2];
+        $segmentB = $lines[3];
+
+        self::assertSame('009', substr($segmentA, 17, 3));
+        self::assertSame('04', substr($segmentA, 112, 2));
+        self::assertSame('02', substr($segmentB, 14, 2));
     }
 
     public function test_generates_ted_remittance_file(): void
@@ -337,6 +345,7 @@ final class RemittanceGenerationTest extends TestCase
         $segmentB = $lines[3];
 
         self::assertSame('27263527000165', substr($segmentB, 18, 14));
+        self::assertSame('03', substr($segmentB, 14, 2));
         self::assertSame('27263527000165', trim(substr($segmentB, 127, 100)));
     }
 

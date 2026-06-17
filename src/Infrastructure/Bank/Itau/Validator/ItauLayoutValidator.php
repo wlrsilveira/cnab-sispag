@@ -104,6 +104,7 @@ final class ItauLayoutValidator
             ++$index;
 
             $currentPaymentSegments = [];
+            $currentPaymentLineContents = [];
             $currentRecordNumber = 0;
             $currentPaymentLine = 0;
             $currentPaymentPrimaryIndex = 0;
@@ -127,6 +128,7 @@ final class ItauLayoutValidator
                             $currentRecordNumber,
                         );
                         $batchContext->detailLines[] = $currentPaymentLine;
+                        $batchContext->paymentLines[] = $currentPaymentLineContents;
                         $batchContext->paymentAmounts[] = $this->extractPaymentAmount(
                             $lines[$currentPaymentPrimaryIndex],
                             $paymentMethod,
@@ -134,11 +136,13 @@ final class ItauLayoutValidator
                     }
 
                     $currentPaymentSegments = [$segmentType];
+                    $currentPaymentLineContents = [$lines[$index]];
                     $currentRecordNumber = (int) $fields['recordNumber'];
                     $currentPaymentLine = $lineNumber;
                     $currentPaymentPrimaryIndex = $index;
                 } else {
                     $currentPaymentSegments[] = $segmentType;
+                    $currentPaymentLineContents[] = $lines[$index];
                 }
 
                 ++$index;
@@ -151,6 +155,7 @@ final class ItauLayoutValidator
                     $currentRecordNumber,
                 );
                 $batchContext->detailLines[] = $currentPaymentLine;
+                $batchContext->paymentLines[] = $currentPaymentLineContents;
                 $batchContext->paymentAmounts[] = $this->extractPaymentAmount(
                     $lines[$currentPaymentPrimaryIndex],
                     $paymentMethod,

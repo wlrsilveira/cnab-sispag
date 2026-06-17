@@ -31,4 +31,8 @@ final class ItauConstants
     public const OPERATION_CREDIT = 'C';
 
     public const OPTIONAL_RECORD_J52 = '52';
+
+    public const PIX_CHAMBER_CODE = '009';
+
+    public const PIX_TRANSFER_KEY = '04';
 }

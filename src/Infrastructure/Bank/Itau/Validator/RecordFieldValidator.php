@@ -147,17 +147,100 @@ final class RecordFieldValidator
      */
     private function validateSemanticFields(int $lineNumber, string $line, \CnabSispag\Infrastructure\Cnab\Layout\RecordDefinition $definition): array
     {
-        if ($definition->name !== 'segmentBPix') {
+        return match ($definition->name) {
+            'segmentA' => $this->validateSegmentAPixFields($lineNumber, $line),
+            'segmentBPix' => $this->validateSegmentBPixFields($lineNumber, $line),
+            default => [],
+        };
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validateSegmentAPixFields(int $lineNumber, string $line): array
+    {
+        if (trim(substr($line, 17, 3)) !== ItauConstants::PIX_CHAMBER_CODE) {
             return [];
         }
 
+        $transferIdentification = trim(substr($line, 112, 2));
+
+        if ($transferIdentification === '' || !in_array($transferIdentification, ['01', 'PG', '03', '04'], true)) {
+            return [
+                new Violation(
+                    'invalid_pix_transfer_identification',
+                    MessageCatalog::get('validation.invalid_pix_transfer_identification', [
+                        'line' => (string) $lineNumber,
+                    ]),
+                    $lineNumber,
+                    'transferIdentification',
+                ),
+            ];
+        }
+
+        if (in_array($transferIdentification, ['01', 'PG', '03'], true)
+            && trim(substr($line, 23, 20)) === '') {
+            return [
+                new Violation(
+                    'pix_account_required',
+                    MessageCatalog::get('validation.pix_account_required', [
+                        'line' => (string) $lineNumber,
+                    ]),
+                    $lineNumber,
+                    'beneficiaryAgencyAccount',
+                ),
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validateSegmentBPixFields(int $lineNumber, string $line): array
+    {
         $pixKey = trim(substr($line, 127, 100));
 
         if ($pixKey === '') {
             return [];
         }
 
-        $pixKeyType = PixKeyType::tryFrom(trim(substr($line, 14, 2)));
+        $segmentCode = trim(substr($line, 14, 2));
+
+        if (!in_array($segmentCode, ['01', '02', '03', '04'], true)) {
+            return [
+                new Violation(
+                    'invalid_pix_key_type',
+                    MessageCatalog::get('validation.invalid_pix_key_type', [
+                        'line' => (string) $lineNumber,
+                    ]),
+                    $lineNumber,
+                    'pixKeyType',
+                ),
+            ];
+        }
+
+        if ($segmentCode === '03') {
+            if (DocumentNormalizer::isValidPixKey(PixKeyType::Cpf, $pixKey)
+                || DocumentNormalizer::isValidPixKey(PixKeyType::Cnpj, $pixKey)) {
+                return [];
+            }
+
+            return [
+                new Violation(
+                    'invalid_pix_key_format',
+                    MessageCatalog::get('validation.invalid_pix_key_format', [
+                        'line' => (string) $lineNumber,
+                        'field' => 'pixKey',
+                    ]),
+                    $lineNumber,
+                    'pixKey',
+                ),
+            ];
+        }
+
+        $pixKeyType = PixKeyType::tryFromSegmentCode($segmentCode);
 
         if ($pixKeyType === null) {
             return [];

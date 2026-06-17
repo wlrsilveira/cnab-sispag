@@ -90,13 +90,15 @@ Mapa das classes públicas e internas relevantes para integradores.
 
 ### PixKeyType
 
+Códigos do Segmento B conforme Nota 37 do manual SISPAG v086 (`segmentCode()`):
+
 | Case | Código |
 |---|---|
-| `Cpf` | 01 |
-| `Cnpj` | 02 |
-| `Phone` | 03 |
-| `Email` | 04 |
-| `Random` | 05 |
+| `Phone` | 01 |
+| `Email` | 02 |
+| `Cpf` | 03 |
+| `Cnpj` | 03 |
+| `Random` | 04 |
 
 ## Entidades de retorno
 

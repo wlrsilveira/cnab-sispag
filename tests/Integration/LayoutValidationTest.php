@@ -28,6 +28,39 @@ final class LayoutValidationTest extends TestCase
         $this->returnFixtures = new ReturnFileFixtureBuilder();
     }
 
+    public function test_valid_pix_remittance_passes_validation(): void
+    {
+        $content = $this->generatePixRemittance();
+
+        self::assertTrue($this->sispag->validateLayout($content)->isValid());
+    }
+
+    public function test_pix_missing_transfer_identification_fails_validation(): void
+    {
+        $content = $this->generatePixRemittance();
+        $lines = $this->extractLines($content);
+
+        foreach ($lines as $index => $line) {
+            if (substr($line, 13, 1) !== 'A' || trim(substr($line, 17, 3)) !== '009') {
+                continue;
+            }
+
+            $lines[$index] = substr_replace($lines[$index], '  ', 112, 2);
+            break;
+        }
+
+        $result = $this->sispag->validateLayout(implode("\r\n", $lines) . "\r\n");
+
+        self::assertFalse($result->isValid());
+        self::assertNotEmpty(array_filter(
+            $result->violations,
+            static fn ($violation) => in_array($violation->code, [
+                'invalid_pix_transfer_identification',
+                'pix_key_requires_transfer_code_04',
+            ], true),
+        ));
+    }
+
     public function test_valid_ted_remittance_passes_validation(): void
     {
         $content = $this->generateTedRemittance();

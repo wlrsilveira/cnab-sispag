@@ -49,4 +49,7 @@ final class ValidationBatchContext
 
     /** @var list<int> */
     public array $detailLines = [];
+
+    /** @var list<list<string>> */
+    public array $paymentLines = [];
 }

@@ -205,7 +205,7 @@ final class ItauLayoutRoundTripTest extends TestCase
             [
                 'batchCode' => '1',
                 'recordNumber' => '3',
-                'pixKeyType' => '01',
+                'pixKeyType' => '03',
                 'beneficiaryRegistrationType' => '1',
                 'beneficiaryRegistrationNumber' => '12345678901',
                 'pixKey' => '12345678901',

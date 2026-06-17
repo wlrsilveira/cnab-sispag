@@ -35,18 +35,22 @@ new PixKeyPaymentDto(
 | `pixKey` | Chave PIX do favorecido |
 | `pixKeyType` | Tipo da chave (`PixKeyType`) |
 | `chamberCode` | Padrão `9` (PIX) |
-| `beneficiaryAgencyAccount` | Conta do favorecido (obrigatório para certas chaves) |
+| `beneficiaryAgencyAccount` | Conta do favorecido (opcional para PIX por chave — Nota 11) |
 | `beneficiaryBankCode` | ISPB/banco (quando aplicável) |
+
+O Segmento A preenche automaticamente `transferIdentification = 04` (Chave Pix — Nota 36) e `chamberCode = 009`.
 
 ## Tipos de chave
 
-| PixKeyType | Código | Exemplo |
+Códigos conforme **Nota 37** do manual SISPAG v086:
+
+| PixKeyType | Código Segmento B | Exemplo |
 |---|---|---|
-| `Cpf` | 01 | 12345678901 |
-| `Cnpj` | 02 | 12345678000199 |
-| `Phone` | 03 | +5511999998888 |
-| `Email` | 04 | email@exemplo.com |
-| `Random` | 05 | UUID da chave aleatória |
+| `Phone` | 01 | +5511999998888 |
+| `Email` | 02 | email@exemplo.com |
+| `Cpf` | 03 | 12345678901 |
+| `Cnpj` | 03 | 12345678000199 |
+| `Random` | 04 | UUID da chave aleatória |
 
 ## Regras
 

@@ -30,6 +30,7 @@ use CnabSispag\Infrastructure\Bank\Itau\Layout\BatchTrailerTransferRecord;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\BatchTrailerUtilityRecord;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\FileHeaderRecord;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\FileTrailerRecord;
+use CnabSispag\Infrastructure\Bank\Itau\Layout\ItauConstants;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\SegmentARecord;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\SegmentBRecord;
@@ -236,7 +237,7 @@ final class ItauRemittanceWriter
     {
         if ($payment instanceof PixKeyPayment) {
             return [
-                'pixKeyType' => $payment->pixKeyType()->value,
+                'pixKeyType' => $payment->pixKeyType()->segmentCode(),
                 'beneficiaryRegistrationType' => $payment->beneficiaryRegistrationType(),
                 'beneficiaryRegistrationNumber' => DocumentNormalizer::normalizeRegistrationNumber(
                     $payment->beneficiaryRegistrationNumber(),
@@ -297,6 +298,7 @@ final class ItauRemittanceWriter
                 'beneficiaryName' => $payment->beneficiaryName(),
                 'companyDocumentNumber' => $payment->companyDocumentNumber(),
                 'paymentDate' => $payment->paymentDate()->value,
+                'transferIdentification' => ItauConstants::PIX_TRANSFER_KEY,
                 'paymentAmount' => $payment->amount()->amount,
                 'bankDocumentNumber' => $payment->bankDocumentNumber(),
                 'beneficiaryRegistrationNumber' => DocumentNormalizer::normalizeRegistrationNumber(
