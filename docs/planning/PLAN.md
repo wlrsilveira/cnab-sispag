@@ -2,9 +2,9 @@
 
 ## Objetivo
 
-Biblioteca PHP **framework-agnostic**, instalável via Composer, para o **SISPAG Itaú CNAB 240 versão 086**.
+Biblioteca PHP **framework-agnostic**, instalável via Composer, para geração e leitura de arquivos **CNAB 240 de pagamentos**. A **v1.0** cobre o **SISPAG Itaú v086**; a **v2.0** adiciona o **Banco do Brasil (PgtVer03BB)** com paridade de modalidades.
 
-## Escopo v1.0
+## Escopo v1.0 — Itaú SISPAG
 
 | Funcionalidade | Descrição |
 |---|---|
@@ -65,7 +65,7 @@ $returnFile = $sispag->parseReturn($content);
 $validation = $sispag->validateLayout($content);
 ```
 
-## Entregável v1.0.0
+## Entregável v1.0.0 — Itaú
 
 - [x] `composer require wlrsilveira/cnab-sispag` (código pronto; Packagist pendente)
 - [x] Todos os segmentos e modalidades SISPAG Itaú v086
@@ -76,11 +76,41 @@ $validation = $sispag->validateLayout($content);
 - [x] Homologação documentada (Itaú 30 horas)
 - [ ] Tag v1.0.0 + publicação Packagist
 
+## Escopo v2.0 — Banco do Brasil
+
+| Funcionalidade | Descrição |
+|---|---|
+| Remessa | Paridade com Itaú: TED/DOC, PIX, boleto, concessionária, tributos, folha |
+| Retorno | Leitura de retorno BB |
+| Validador | Interno + validação no [validaleiautes.bb.com.br](https://validaleiautes.bb.com.br/) |
+| Layout | PgtVer03BB — banco `001`, versão arquivo `030`, lote `020` |
+| Arquivo | **Único** — PIX no mesmo arquivo (sem `PixFileSeparator`) |
+
+Facade: `CnabSispag\Bank\Bb\BbPagamentos` (espelha `ItauSispag`).
+
+Plano detalhado: [bb-remittance.md](./bb-remittance.md).
+
+## Entregável v2.0.0 — BB
+
+- [ ] Refatoração multi-banco (sem breaking change na API Itaú)
+- [ ] Layouts BB completos (headers + segmentos A–W, J-52)
+- [ ] `BbPagamentos::generateRemittance()`, `parseReturn()`, `validateLayout()`
+- [ ] CLI `bin/validate-bb`
+- [ ] Golden file tests por modalidade
+- [ ] `docs/homologation-bb.md` + `docs/entities/bb-reference.md`
+
 ## Estimativa
 
-~13–15 dias de desenvolvimento. Detalhes em [roadmap.md](./roadmap.md).
+| Versão | Dias |
+|---|---|
+| v1.0 Itaú | ~13–15 (concluída) |
+| v2.0 BB | ~15–21 |
+
+Detalhes em [roadmap.md](./roadmap.md).
 
 ## Riscos
+
+### Itaú (v1.0)
 
 | Risco | Mitigação |
 |---|---|
@@ -88,3 +118,12 @@ $validation = $sispag->validateLayout($content);
 | Segmentos D/E/F (holerite) pouco usados | Serialize/parse funcional; testes mínimos |
 | PDF v086 inacessível online | Usar PDF local como fonte de verdade |
 | PIX misturado com outros pagamentos | `generateRemittance()` separa em dois arquivos; exceção só em uso manual |
+
+### Banco do Brasil (v2.0)
+
+| Risco | Mitigação |
+|---|---|
+| Header FEBRABAN diferente do Itaú | Layouts BB separados; não reutilizar `FileHeaderRecord` Itaú |
+| Convênio obrigatório (nota 7) | Campo no `DebitAccountDto` BB + validação |
+| Posições tributo divergentes | Mapear do PDF BB, não assumir paridade com Itaú |
+| PDF PgtVer03BB inacessível via HTTP | Cópia em `docs/layouts/PgtVer03BB.pdf` |

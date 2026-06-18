@@ -126,3 +126,67 @@ Status da **v1.0.0** (2026-06-16). Itens pendentes marcados com `[ ]`.
 - [ ] Tag v1.0.0
 - [ ] Packagist
 - [x] Homologação Itaú documentada (`docs/homologation-itau.md`)
+
+---
+
+## v2.0 — Banco do Brasil (PgtVer03BB)
+
+Ver [bb-remittance.md](./bb-remittance.md) e fases 7–12 em [roadmap.md](./roadmap.md).
+
+### Refatoração multi-banco
+
+- [ ] `RemittanceWriterInterface`, `LayoutValidatorInterface`, `ReturnReaderInterface`
+- [ ] `RemittanceGenerationPolicy`
+- [ ] `ItauBatchSegmentRules` (extraído de `BatchSegmentRules`)
+- [ ] `BbBatchSegmentRules`
+- [ ] Use cases com injeção de dependência (Itaú inalterado externamente)
+
+### Domain — BB
+
+- [ ] `BbDebitAccount` ou extensão de `BankAccount` com convênio e DVs
+- [ ] Regras BB: arquivo único (sem `PixFileSeparator`)
+
+### Infrastructure — BB Layouts
+
+- [ ] `BbConstants`, `BbFieldFactory`, `BbLayoutRegistry`
+- [ ] Headers/trailers arquivo e lote
+- [ ] Segmentos A–W, J-52, J-52 PIX
+- [ ] Sub-layouts segmento N (mapear do PDF BB)
+- [ ] Testes `BbLayoutDefinitionTest`, `BbLayoutRoundTripTest`
+
+### Infrastructure — BB Writer/Reader/Validator
+
+- [ ] `BbRemittanceWriter`
+- [ ] `BbReturnReader` + `BbTaxSegmentParser`
+- [ ] `BbLayoutValidator` + `BbRulesValidator`
+- [ ] `BbTaxSegmentBuilder`
+- [ ] Reutilizar `BarcodeParser`, `PixQrCodeParser` (se compatíveis)
+
+### Application — BB
+
+- [ ] `GenerateBbRemittanceUseCase`
+- [ ] `ParseBbReturnUseCase`
+- [ ] `ValidateBbLayoutUseCase`
+- [ ] DTOs `src/Bank/Bb/Dto/` (`convenio`, `agencyCheckDigit`, `agContaCheckDigit`)
+
+### API pública — BB
+
+- [ ] `BbPagamentos` facade
+- [ ] `generateRemittance()`
+- [ ] `parseReturn()`
+- [ ] `validateLayout()`
+- [ ] CLI `bin/validate-bb`
+
+### Testes BB
+
+- [ ] `BbRemittanceGenerationTest` (golden files por modalidade)
+- [ ] `BbLayoutValidationTest`
+- [ ] `BbReturnParsingTest`
+- [ ] Fixtures em `tests/Fixtures/Bb/`
+
+### Documentação BB
+
+- [ ] `docs/homologation-bb.md`
+- [ ] `docs/entities/bb-reference.md`
+- [ ] `docs/layouts/PgtVer03BB.pdf`
+- [ ] Atualizar `README.md`

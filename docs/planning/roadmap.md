@@ -105,8 +105,79 @@ Estimativa original: **~13–15 dias** — **v1.0.0 concluída em 2026-06-16** (
 | Item | Prioridade |
 |---|---|
 | PHPStan nível 8 (1.12) | Média |
-| Suporte a outros bancos | Baixa |
 | CI/CD (GitHub Actions) | Média |
+| Tag v1.0.0 + Packagist (6.10) | Alta |
+
+---
+
+## v2.0 — Banco do Brasil (PgtVer03BB)
+
+Estimativa: **15–21 dias**. Plano detalhado: [bb-remittance.md](./bb-remittance.md).
+
+### Fase 7 — Refatoração multi-banco
+
+| # | Tarefa | Status |
+|---|---|---|
+| 7.1 | `RemittanceWriterInterface` | ⬜ |
+| 7.2 | `LayoutValidatorInterface` | ⬜ |
+| 7.3 | `ReturnReaderInterface` | ⬜ |
+| 7.4 | `RemittanceGenerationPolicy` (Itaú vs BB) | ⬜ |
+| 7.5 | Extrair `ItauBatchSegmentRules` | ⬜ |
+| 7.6 | `BbBatchSegmentRules` | ⬜ |
+| 7.7 | Injetar dependências nos use cases Itaú (sem breaking change) | ⬜ |
+
+### Fase 8 — Layouts BB
+
+| # | Tarefa | Status |
+|---|---|---|
+| 8.1 | `BbConstants` + `BbFieldFactory` | ⬜ |
+| 8.2 | `FileHeaderRecord` / `FileTrailerRecord` (FEBRABAN) | ⬜ |
+| 8.3 | Batch headers/trailers (transfer, boleto, utility, tax) | ⬜ |
+| 8.4 | Segmentos A–W, J-52, J-52 PIX | ⬜ |
+| 8.5 | Sub-layouts segmento N (GPS, DARF, FGTS, GARE…) | ⬜ |
+| 8.6 | `BbLayoutRegistry` | ⬜ |
+| 8.7 | Testes definition + round-trip | ⬜ |
+
+### Fase 9 — Remessa BB
+
+| # | Tarefa | Status |
+|---|---|---|
+| 9.1 | DTOs `src/Bank/Bb/Dto/` (com `convenio`) | ⬜ |
+| 9.2 | `BbRemittanceWriter` | ⬜ |
+| 9.3 | `GenerateBbRemittanceUseCase` (arquivo único) | ⬜ |
+| 9.4 | `BbTaxSegmentBuilder` | ⬜ |
+| 9.5 | Facade `BbPagamentos::generateRemittance()` | ⬜ |
+| 9.6 | Golden file tests por modalidade | ⬜ |
+
+### Fase 10 — Validador BB
+
+| # | Tarefa | Status |
+|---|---|---|
+| 10.1 | `BbLayoutValidator` (estrutural + campos + regras) | ⬜ |
+| 10.2 | `ValidateBbLayoutUseCase` | ⬜ |
+| 10.3 | Facade `BbPagamentos::validateLayout()` | ⬜ |
+| 10.4 | CLI `bin/validate-bb` | ⬜ |
+| 10.5 | Validação externa (validaleiautes.bb.com.br) | ⬜ |
+
+### Fase 11 — Retorno BB
+
+| # | Tarefa | Status |
+|---|---|---|
+| 11.1 | `BbReturnReader` + `DetailLayoutResolver` | ⬜ |
+| 11.2 | `BbTaxSegmentParser` | ⬜ |
+| 11.3 | `ParseBbReturnUseCase` | ⬜ |
+| 11.4 | Facade `BbPagamentos::parseReturn()` | ⬜ |
+| 11.5 | Testes com fixtures de retorno BB | ⬜ |
+
+### Fase 12 — Documentação BB
+
+| # | Tarefa | Status |
+|---|---|---|
+| 12.1 | `docs/homologation-bb.md` | ⬜ |
+| 12.2 | `docs/entities/bb-reference.md` | ⬜ |
+| 12.3 | `docs/layouts/PgtVer03BB.pdf` (cópia local) | ⬜ |
+| 12.4 | Atualizar `README.md` com exemplo BB | ⬜ |
+| 12.5 | `CHANGELOG.md` v2.0 | ⬜ |
 
 ## Legenda
 

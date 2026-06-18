@@ -1,6 +1,7 @@
 # Segmentos e regras de combinação
 
-Fonte: Manual SISPAG Itaú CNAB 240 **v086**, seção 2.2.
+Fonte Itaú: Manual SISPAG CNAB 240 **v086**, seção 2.2.  
+Fonte BB: [PgtVer03BB](https://www.bb.com.br/docs/portal/disem/PgtVer03BB.pdf) — ver também [bb-remittance.md](./bb-remittance.md).
 
 ## Registros de controle
 
@@ -109,3 +110,33 @@ Implementar via `TaxSegmentBuilder` strategy:
 | `PaymentSegmentComposer` | `src/Domain/Remittance/Service/PaymentSegmentComposer.php` | ✅ |
 | `ItauLayoutValidator` | `src/Infrastructure/Bank/Itau/Validator/` | ✅ |
 | Testes | `tests/` | ✅ 125 testes |
+
+---
+
+## Banco do Brasil (PgtVer03BB) — planejado v2.0
+
+### Diferenças em relação ao Itaú
+
+| Regra | Itaú | BB |
+|---|---|---|
+| PIX em arquivo separado | Obrigatório (`PixFileSeparator`) | **Não** — mesmo arquivo |
+| Header de arquivo | Layout SISPAG (versão em 15–17) | FEBRABAN (convênio 33–52, versão `030` em 164–166) |
+| Versão lote pagamentos | `040` transfer / `030` boleto | `020` |
+| Segmento B (PIX chave) | Obrigatório | Opcional no manual base; validador BB exige A/B para PIX |
+| Código banco | `341` | `001` |
+
+### Segmentos validados pelo BB
+
+Perfil do [Validador BB](https://validaleiautes.bb.com.br/): **A/B — J/J52 — N — O/W**.
+
+As combinações por modalidade seguem o padrão FEBRABAN (formas `45` PIX chave, `47` PIX QR, etc.) e são **reutilizáveis** via `PaymentSegmentComposer`. As posições de campo nos layouts BB devem ser mapeadas do PDF — não copiar posições Itaú.
+
+### Implementação planejada
+
+| Classe | Arquivo | Status |
+|---|---|---|
+| `BbBatchSegmentRules` | `src/Domain/Remittance/Service/` | ⬜ |
+| `BbLayoutValidator` | `src/Infrastructure/Bank/Bb/Validator/` | ⬜ |
+| `BbRemittanceWriter` | `src/Infrastructure/Bank/Bb/Writer/` | ⬜ |
+| `BbTaxSegmentBuilder` | `src/Infrastructure/Bank/Bb/Builder/` | ⬜ |
+| Testes BB | `tests/Integration/Bb*` | ⬜ |

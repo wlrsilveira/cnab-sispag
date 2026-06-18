@@ -58,5 +58,9 @@ CnabSispag\
   Domain\
   Application\
   Infrastructure\
-  Bank\Itau\          ← API pública por banco
+  Bank\
+    Itau\             ← API pública Itaú (v1.0)
+    Bb\               ← API pública BB (v2.0, planejado)
 ```
+
+Facades por banco: `ItauSispag`, `BbPagamentos`. Use cases e layouts ficam em `Infrastructure/Bank/{Banco}/`.

@@ -5,13 +5,17 @@
 ```mermaid
 flowchart TB
     subgraph public [Public API]
-        Facade[ItauSispag]
+        ItauFacade[ItauSispag]
+        BbFacade[BbPagamentos]
     end
 
     subgraph application [Application]
         GenerateRemittance[GenerateRemittanceUseCase]
+        GenerateBbRemittance[GenerateBbRemittanceUseCase]
         ParseReturn[ParseReturnFileUseCase]
+        ParseBbReturn[ParseBbReturnUseCase]
         Validate[ValidateLayoutUseCase]
+        ValidateBb[ValidateBbLayoutUseCase]
     end
 
     subgraph domain [Domain]
@@ -19,25 +23,44 @@ flowchart TB
         Batch[Batch]
         Payment[PixKeyPayment / BankSlipPayment / TaxPayment]
         ReturnFile[ReturnFile]
-        Rules[BatchSegmentRules / PixFileSeparator]
+        RulesItau[ItauBatchSegmentRules / PixFileSeparator]
+        RulesBb[BbBatchSegmentRules]
     end
 
-    subgraph infra [Infrastructure]
+    subgraph infraCnab [Infrastructure Cnab]
         Serializer[RecordFormatter / RecordParser]
-        Layout[ItauLayout086]
-        Validator[LayoutValidator]
-        Messages[MessageCatalog]
     end
 
-    Facade --> GenerateRemittance
-    Facade --> ParseReturn
-    Facade --> Validate
+    subgraph infraItau [Infrastructure Bank Itau]
+        ItauLayout[ItauLayout086]
+        ItauWriter[ItauRemittanceWriter]
+        ItauValidator[ItauLayoutValidator]
+        ItauReader[ItauReturnReader]
+    end
+
+    subgraph infraBb [Infrastructure Bank BB]
+        BbLayout[BbLayout030]
+        BbWriter[BbRemittanceWriter]
+        BbValidator[BbLayoutValidator]
+        BbReader[BbReturnReader]
+    end
+
+    ItauFacade --> GenerateRemittance
+    ItauFacade --> ParseReturn
+    ItauFacade --> Validate
+    BbFacade --> GenerateBbRemittance
+    BbFacade --> ParseBbReturn
+    BbFacade --> ValidateBb
     GenerateRemittance --> RemittanceFile
-    ParseReturn --> ReturnFile
-    Validate --> Layout
-    GenerateRemittance --> Serializer
-    ParseReturn --> Serializer
-    infra --> Messages
+    GenerateBbRemittance --> RemittanceFile
+    GenerateRemittance --> ItauWriter
+    GenerateBbRemittance --> BbWriter
+    ParseReturn --> ItauReader
+    ParseBbReturn --> BbReader
+    Validate --> ItauValidator
+    ValidateBb --> BbValidator
+    ItauWriter --> Serializer
+    BbWriter --> Serializer
 ```
 
 ## Estrutura de pastas
@@ -57,9 +80,10 @@ src/
 │       ├── Entity/         ReturnFile, ReturnBatch, ReturnDetail
 │       └── ValueObject/    Occurrence, PaymentStatus
 ├── Application/
-│   ├── Remittance/         GenerateRemittanceUseCase, DTOs
-│   ├── Return/             ParseReturnFileUseCase, DTOs
-│   └── Validation/         ValidateLayoutUseCase, ValidationResult
+│   ├── Contracts/          ← planejado v2.0: writer/validator/reader interfaces
+│   ├── Remittance/         GenerateRemittanceUseCase, GenerateBbRemittanceUseCase
+│   ├── Return/             ParseReturnFileUseCase, ParseBbReturnUseCase
+│   └── Validation/         ValidateLayoutUseCase, ValidateBbLayoutUseCase
 ├── Infrastructure/
 │   ├── Cnab/
 │   │   ├── Layout/         FieldDefinition, RecordDefinition, FieldType
@@ -70,12 +94,21 @@ src/
 │   │   ├── Writer/         ItauRemittanceWriter
 │   │   ├── Reader/         ItauReturnReader
 │   │   └── Validator/      ItauLayoutValidator
+│   ├── Bank/Bb/            ← planejado v2.0
+│   │   ├── Layout/         Layouts FEBRABAN / PgtVer03BB
+│   │   ├── Writer/         BbRemittanceWriter
+│   │   ├── Reader/         BbReturnReader
+│   │   └── Validator/      BbLayoutValidator
 │   └── I18n/
 │       ├── MessageCatalog.php
 │       └── OccurrenceTranslator.php
-└── Bank/Itau/
-    ├── ItauSispag.php      ← Facade pública
-    └── Dto/                CompanyDto, PixKeyPaymentDto...
+└── Bank/
+    ├── Itau/
+    │   ├── ItauSispag.php      ← Facade Itaú
+    │   └── Dto/
+    └── Bb/                     ← planejado v2.0
+        ├── BbPagamentos.php    ← Facade BB
+        └── Dto/
 ```
 
 ## Domain — entidades (inglês)
@@ -106,20 +139,27 @@ src/
 
 ### Domain Services
 
-| Classe | Responsabilidade | Status |
-|---|---|---|
-| `BatchSegmentRules` | Valida combinações de segmentos | ✅ |
-| `BatchGrouper` | Agrupa pagamentos em lotes homogêneos | ✅ |
-| `PixFileSeparator` | Separa arquivo PIX de não-PIX | ✅ |
-| `RecordSequencer` | Numera registros sequenciais | ✅ |
+| Classe | Responsabilidade | Banco | Status |
+|---|---|---|---|
+| `BatchSegmentRules` | Valida combinações de segmentos | Itaú | ✅ |
+| `ItauBatchSegmentRules` | Regras SISPAG v086 (extraído de `BatchSegmentRules`) | Itaú | ⬜ v2.0 |
+| `BbBatchSegmentRules` | Regras PgtVer03BB | BB | ⬜ v2.0 |
+| `BatchGrouper` | Agrupa pagamentos em lotes homogêneos | Ambos | ✅ |
+| `PixFileSeparator` | Separa arquivo PIX de não-PIX | Itaú only | ✅ |
+| `RecordSequencer` | Numera registros sequenciais | Ambos | ✅ |
 
 ## Application — use cases
 
-| Use Case | Input | Output |
-|---|---|---|
-| `GenerateRemittanceUseCase` | CompanyDto, DebitAccountDto, PaymentDto[] | GeneratedRemittanceFile[] |
-| `ParseReturnFileUseCase` | string content | ReturnFile |
-| `ValidateLayoutUseCase` | string content | ValidationResult |
+| Use Case | Banco | Input | Output | Status |
+|---|---|---|---|---|
+| `GenerateRemittanceUseCase` | Itaú | CompanyDto, DebitAccountDto, PaymentDto[] | GeneratedRemittanceFile[] | ✅ |
+| `GenerateBbRemittanceUseCase` | BB | CompanyDto, DebitAccountDto, PaymentDto[] | GeneratedRemittanceFile[] | ⬜ |
+| `ParseReturnFileUseCase` | Itaú | string content | ReturnFile | ✅ |
+| `ParseBbReturnUseCase` | BB | string content | ReturnFile | ⬜ |
+| `ValidateLayoutUseCase` | Itaú | string content | ValidationResult | ✅ |
+| `ValidateBbLayoutUseCase` | BB | string content | ValidationResult | ⬜ |
+
+Contratos planejados em `Application/Contracts/`: `RemittanceWriterInterface`, `LayoutValidatorInterface`, `ReturnReaderInterface`, `RemittanceGenerationPolicy`.
 
 ## Infrastructure — motor CNAB
 
@@ -141,7 +181,7 @@ final readonly class FieldDefinition {
 - Encoding: UTF-8 interno, Windows-1252 na saída
 - Line ending: CRLF (`\r\n`)
 
-## Fluxo de geração (PIX + boleto)
+## Fluxo de geração — Itaú (PIX separado)
 
 ```mermaid
 sequenceDiagram
@@ -157,6 +197,22 @@ sequenceDiagram
     UseCase->>Writer: RemittanceFile PIX
     UseCase->>Writer: RemittanceFile Boletos
     Writer-->>App: 2 arquivos .rem
+```
+
+## Fluxo de geração — BB (arquivo único)
+
+```mermaid
+sequenceDiagram
+    participant App
+    participant UseCase as GenerateBbRemittanceUseCase
+    participant Domain
+    participant Writer as BbRemittanceWriter
+
+    App->>UseCase: payments mistos
+    UseCase->>Domain: BatchGrouper.group()
+    Note over UseCase: sem PixFileSeparator
+    UseCase->>Writer: RemittanceFile único
+    Writer-->>App: 1 arquivo .rem
 ```
 
 ## Exceções tipadas
