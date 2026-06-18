@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CnabSispag\Tests\Integration;
 
+use CnabSispag\Application\Remittance\Dto\GenerateRemittanceOptionsDto;
 use CnabSispag\Bank\Itau\Dto\BankSlipPaymentDto;
 use CnabSispag\Bank\Itau\Dto\CompanyDto;
 use CnabSispag\Bank\Itau\Dto\DebitAccountDto;
@@ -239,6 +240,71 @@ final class RemittanceGenerationTest extends TestCase
         $this->assertValidRemittanceFile($nonPixFile->content, 5);
     }
 
+    public function test_writes_file_sequence_number_to_header(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            $this->company,
+            $this->debitAccount,
+            [
+                new TransferPaymentDto(
+                    paymentMethod: PaymentMethod::TedOtherHolder,
+                    companyDocumentNumber: 'TED001',
+                    amount: 100.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAV TED',
+                    beneficiaryAgencyAccount: '00001234567890123456',
+                    beneficiaryBankCode: 341,
+                    chamberCode: 18,
+                ),
+            ],
+            PaymentType::Suppliers,
+            $this->generatedAt,
+            new GenerateRemittanceOptionsDto(fileSequenceNumber: 42),
+        );
+
+        $this->assertFileSequenceNumber($files[0]->content, 42);
+    }
+
+    public function test_writes_distinct_file_sequence_numbers_for_split_pix_files(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            $this->company,
+            $this->debitAccount,
+            [
+                new PixKeyPaymentDto(
+                    companyDocumentNumber: 'PIX001',
+                    amount: 100.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAV PIX',
+                    pixKey: '11999998888',
+                    pixKeyType: PixKeyType::Phone,
+                ),
+                new TransferPaymentDto(
+                    paymentMethod: PaymentMethod::TedOtherHolder,
+                    companyDocumentNumber: 'TED002',
+                    amount: 200.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAV TED',
+                    beneficiaryAgencyAccount: '00001234567890123456',
+                    beneficiaryBankCode: 341,
+                    chamberCode: 18,
+                ),
+            ],
+            PaymentType::Suppliers,
+            $this->generatedAt,
+            new GenerateRemittanceOptionsDto(
+                pixFileSequenceNumber: 101,
+                nonPixFileSequenceNumber: 102,
+            ),
+        );
+
+        self::assertCount(2, $files);
+        $pixFile = $files[0]->isPix ? $files[0] : $files[1];
+        $nonPixFile = $files[0]->isPix ? $files[1] : $files[0];
+        $this->assertFileSequenceNumber($pixFile->content, 101);
+        $this->assertFileSequenceNumber($nonPixFile->content, 102);
+    }
+
     public function test_generates_salary_transfer_with_payroll_segments(): void
     {
         $files = $this->sispag->generateRemittance(
@@ -347,6 +413,12 @@ final class RemittanceGenerationTest extends TestCase
         self::assertSame('27263527000165', substr($segmentB, 18, 14));
         self::assertSame('03', substr($segmentB, 14, 2));
         self::assertSame('27263527000165', trim(substr($segmentB, 127, 100)));
+    }
+
+    private function assertFileSequenceNumber(string $content, int $expected): void
+    {
+        $lines = array_values(array_filter(explode("\r\n", $content), static fn (string $line): bool => $line !== ''));
+        self::assertSame(str_pad((string) $expected, 9, '0', STR_PAD_LEFT), substr($lines[0], 157, 9));
     }
 
     private function assertValidRemittanceFile(string $content, int $expectedLineCount): void

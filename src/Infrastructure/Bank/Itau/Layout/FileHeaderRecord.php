@@ -30,7 +30,7 @@ final class FileHeaderRecord implements RecordLayout
             FieldFactory::numeric('fileKind', 143, 1),
             FieldFactory::numeric('generationDate', 144, 8),
             FieldFactory::numeric('generationTime', 152, 6),
-            FieldFactory::numeric('filler6', 158, 9, '0'),
+            FieldFactory::numeric('fileSequenceNumber', 158, 9, '0'),
             FieldFactory::numeric('density', 167, 5, '0'),
             FieldFactory::alpha('filler7', 172, 69, ''),
         ]);
@@ -44,7 +44,7 @@ final class FileHeaderRecord implements RecordLayout
             'recordType' => ItauConstants::RECORD_TYPE_FILE_HEADER,
             'layoutVersion' => ItauConstants::FILE_LAYOUT_VERSION,
             'bankName' => 'BANCO ITAU SA',
-            'filler6' => '0',
+            'fileSequenceNumber' => '0',
             'density' => '0',
         ];
     }

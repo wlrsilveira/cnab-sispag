@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CnabSispag\Bank\Itau;
 
 use CnabSispag\Application\Remittance\Dto\GeneratedRemittanceFile;
+use CnabSispag\Application\Remittance\Dto\GenerateRemittanceOptionsDto;
 use CnabSispag\Application\Remittance\GenerateRemittanceUseCase;
 use CnabSispag\Application\Return\ParseReturnFileUseCase;
 use CnabSispag\Application\Validation\Dto\ValidationResult;
@@ -34,6 +35,7 @@ final class ItauSispag
         array $payments,
         PaymentType $paymentType = PaymentType::Various,
         ?\DateTimeImmutable $generatedAt = null,
+        ?GenerateRemittanceOptionsDto $options = null,
     ): array {
         return $this->generateRemittanceUseCase->execute(
             $company,
@@ -41,6 +43,7 @@ final class ItauSispag
             $payments,
             $paymentType,
             $generatedAt,
+            $options,
         );
     }
 

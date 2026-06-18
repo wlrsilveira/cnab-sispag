@@ -24,6 +24,7 @@ final readonly class RemittanceFile
         public string $statementIdentification = '',
         public string $batchPurpose = '',
         public string $debitHistory = '',
+        public int $fileSequenceNumber = 0,
     ) {
     }
 }

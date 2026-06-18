@@ -119,6 +119,7 @@ final class ItauRemittanceWriter
             'fileKind' => FileKind::Remittance->value,
             'generationDate' => $file->generatedAt->format('dmY'),
             'generationTime' => $file->generatedAt->format('His'),
+            'fileSequenceNumber' => $file->fileSequenceNumber,
         ];
     }
 

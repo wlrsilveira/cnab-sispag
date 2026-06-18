@@ -68,6 +68,7 @@ final class ItauLayoutRoundTripTest extends TestCase
                 'fileKind' => '1',
                 'generationDate' => '16062026',
                 'generationTime' => '103000',
+                'fileSequenceNumber' => '42',
             ],
         ];
 

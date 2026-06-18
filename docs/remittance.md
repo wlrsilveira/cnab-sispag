@@ -15,6 +15,7 @@ public function generateRemittance(
     array $payments,
     PaymentType $paymentType = PaymentType::Various,
     ?DateTimeImmutable $generatedAt = null,
+    ?GenerateRemittanceOptionsDto $options = null,
 ): array;
 ```
 
@@ -42,6 +43,27 @@ new DebitAccountDto(
     companyName: 'EMPRESA LTDA',
 );
 ```
+
+### GenerateRemittanceOptionsDto
+
+O **número sequencial do arquivo** (NSA, header pos. 158–166) deve ser controlado pelo sistema integrador — varia por banco, convênio e conta:
+
+```php
+use CnabSispag\Application\Remittance\Dto\GenerateRemittanceOptionsDto;
+
+new GenerateRemittanceOptionsDto(fileSequenceNumber: 42);
+```
+
+Quando a remessa gera **dois arquivos** (PIX e não-PIX separados), informe números distintos:
+
+```php
+new GenerateRemittanceOptionsDto(
+    pixFileSequenceNumber: 42,
+    nonPixFileSequenceNumber: 43,
+);
+```
+
+Se omitido, o campo permanece zerado (comportamento legado — evite em produção).
 
 ## Tipos de pagamento (header de lote)
 
@@ -107,5 +129,6 @@ A biblioteca valida combinações permitidas antes de gerar o arquivo.
 | D/E/F obrigatórios | Salário sem holerite |
 | W obrigatório | GARE-SP ICMS sem segmento W |
 | Dois arquivos gerados | Lista continha PIX e TED misturados (comportamento esperado) |
+| Arquivo duplicado no banco | NSA repetido — incremente `fileSequenceNumber` a cada envio |
 
 Consulte os guias específicos por modalidade em [payment-types/](./payment-types/pix-key.md).

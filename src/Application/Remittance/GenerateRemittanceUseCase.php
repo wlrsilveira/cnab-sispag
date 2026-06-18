@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CnabSispag\Application\Remittance;
 
 use CnabSispag\Application\Remittance\Dto\GeneratedRemittanceFile;
+use CnabSispag\Application\Remittance\Dto\GenerateRemittanceOptionsDto;
 use CnabSispag\Bank\Itau\Dto\CompanyDto;
 use CnabSispag\Bank\Itau\Dto\DebitAccountDto;
 use CnabSispag\Bank\Itau\Dto\PaymentDto;
@@ -37,8 +38,10 @@ final class GenerateRemittanceUseCase
         array $payments,
         PaymentType $paymentType = PaymentType::Various,
         ?\DateTimeImmutable $generatedAt = null,
+        ?GenerateRemittanceOptionsDto $options = null,
     ): array {
         $generatedAt ??= new \DateTimeImmutable();
+        $options ??= new GenerateRemittanceOptionsDto();
         $remittancePayments = array_map(
             static fn (PaymentDto $payment): RemittancePayment => $payment->toRemittancePayment($paymentType),
             $payments,
@@ -50,11 +53,27 @@ final class GenerateRemittanceUseCase
         $files = [];
 
         if ($separated['pix'] !== []) {
-            $files[] = $this->buildFile($company, $debitAccount, $separated['pix'], $paymentType, $generatedAt, true);
+            $files[] = $this->buildFile(
+                $company,
+                $debitAccount,
+                $separated['pix'],
+                $paymentType,
+                $generatedAt,
+                true,
+                $options->forPixFile(),
+            );
         }
 
         if ($separated['non_pix'] !== []) {
-            $files[] = $this->buildFile($company, $debitAccount, $separated['non_pix'], $paymentType, $generatedAt, false);
+            $files[] = $this->buildFile(
+                $company,
+                $debitAccount,
+                $separated['non_pix'],
+                $paymentType,
+                $generatedAt,
+                false,
+                $options->forNonPixFile(),
+            );
         }
 
         return $files;
@@ -70,6 +89,7 @@ final class GenerateRemittanceUseCase
         PaymentType $paymentType,
         \DateTimeImmutable $generatedAt,
         bool $isPix,
+        int $fileSequenceNumber,
     ): GeneratedRemittanceFile {
         $batches = [];
         $batchNumber = 0;
@@ -90,6 +110,7 @@ final class GenerateRemittanceUseCase
             $debitAccount->statementIdentification,
             $debitAccount->batchPurpose,
             $debitAccount->debitHistory,
+            $fileSequenceNumber,
         );
 
         $content = $this->writer->write($remittanceFile);
