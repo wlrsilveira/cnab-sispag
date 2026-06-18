@@ -66,6 +66,15 @@ final class MessageCatalog
         'validation.batch_total_amount_mismatch' => 'Lote :batch: valor total no trailer (:expected) difere da soma dos pagamentos (:actual).',
         'validation.detail_record_number_gap' => 'Lote :batch: número sequencial do detalhe deveria ser :expected, encontrado :actual.',
         'validation.unknown_payment_method' => 'Lote :batch: forma de pagamento não reconhecida.',
+        'validation.invalid_barcode_check_digit' => 'Linha :line: DAC do código de barras inválido (esperado :expected, encontrado :actual).',
+        'validation.barcode_title_amount_mismatch' => 'Linha :line: valor do código de barras difere do valor do título.',
+        'validation.barcode_all_zeros' => 'Linha :line: código de barras não pode ser zerado para pagamento de boleto.',
+        'validation.invalid_registration_type' => 'Linha :line: tipo de inscrição inválido no campo :field (use 1=CPF ou 2=CNPJ).',
+        'validation.invalid_registration_document' => 'Linha :line: CPF/CNPJ inválido ou ausente no campo :field.',
+        'validation.registration_type_length_mismatch' => 'Linha :line: tipo de inscrição incompatível com o tamanho do documento no campo :field.',
+        'validation.pix_qr_key_or_url_required' => 'Linha :line: chave PIX ou URL do QR Code obrigatória no segmento J-52 PIX (pos. 132-208).',
+        'validation.invalid_pix_qr_key_or_url' => 'Linha :line: chave PIX ou URL do QR Code inválida no segmento J-52 PIX.',
+        'validation.pix_qr_txid_required' => 'Linha :line: TXID obrigatório para QR Code dinâmico (pos. 209-240).',
     ];
 
     public static function get(string $key, array $params = []): string

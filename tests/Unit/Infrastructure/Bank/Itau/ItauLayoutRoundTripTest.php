@@ -275,7 +275,7 @@ final class ItauLayoutRoundTripTest extends TestCase
                 'barcodeCurrencyCode' => '9',
                 'barcodeCheckDigit' => '1',
                 'barcodeDueFactor' => '1234',
-                'barcodeAmount' => '100.00',
+                'barcodeAmount' => '0000010000',
                 'barcodeFreeField' => '1234567890123456789012345',
                 'beneficiaryName' => 'CEDENTE TESTE',
                 'dueDate' => '30062026',

@@ -6,7 +6,9 @@ namespace CnabSispag\Tests\Integration;
 
 use CnabSispag\Bank\Itau\Dto\CompanyDto;
 use CnabSispag\Bank\Itau\Dto\DebitAccountDto;
+use CnabSispag\Bank\Itau\Dto\BankSlipPaymentDto;
 use CnabSispag\Bank\Itau\Dto\PixKeyPaymentDto;
+use CnabSispag\Bank\Itau\Dto\PixQrCodePaymentDto;
 use CnabSispag\Bank\Itau\Dto\TransferPaymentDto;
 use CnabSispag\Bank\Itau\ItauSispag;
 use CnabSispag\Domain\Shared\Enum\PaymentMethod;
@@ -199,6 +201,103 @@ final class LayoutValidationTest extends TestCase
             $result->violations,
             static fn ($violation) => $violation->code === 'invalid_pix_key_format',
         ));
+    }
+
+    public function test_rejected_boleto_fixture_fails_semantic_validation(): void
+    {
+        $content = str_replace("\n", "\r\n", file_get_contents(__DIR__ . '/../Fixtures/Rejected/boleto2.txt'));
+
+        if (!str_ends_with($content, "\r\n")) {
+            $content .= "\r\n";
+        }
+
+        $result = $this->sispag->validateLayout($content);
+
+        self::assertFalse($result->isValid());
+        $codes = array_map(static fn ($violation) => $violation->code, $result->violations);
+
+        self::assertContains('invalid_barcode_check_digit', $codes);
+        self::assertContains('barcode_title_amount_mismatch', $codes);
+        self::assertContains('invalid_registration_document', $codes);
+    }
+
+    public function test_rejected_pix_qr_fixture_fails_semantic_validation(): void
+    {
+        $content = str_replace("\n", "\r\n", file_get_contents(__DIR__ . '/../Fixtures/Rejected/pixcc.txt'));
+
+        if (!str_ends_with($content, "\r\n")) {
+            $content .= "\r\n";
+        }
+
+        $result = $this->sispag->validateLayout($content);
+
+        self::assertFalse($result->isValid());
+        $codes = array_map(static fn ($violation) => $violation->code, $result->violations);
+
+        self::assertContains('invalid_pix_qr_key_or_url', $codes);
+        self::assertContains('invalid_registration_document', $codes);
+    }
+
+    public function test_valid_bank_slip_with_linha_digitavel_passes_validation(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            new CompanyDto(2, '52802295000113', 'AMA - ASSOCIACAO DE AMIGOS DO AUTISTA'),
+            new DebitAccountDto(2, '52802295000113', '1234', '1234567890', '1', 'AMA - ASSOCIACAO DE AMIGOS DO AUTISTA'),
+            [
+                new BankSlipPaymentDto(
+                    paymentMethod: PaymentMethod::OtherBankSlip,
+                    companyDocumentNumber: '19243',
+                    amount: 2243.70,
+                    paymentDate: new \DateTimeImmutable('2026-06-17'),
+                    beneficiaryName: 'MOPEN SERVICOS EM TEC E COMERC',
+                    barcode: '48190.00003 00005.150545 97527.830141 1 14850000224370',
+                    payerRegistrationType: 2,
+                    payerRegistrationNumber: '52802295000113',
+                    payerName: 'AMA - ASSOCIACAO DE AMIGOS DO AUTISTA',
+                    beneficiaryRegistrationType: 2,
+                    beneficiaryRegistrationNumber: '27263527000165',
+                    dueDate: new \DateTimeImmutable('2026-06-20'),
+                    titleAmount: 2243.70,
+                ),
+            ],
+            PaymentType::Suppliers,
+            new \DateTimeImmutable('2026-06-17 10:00:00'),
+        );
+
+        $result = $this->sispag->validateLayout($files[0]->content);
+
+        self::assertTrue($result->isValid(), implode('; ', $result->messages()));
+    }
+
+    public function test_valid_pix_qr_caixa_payload_passes_validation(): void
+    {
+        $payload = '00020101021226900014br.gov.bcb.pix2568pix-qrcode.caixa.gov.br/api/v2/cobv/86fccff844744324b57627607ffff9925204000053039865802BR5923CAIXA ECONOMICA FEDERAL6008Brasilia62070503***63041469';
+
+        $files = $this->sispag->generateRemittance(
+            new CompanyDto(2, '52802295000113', 'AMA - ASSOCIACAO DE AMIGOS DO AUTISTA'),
+            new DebitAccountDto(2, '52802295000113', '1234', '1234567890', '1', 'AMA - ASSOCIACAO DE AMIGOS DO AUTISTA'),
+            [
+                new PixQrCodePaymentDto(
+                    companyDocumentNumber: '19639',
+                    amount: 37967.48,
+                    paymentDate: new \DateTimeImmutable('2026-06-17'),
+                    beneficiaryName: 'CAIXA ECONOMICA FEDERAL - FGTS',
+                    barcode: '00000000000000000000000000000000000000000000',
+                    payerRegistrationType: 2,
+                    payerRegistrationNumber: '52802295000113',
+                    payerName: 'AMA - ASSOCIACAO DE AMIGOS DO AUTISTA',
+                    beneficiaryRegistrationType: 2,
+                    beneficiaryRegistrationNumber: '00360305000104',
+                    qrCodePayload: $payload,
+                ),
+            ],
+            PaymentType::Suppliers,
+            new \DateTimeImmutable('2026-06-17 10:00:00'),
+        );
+
+        $result = $this->sispag->validateLayout($files[0]->content);
+
+        self::assertTrue($result->isValid(), implode('; ', $result->messages()));
     }
 
     private function generateTedRemittance(): string

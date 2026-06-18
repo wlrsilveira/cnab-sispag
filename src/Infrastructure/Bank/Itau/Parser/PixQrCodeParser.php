@@ -6,13 +6,18 @@ namespace CnabSispag\Infrastructure\Bank\Itau\Parser;
 
 final class PixQrCodeParser
 {
+    public function __construct(
+        private readonly EmvTlvParser $tlvParser = new EmvTlvParser(),
+    ) {
+    }
+
     /**
      * @return array{pixKeyOrUrl: string, txid: string}
      */
     public function parse(string $payload): array
     {
-        $txid = $this->extractTag($payload, '05') ?? '';
-        $pixKeyOrUrl = $this->extractMerchantAccountInfo($payload);
+        $pixKeyOrUrl = $this->extractPixKeyOrUrl($payload);
+        $txid = $this->tlvParser->findNestedTag($payload, '62', '05') ?? '';
 
         return [
             'pixKeyOrUrl' => $pixKeyOrUrl,
@@ -20,32 +25,58 @@ final class PixQrCodeParser
         ];
     }
 
-    private function extractMerchantAccountInfo(string $payload): string
+    private function extractPixKeyOrUrl(string $payload): string
     {
-        $merchantBlock = $this->extractTag($payload, '26')
-            ?? $this->extractTag($payload, '27')
-            ?? '';
+        foreach (['26', '27'] as $merchantTag) {
+            foreach ($this->merchantBlocks($payload, $merchantTag) as $block) {
+                $url = $this->tlvParser->findTag($block, '25');
 
-        if ($merchantBlock === '') {
-            return '';
+                if ($url !== null && $url !== '') {
+                    return $url;
+                }
+
+                $key = $this->tlvParser->findTag($block, '01');
+
+                if ($key !== null && $key !== '') {
+                    return $key;
+                }
+            }
         }
 
-        return $this->extractTag($merchantBlock, '25')
-            ?? $this->extractTag($merchantBlock, '01')
-            ?? $merchantBlock;
+        return '';
     }
 
-    private function extractTag(string $payload, string $tag): ?string
+    /**
+     * @return list<string>
+     */
+    private function merchantBlocks(string $payload, string $merchantTag): array
     {
-        $pattern = '/'.preg_quote($tag, '/').'(\d{2})(.{0,99}?)(?=\d{2}[0-9A-Z]|$)/s';
+        $blocks = [];
+        $offset = 0;
+        $length = strlen($payload);
 
-        if (preg_match($pattern, $payload, $matches) !== 1) {
-            return null;
+        while ($offset + 4 <= $length) {
+            $tag = substr($payload, $offset, 2);
+
+            if (!ctype_digit($tag)) {
+                break;
+            }
+
+            $size = (int) substr($payload, $offset + 2, 2);
+
+            if ($size < 0 || $offset + 4 + $size > $length) {
+                break;
+            }
+
+            $value = substr($payload, $offset + 4, $size);
+
+            if ($tag === $merchantTag) {
+                $blocks[] = $value;
+            }
+
+            $offset += 4 + $size;
         }
 
-        $length = (int) $matches[1];
-        $value = substr($matches[2], 0, $length);
-
-        return $value !== '' ? $value : null;
+        return $blocks;
     }
 }

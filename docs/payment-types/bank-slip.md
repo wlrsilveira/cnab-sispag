@@ -35,7 +35,7 @@ new BankSlipPaymentDto(
 
 ## Código de barras
 
-Informe a linha digitável ou código de barras de 44/47 dígitos. A biblioteca usa `BarcodeParser` para decompor o código nos campos do segmento J:
+Informe a linha digitável ou código de barras de 44/47 dígitos. A biblioteca usa `BarcodeParser` para decompor o código nos campos do segmento J (linha digitável é convertida automaticamente para 44 dígitos):
 
 - Banco favorecido
 - Moeda, DV, fator de vencimento

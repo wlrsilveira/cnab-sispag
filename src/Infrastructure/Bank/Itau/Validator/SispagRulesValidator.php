@@ -14,6 +14,7 @@ use CnabSispag\Domain\Shared\Enum\PixKeyType;
 use CnabSispag\Domain\Shared\Enum\SegmentType;
 use CnabSispag\Domain\Shared\Exception\InvalidBatchException;
 use CnabSispag\Domain\Shared\Exception\InvalidPaymentException;
+use CnabSispag\Domain\Shared\Service\BarcodeValidator;
 use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\ItauConstants;
 use CnabSispag\Infrastructure\I18n\MessageCatalog;
@@ -22,6 +23,7 @@ final class SispagRulesValidator
 {
     public function __construct(
         private readonly BatchSegmentRules $batchSegmentRules = new BatchSegmentRules(),
+        private readonly BarcodeValidator $barcodeValidator = new BarcodeValidator(),
     ) {
     }
 
@@ -150,6 +152,12 @@ final class SispagRulesValidator
 
         $violations = array_merge($violations, $this->validateDetailRecordNumbers($batch, $batchIndex));
         $violations = array_merge($violations, $this->validatePixPayments($batch));
+
+        if ($fileKind === FileKind::Remittance) {
+            $violations = array_merge($violations, $this->validateBankSlipPayments($batch));
+            $violations = array_merge($violations, $this->validatePixQrPayments($batch));
+            $violations = array_merge($violations, $this->validateJ52Registration($batch));
+        }
 
         return $violations;
     }
@@ -326,5 +334,263 @@ final class SispagRulesValidator
         }
 
         return $violations;
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validateBankSlipPayments(ValidationBatchContext $batch): array
+    {
+        if (!in_array($batch->paymentMethod, [PaymentMethod::ItauBankSlip, PaymentMethod::OtherBankSlip], true)) {
+            return [];
+        }
+
+        $violations = [];
+
+        foreach ($batch->paymentLines as $paymentIndex => $lines) {
+            $segmentJ = $this->findPrimarySegmentJLine($lines);
+
+            if ($segmentJ === null) {
+                continue;
+            }
+
+            $lineNumber = ($batch->detailLines[$paymentIndex] ?? 0) + $segmentJ['index'];
+            $line = $segmentJ['line'];
+            $barcode = $this->barcodeValidator->composeFromSegmentLine($line);
+
+            if ($this->barcodeValidator->isAllZeros($barcode)) {
+                $violations[] = new Violation(
+                    'barcode_all_zeros',
+                    MessageCatalog::get('validation.barcode_all_zeros', ['line' => (string) $lineNumber]),
+                    $lineNumber,
+                    'barcode',
+                );
+
+                continue;
+            }
+
+            if (!$this->barcodeValidator->isValidCheckDigit($barcode)) {
+                $violations[] = new Violation(
+                    'invalid_barcode_check_digit',
+                    MessageCatalog::get('validation.invalid_barcode_check_digit', [
+                        'line' => (string) $lineNumber,
+                        'expected' => (string) $this->barcodeValidator->calculateCheckDigit($barcode),
+                        'actual' => substr($barcode, 4, 1),
+                    ]),
+                    $lineNumber,
+                    'barcodeCheckDigit',
+                );
+            }
+
+            $barcodeAmount = $this->barcodeValidator->barcodeAmountInCents($barcode);
+            $titleAmount = $this->barcodeValidator->titleAmountInCents($line);
+
+            if ($barcodeAmount > 0 && $titleAmount > 0 && $barcodeAmount !== $titleAmount) {
+                $violations[] = new Violation(
+                    'barcode_title_amount_mismatch',
+                    MessageCatalog::get('validation.barcode_title_amount_mismatch', ['line' => (string) $lineNumber]),
+                    $lineNumber,
+                    'titleAmount',
+                );
+            }
+        }
+
+        return $violations;
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validatePixQrPayments(ValidationBatchContext $batch): array
+    {
+        if ($batch->paymentMethod !== PaymentMethod::PixQrCode) {
+            return [];
+        }
+
+        $violations = [];
+
+        foreach ($batch->paymentLines as $paymentIndex => $lines) {
+            $segmentJ52 = $this->findSegmentJ52Line($lines);
+
+            if ($segmentJ52 === null) {
+                continue;
+            }
+
+            $lineNumber = ($batch->detailLines[$paymentIndex] ?? 0) + $segmentJ52['index'];
+            $line = $segmentJ52['line'];
+            $pixKeyOrUrl = trim(substr($line, 131, 77));
+            $txid = trim(substr($line, 208, 32));
+
+            if ($pixKeyOrUrl === '') {
+                $violations[] = new Violation(
+                    'pix_qr_key_or_url_required',
+                    MessageCatalog::get('validation.pix_qr_key_or_url_required', ['line' => (string) $lineNumber]),
+                    $lineNumber,
+                    'pixKeyOrUrl',
+                );
+
+                continue;
+            }
+
+            if (!DocumentNormalizer::isValidPixQrKeyOrUrl($pixKeyOrUrl)) {
+                $violations[] = new Violation(
+                    'invalid_pix_qr_key_or_url',
+                    MessageCatalog::get('validation.invalid_pix_qr_key_or_url', ['line' => (string) $lineNumber]),
+                    $lineNumber,
+                    'pixKeyOrUrl',
+                );
+            }
+
+            if ($this->requiresPixQrTxid($pixKeyOrUrl) && $txid === '') {
+                $violations[] = new Violation(
+                    'pix_qr_txid_required',
+                    MessageCatalog::get('validation.pix_qr_txid_required', ['line' => (string) $lineNumber]),
+                    $lineNumber,
+                    'txid',
+                );
+            }
+        }
+
+        return $violations;
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validateJ52Registration(ValidationBatchContext $batch): array
+    {
+        if ($batch->paymentMethod === null || $batch->paymentMethod->batchProfile() !== BatchProfile::BankSlip) {
+            return [];
+        }
+
+        $violations = [];
+
+        foreach ($batch->paymentLines as $paymentIndex => $lines) {
+            $segmentJ52 = $this->findSegmentJ52Line($lines);
+
+            if ($segmentJ52 === null) {
+                continue;
+            }
+
+            $lineNumber = ($batch->detailLines[$paymentIndex] ?? 0) + $segmentJ52['index'];
+            $line = $segmentJ52['line'];
+
+            $violations = array_merge(
+                $violations,
+                $this->validateRegistrationField($lineNumber, $line, 19, 20, 15, 'payerRegistrationType', 'payerRegistrationNumber'),
+                $this->validateRegistrationField($lineNumber, $line, 75, 76, 15, 'beneficiaryRegistrationType', 'beneficiaryRegistrationNumber'),
+            );
+        }
+
+        return $violations;
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validateRegistrationField(
+        int $lineNumber,
+        string $line,
+        int $typeOffset,
+        int $numberOffset,
+        int $numberLength,
+        string $typeField,
+        string $numberField,
+    ): array {
+        $violations = [];
+        $type = (int) substr($line, $typeOffset, 1);
+        $number = trim(substr($line, $numberOffset, $numberLength));
+
+        if (!in_array($type, [1, 2], true)) {
+            $violations[] = new Violation(
+                'invalid_registration_type',
+                MessageCatalog::get('validation.invalid_registration_type', [
+                    'line' => (string) $lineNumber,
+                    'field' => $typeField,
+                ]),
+                $lineNumber,
+                $typeField,
+            );
+
+            return $violations;
+        }
+
+        if (DocumentNormalizer::isBlankRegistrationNumber($number)) {
+            $violations[] = new Violation(
+                'invalid_registration_document',
+                MessageCatalog::get('validation.invalid_registration_document', [
+                    'line' => (string) $lineNumber,
+                    'field' => $numberField,
+                ]),
+                $lineNumber,
+                $numberField,
+            );
+
+            return $violations;
+        }
+
+        if (!DocumentNormalizer::registrationLengthMatchesType($type, $number)) {
+            $violations[] = new Violation(
+                'registration_type_length_mismatch',
+                MessageCatalog::get('validation.registration_type_length_mismatch', [
+                    'line' => (string) $lineNumber,
+                    'field' => $numberField,
+                ]),
+                $lineNumber,
+                $numberField,
+            );
+
+            return $violations;
+        }
+
+        if (!DocumentNormalizer::isValidRegistration($type, $number)) {
+            $violations[] = new Violation(
+                'invalid_registration_document',
+                MessageCatalog::get('validation.invalid_registration_document', [
+                    'line' => (string) $lineNumber,
+                    'field' => $numberField,
+                ]),
+                $lineNumber,
+                $numberField,
+            );
+        }
+
+        return $violations;
+    }
+
+    private function requiresPixQrTxid(string $pixKeyOrUrl): bool
+    {
+        return str_contains(strtolower($pixKeyOrUrl), '/cobv/')
+            || str_contains(strtolower($pixKeyOrUrl), '/cob/');
+    }
+
+    /**
+     * @param list<string> $lines
+     * @return array{line: string, index: int}|null
+     */
+    private function findPrimarySegmentJLine(array $lines): ?array
+    {
+        foreach ($lines as $index => $line) {
+            if (substr($line, 13, 1) === 'J' && substr($line, 17, 2) !== ItauConstants::OPTIONAL_RECORD_J52) {
+                return ['line' => $line, 'index' => $index];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param list<string> $lines
+     * @return array{line: string, index: int}|null
+     */
+    private function findSegmentJ52Line(array $lines): ?array
+    {
+        foreach ($lines as $index => $line) {
+            if (substr($line, 13, 1) === 'J' && substr($line, 17, 2) === ItauConstants::OPTIONAL_RECORD_J52) {
+                return ['line' => $line, 'index' => $index];
+            }
+        }
+
+        return null;
     }
 }

@@ -83,6 +83,30 @@ As regras de segmentos reutilizam `BatchSegmentRules` — as mesmas validadas na
 | Identificação 04 (Chave Pix) no Segmento A | `pix_key_requires_transfer_code_04` |
 | Chave PIX obrigatória no Segmento B | `pix_key_required` |
 
+### 5. Boletos (formas 30 e 31)
+
+| Verificação | Código |
+|---|---|
+| DAC mod-11 FEBRABAN do código de barras | `invalid_barcode_check_digit` |
+| Valor no barcode ≠ valor do título | `barcode_title_amount_mismatch` |
+| Código de barras zerado | `barcode_all_zeros` |
+
+### 6. PIX QR Code (forma 47)
+
+| Verificação | Código |
+|---|---|
+| Chave/URL do QR ausente | `pix_qr_key_or_url_required` |
+| Chave/URL do QR inválida | `invalid_pix_qr_key_or_url` |
+| TXID ausente (QR dinâmico `/cobv/`) | `pix_qr_txid_required` |
+
+### 7. Segmento J-52 / J-52 PIX (remessa)
+
+| Verificação | Código |
+|---|---|
+| Tipo de inscrição inválido | `invalid_registration_type` |
+| CPF/CNPJ inválido ou ausente | `invalid_registration_document` |
+| Tipo incompatível com tamanho do documento | `registration_type_length_mismatch` |
+
 ## ValidationResult
 
 | Método/Propriedade | Descrição |
@@ -110,3 +134,4 @@ O validador funciona para **remessa e retorno**. Regras específicas de remessa 
 - Não valida saldo em conta, limites diários ou cadastro de favorecidos no banco.
 - Não substitui a homologação oficial do Itaú.
 - Arquivos com erros estruturais graves (linhas com tamanho errado) interrompem a validação de campos/regras para evitar falsos positivos.
+- Validações semânticas de boleto, PIX QR e J-52 aplicam-se apenas a **remessas** (`fileKind = 1`).

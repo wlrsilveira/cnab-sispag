@@ -17,7 +17,7 @@ final class SegmentJRecord implements RecordLayout
             FieldFactory::numeric('barcodeCurrencyCode', 21, 1),
             FieldFactory::numeric('barcodeCheckDigit', 22, 1),
             FieldFactory::numeric('barcodeDueFactor', 23, 4),
-            FieldFactory::decimal('barcodeAmount', 27, 10),
+            FieldFactory::numeric('barcodeAmount', 27, 10),
             FieldFactory::numeric('barcodeFreeField', 37, 25),
             FieldFactory::alpha('beneficiaryName', 62, 30),
             FieldFactory::numeric('dueDate', 92, 8),
