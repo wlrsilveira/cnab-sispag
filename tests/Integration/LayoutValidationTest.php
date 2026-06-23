@@ -37,6 +37,43 @@ final class LayoutValidationTest extends TestCase
         self::assertTrue($this->sispag->validateLayout($content)->isValid());
     }
 
+    public function test_multi_payment_pix_remittance_passes_validation(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            new CompanyDto(2, '12345678000199', 'EMPRESA TESTE LTDA'),
+            new DebitAccountDto(2, '12345678000199', '1234', '1234567890', '1', 'EMPRESA TESTE LTDA'),
+            [
+                new PixKeyPaymentDto(
+                    companyDocumentNumber: 'PIX001',
+                    amount: 100.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAV PIX 1',
+                    pixKey: '11999998888',
+                    pixKeyType: PixKeyType::Phone,
+                ),
+                new PixKeyPaymentDto(
+                    companyDocumentNumber: 'PIX002',
+                    amount: 200.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAV PIX 2',
+                    pixKey: 'joao@email.com',
+                    pixKeyType: PixKeyType::Email,
+                ),
+            ],
+            PaymentType::Suppliers,
+            new \DateTimeImmutable('2026-06-16 10:30:00'),
+        );
+
+        $content = $files[0]->content;
+        $lines = $this->extractLines($content);
+
+        self::assertSame('00001', substr($lines[2], 8, 5));
+        self::assertSame('00001', substr($lines[3], 8, 5));
+        self::assertSame('00002', substr($lines[4], 8, 5));
+        self::assertSame('00002', substr($lines[5], 8, 5));
+        self::assertTrue($this->sispag->validateLayout($content)->isValid());
+    }
+
     public function test_pix_missing_transfer_identification_fails_validation(): void
     {
         $content = $this->generatePixRemittance();

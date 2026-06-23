@@ -76,6 +76,7 @@ final class ItauRemittanceWriter
             $totalAmount = 0.0;
 
             foreach ($batch->payments as $payment) {
+                $recordNumber = $sequencer->nextDetail();
                 $segmentCounters = [];
                 foreach ($payment->segments() as $segment) {
                     $recordCount++;
@@ -85,7 +86,7 @@ final class ItauRemittanceWriter
                         $segment,
                         $payment,
                         $batchNumber,
-                        $sequencer->nextDetail(),
+                        $recordNumber,
                         $occurrence,
                     );
                 }
