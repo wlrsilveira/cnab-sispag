@@ -83,7 +83,16 @@ As regras de segmentos reutilizam `BatchSegmentRules` — as mesmas validadas na
 | Identificação 04 (Chave Pix) no Segmento A | `pix_key_requires_transfer_code_04` |
 | Chave PIX obrigatória no Segmento B | `pix_key_required` |
 
-### 5. Boletos (formas 30 e 31)
+### 5. Transferências TED e crédito em conta (formas 6, 7, 41, 43)
+
+| Verificação | Código |
+|---|---|
+| TED (41/43) com favorecido no Itaú (341) | `transfer_ted_to_itau` |
+| TED (41/43) sem câmara 018 | `transfer_ted_requires_chamber_018` |
+| Crédito (6/7) com favorecido fora do Itaú | `transfer_credit_requires_itau` |
+| Crédito (6/7) sem câmara 000 | `transfer_credit_requires_chamber_000` |
+
+### 6. Boletos (formas 30 e 31)
 
 | Verificação | Código |
 |---|---|
@@ -91,7 +100,7 @@ As regras de segmentos reutilizam `BatchSegmentRules` — as mesmas validadas na
 | Valor no barcode ≠ valor do título | `barcode_title_amount_mismatch` |
 | Código de barras zerado | `barcode_all_zeros` |
 
-### 6. PIX QR Code (forma 47)
+### 7. PIX QR Code (forma 47)
 
 | Verificação | Código |
 |---|---|
@@ -99,7 +108,7 @@ As regras de segmentos reutilizam `BatchSegmentRules` — as mesmas validadas na
 | Chave/URL do QR inválida | `invalid_pix_qr_key_or_url` |
 | TXID ausente (QR dinâmico `/cobv/`) | `pix_qr_txid_required` |
 
-### 7. Segmento J-52 / J-52 PIX (remessa)
+### 8. Segmento J-52 / J-52 PIX (remessa)
 
 | Verificação | Código |
 |---|---|

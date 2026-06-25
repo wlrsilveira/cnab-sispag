@@ -35,4 +35,8 @@ final class ItauConstants
     public const PIX_CHAMBER_CODE = '009';
 
     public const PIX_TRANSFER_KEY = '04';
+
+    public const TED_CHAMBER_CODE = '018';
+
+    public const CREDIT_CHAMBER_CODE = '000';
 }

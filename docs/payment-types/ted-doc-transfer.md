@@ -44,9 +44,22 @@ new TransferPaymentDto(
 
 | Forma | chamberCode típico |
 |---|---|
-| TED | 18 |
-| DOC | 03 (C) ou 07 (D) |
-| Crédito Itaú | 000 |
+| TED (outros bancos) | 18 |
+| Crédito Itaú (mesmo banco) | 000 |
+| DOC (obsoleto) | 03 (C) ou 07 (D) |
+
+## Como escolher a forma de pagamento
+
+A biblioteca **não infere** automaticamente TED, DOC ou crédito. Você deve informar `paymentMethod` e `chamberCode` corretamente:
+
+| Situação | Forma | `PaymentMethod` | `chamberCode` |
+|---|---|---|---|
+| Favorecido no **Itaú (341)** | Crédito em conta | `CreditSameHolder` (6) ou `CreditOtherHolder` (7) | `0` |
+| Favorecido em **outro banco** | TED | `TedSameHolder` (41) ou `TedOtherHolder` (43) | `18` |
+
+> **Atenção:** a regra antiga "mesmo banco = TED, banco diferente = DOC" **não se aplica**. DOC foi descontinuado para transferências interbancárias; use TED. Transferências para contas Itaú devem usar **crédito em conta**, não TED.
+
+A distinção entre **mesmo titular** e **outro titular** depende se o CPF/CNPJ do favorecido coincide com o pagador.
 
 ## Salários com holerite
 
@@ -56,14 +69,14 @@ Para `PaymentType::Salaries`, segmentos **D, E e F** são obrigatórios:
 use CnabSispag\Bank\Itau\Dto\OptionalSegmentDto;
 
 new TransferPaymentDto(
-    paymentMethod: PaymentMethod::TedOtherHolder,
+    paymentMethod: PaymentMethod::CreditOtherHolder,
     companyDocumentNumber: 'SAL001',
     amount: 3500.00,
     paymentDate: new DateTimeImmutable('2026-06-20'),
     beneficiaryName: 'COLABORADOR',
-    beneficiaryAgencyAccount: '00001234567890123456',
+    beneficiaryAgencyAccount: '12345678901234567890',
     beneficiaryBankCode: 341,
-    chamberCode: 18,
+    chamberCode: 0,
     optionalSegments: new OptionalSegmentDto(
         segmentD: [
             'paymentMonthYear' => '062026',

@@ -154,6 +154,7 @@ final class SispagRulesValidator
         $violations = array_merge($violations, $this->validatePixPayments($batch));
 
         if ($fileKind === FileKind::Remittance) {
+            $violations = array_merge($violations, $this->validateTransferPayments($batch));
             $violations = array_merge($violations, $this->validateBankSlipPayments($batch));
             $violations = array_merge($violations, $this->validatePixQrPayments($batch));
             $violations = array_merge($violations, $this->validateJ52Registration($batch));
@@ -330,6 +331,93 @@ final class SispagRulesValidator
                     $segmentBLineNumber,
                     'pixKey',
                 );
+            }
+        }
+
+        return $violations;
+    }
+
+    /**
+     * @return list<Violation>
+     */
+    private function validateTransferPayments(ValidationBatchContext $batch): array
+    {
+        if ($batch->paymentMethod === null) {
+            return [];
+        }
+
+        $transferMethods = [
+            PaymentMethod::CreditSameHolder,
+            PaymentMethod::CreditOtherHolder,
+            PaymentMethod::TedSameHolder,
+            PaymentMethod::TedOtherHolder,
+        ];
+
+        if (!in_array($batch->paymentMethod, $transferMethods, true)) {
+            return [];
+        }
+
+        $violations = [];
+        $itauBankCode = (int) ItauConstants::BANK_CODE;
+
+        foreach ($batch->paymentLines as $paymentIndex => $lines) {
+            $segmentA = $lines[0] ?? null;
+
+            if ($segmentA === null || substr($segmentA, 13, 1) !== 'A') {
+                continue;
+            }
+
+            $lineNumber = $batch->detailLines[$paymentIndex] ?? null;
+            $chamber = trim(substr($segmentA, 17, 3));
+            $beneficiaryBank = (int) trim(substr($segmentA, 20, 3));
+            $method = $batch->paymentMethod;
+
+            if (in_array($method, [PaymentMethod::TedSameHolder, PaymentMethod::TedOtherHolder], true)) {
+                if ($beneficiaryBank === $itauBankCode) {
+                    $violations[] = new Violation(
+                        'transfer_ted_to_itau',
+                        MessageCatalog::get('validation.transfer_ted_to_itau', [
+                            'line' => (string) $lineNumber,
+                        ]),
+                        $lineNumber,
+                        'beneficiaryBankCode',
+                    );
+                }
+
+                if ($chamber !== ItauConstants::TED_CHAMBER_CODE) {
+                    $violations[] = new Violation(
+                        'transfer_ted_requires_chamber_018',
+                        MessageCatalog::get('validation.transfer_ted_requires_chamber_018', [
+                            'line' => (string) $lineNumber,
+                        ]),
+                        $lineNumber,
+                        'chamberCode',
+                    );
+                }
+            }
+
+            if (in_array($method, [PaymentMethod::CreditSameHolder, PaymentMethod::CreditOtherHolder], true)) {
+                if ($beneficiaryBank !== $itauBankCode) {
+                    $violations[] = new Violation(
+                        'transfer_credit_requires_itau',
+                        MessageCatalog::get('validation.transfer_credit_requires_itau', [
+                            'line' => (string) $lineNumber,
+                        ]),
+                        $lineNumber,
+                        'beneficiaryBankCode',
+                    );
+                }
+
+                if ($chamber !== ItauConstants::CREDIT_CHAMBER_CODE) {
+                    $violations[] = new Violation(
+                        'transfer_credit_requires_chamber_000',
+                        MessageCatalog::get('validation.transfer_credit_requires_chamber_000', [
+                            'line' => (string) $lineNumber,
+                        ]),
+                        $lineNumber,
+                        'chamberCode',
+                    );
+                }
             }
         }
 

@@ -107,6 +107,73 @@ final class LayoutValidationTest extends TestCase
         self::assertTrue($this->sispag->validateLayout($content)->isValid());
     }
 
+    public function test_valid_itau_credit_remittance_passes_validation(): void
+    {
+        $content = $this->generateItauCreditRemittance();
+
+        self::assertTrue($this->sispag->validateLayout($content)->isValid());
+    }
+
+    public function test_transfer_ted_to_itau_fails_validation(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            new CompanyDto(2, '12345678000199', 'EMPRESA TESTE LTDA'),
+            new DebitAccountDto(2, '12345678000199', '1234', '1234567890', '1', 'EMPRESA TESTE LTDA'),
+            [
+                new TransferPaymentDto(
+                    paymentMethod: PaymentMethod::TedOtherHolder,
+                    companyDocumentNumber: 'TED001',
+                    amount: 500.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAVORECIDO ITAU',
+                    beneficiaryAgencyAccount: '12345678901234567890',
+                    beneficiaryBankCode: 341,
+                    chamberCode: 18,
+                ),
+            ],
+            PaymentType::Suppliers,
+            new \DateTimeImmutable('2026-06-16 10:30:00'),
+        );
+
+        $result = $this->sispag->validateLayout($files[0]->content);
+
+        self::assertFalse($result->isValid());
+        self::assertNotEmpty(array_filter(
+            $result->violations,
+            static fn ($violation) => $violation->code === 'transfer_ted_to_itau',
+        ));
+    }
+
+    public function test_transfer_credit_to_other_bank_fails_validation(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            new CompanyDto(2, '12345678000199', 'EMPRESA TESTE LTDA'),
+            new DebitAccountDto(2, '12345678000199', '1234', '1234567890', '1', 'EMPRESA TESTE LTDA'),
+            [
+                new TransferPaymentDto(
+                    paymentMethod: PaymentMethod::CreditOtherHolder,
+                    companyDocumentNumber: 'CRD001',
+                    amount: 500.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAVORECIDO BRADESCO',
+                    beneficiaryAgencyAccount: '00001234567890123456',
+                    beneficiaryBankCode: 237,
+                    chamberCode: 0,
+                ),
+            ],
+            PaymentType::Suppliers,
+            new \DateTimeImmutable('2026-06-16 10:30:00'),
+        );
+
+        $result = $this->sispag->validateLayout($files[0]->content);
+
+        self::assertFalse($result->isValid());
+        self::assertNotEmpty(array_filter(
+            $result->violations,
+            static fn ($violation) => $violation->code === 'transfer_credit_requires_itau',
+        ));
+    }
+
     public function test_valid_return_file_passes_validation(): void
     {
         $content = $this->returnFixtures->buildTedPaidReturn();
@@ -352,6 +419,30 @@ final class LayoutValidationTest extends TestCase
                     beneficiaryAgencyAccount: '00001234567890123456',
                     beneficiaryBankCode: 237,
                     chamberCode: 18,
+                ),
+            ],
+            PaymentType::Suppliers,
+            new \DateTimeImmutable('2026-06-16 10:30:00'),
+        );
+
+        return $files[0]->content;
+    }
+
+    private function generateItauCreditRemittance(): string
+    {
+        $files = $this->sispag->generateRemittance(
+            new CompanyDto(2, '12345678000199', 'EMPRESA TESTE LTDA'),
+            new DebitAccountDto(2, '12345678000199', '1234', '1234567890', '1', 'EMPRESA TESTE LTDA'),
+            [
+                new TransferPaymentDto(
+                    paymentMethod: PaymentMethod::CreditOtherHolder,
+                    companyDocumentNumber: 'CRD001',
+                    amount: 500.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'FAVORECIDO ITAU',
+                    beneficiaryAgencyAccount: '12345678901234567890',
+                    beneficiaryBankCode: 341,
+                    chamberCode: 0,
                 ),
             ],
             PaymentType::Suppliers,

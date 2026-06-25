@@ -75,6 +75,10 @@ final class MessageCatalog
         'validation.pix_qr_key_or_url_required' => 'Linha :line: chave PIX ou URL do QR Code obrigatória no segmento J-52 PIX (pos. 132-208).',
         'validation.invalid_pix_qr_key_or_url' => 'Linha :line: chave PIX ou URL do QR Code inválida no segmento J-52 PIX.',
         'validation.pix_qr_txid_required' => 'Linha :line: TXID obrigatório para QR Code dinâmico (pos. 209-240).',
+        'validation.transfer_ted_to_itau' => 'Linha :line: TED (formas 41/43) não se aplica a favorecido no Itaú (341). Use crédito em conta (formas 6/7) com câmara 000.',
+        'validation.transfer_ted_requires_chamber_018' => 'Linha :line: TED (formas 41/43) exige câmara 018 no segmento A.',
+        'validation.transfer_credit_requires_itau' => 'Linha :line: crédito em conta (formas 6/7) exige favorecido no Itaú (341). Para outros bancos, use TED (formas 41/43) com câmara 018.',
+        'validation.transfer_credit_requires_chamber_000' => 'Linha :line: crédito em conta (formas 6/7) exige câmara 000 no segmento A.',
     ];
 
     public static function get(string $key, array $params = []): string
