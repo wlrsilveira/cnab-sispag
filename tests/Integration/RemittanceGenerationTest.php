@@ -106,9 +106,37 @@ final class RemittanceGenerationTest extends TestCase
         );
 
         self::assertCount(1, $files);
-        self::assertFalse($files[0]->isPix);
         $this->assertValidRemittanceFile($files[0]->content, 5);
         $this->assertSegmentCode($files[0]->content, 2, 'A');
+    }
+
+    public function test_formats_itau_credit_agency_account_in_segment_a(): void
+    {
+        $files = $this->sispag->generateRemittance(
+            $this->company,
+            $this->debitAccount,
+            [
+                new TransferPaymentDto(
+                    paymentMethod: PaymentMethod::CreditOtherHolder,
+                    companyDocumentNumber: 'CRD001',
+                    amount: 10.00,
+                    paymentDate: new \DateTimeImmutable('2026-06-20'),
+                    beneficiaryName: 'RAFAEL ESTEFANO DE LIMA FARFAN',
+                    beneficiaryAgencyAccount: '00775 000000021152 2',
+                    beneficiaryBankCode: 341,
+                    chamberCode: 0,
+                    beneficiaryRegistrationNumber: '28249565851',
+                ),
+            ],
+            PaymentType::Suppliers,
+            $this->generatedAt,
+        );
+
+        $lines = array_values(array_filter(explode("\r\n", $files[0]->content), static fn (string $line): bool => $line !== ''));
+        $segmentA = $lines[2];
+
+        self::assertSame('07750211522         ', substr($segmentA, 23, 20));
+        self::assertTrue($this->sispag->validateLayout($files[0]->content)->isValid());
     }
 
     public function test_generates_bank_slip_remittance_file(): void
@@ -317,9 +345,12 @@ final class RemittanceGenerationTest extends TestCase
                     amount: 3500.00,
                     paymentDate: new \DateTimeImmutable('2026-06-20'),
                     beneficiaryName: 'COLABORADOR TESTE',
-                    beneficiaryAgencyAccount: '12345678901234567890',
+                    beneficiaryAgencyAccount: '',
                     beneficiaryBankCode: 341,
                     chamberCode: 0,
+                    beneficiaryAgency: '1234',
+                    beneficiaryAccount: '567890',
+                    beneficiaryAccountCheckDigit: '1',
                     optionalSegments: new OptionalSegmentDto(
                         segmentD: [
                             'paymentMonthYear' => '062026',

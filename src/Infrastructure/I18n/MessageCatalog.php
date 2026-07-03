@@ -79,6 +79,8 @@ final class MessageCatalog
         'validation.transfer_ted_requires_chamber_018' => 'Linha :line: TED (formas 41/43) exige câmara 018 no segmento A.',
         'validation.transfer_credit_requires_itau' => 'Linha :line: crédito em conta (formas 6/7) exige favorecido no Itaú (341). Para outros bancos, use TED (formas 41/43) com câmara 018.',
         'validation.transfer_credit_requires_chamber_000' => 'Linha :line: crédito em conta (formas 6/7) exige câmara 000 no segmento A.',
+        'validation.transfer_invalid_itau_agency_account' => 'Linha :line: agência/conta Itaú inválida no segmento A. Use agência (4) + conta (6) + DAC (1), sem espaços internos (Nota 11).',
+        'validation.transfer_invalid_ted_agency_account' => 'Linha :line: agência/conta TED inválida no segmento A. Use agência (5) + conta (12) + DAC (1), sem espaços internos (Nota 11).',
     ];
 
     public static function get(string $key, array $params = []): string

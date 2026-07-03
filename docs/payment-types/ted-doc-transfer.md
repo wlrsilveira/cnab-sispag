@@ -100,6 +100,31 @@ Formato de 20 posições conforme manual (Nota 11):
 - **Itaú (341):** agência (4) + conta (6) + DAC
 - **Outros bancos:** agência (5) + conta (12) + DAC
 
+A biblioteca **normaliza automaticamente** esse campo na geração. Você pode informar:
+
+1. **Campos separados** (recomendado):
+
+```php
+new TransferPaymentDto(
+    paymentMethod: PaymentMethod::CreditOtherHolder,
+    beneficiaryAgencyAccount: '',
+    beneficiaryBankCode: 341,
+    beneficiaryAgency: '775',
+    beneficiaryAccount: '21152',
+    beneficiaryAccountCheckDigit: '2',
+    chamberCode: 0,
+    // ...
+);
+```
+
+2. **String combinada** — a biblioteca converte formatos com espaços ou layout de outros bancos (5+12+1) para o layout correto do Itaú (4+6+1):
+
+```php
+beneficiaryAgencyAccount: '00775 000000021152 2', // gera 07750211522
+```
+
+> **Importante:** não use espaços no meio do campo final. A biblioteca remove e reformat; o validador rejeita remessas com espaços internos no segmento A.
+
 ## Regras
 
 - Perfil: **Transfer**

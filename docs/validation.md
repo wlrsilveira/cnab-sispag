@@ -91,6 +91,8 @@ As regras de segmentos reutilizam `BatchSegmentRules` — as mesmas validadas na
 | TED (41/43) sem câmara 018 | `transfer_ted_requires_chamber_018` |
 | Crédito (6/7) com favorecido fora do Itaú | `transfer_credit_requires_itau` |
 | Crédito (6/7) sem câmara 000 | `transfer_credit_requires_chamber_000` |
+| Agência/conta Itaú mal formatada (4+6+1) | `transfer_invalid_itau_agency_account` |
+| Agência/conta TED mal formatada (5+12+1) | `transfer_invalid_ted_agency_account` |
 
 ### 6. Boletos (formas 30 e 31)
 

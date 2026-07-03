@@ -8,6 +8,7 @@ use CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment;
 use CnabSispag\Domain\Remittance\Entity\Payment\TransferPayment;
 use CnabSispag\Domain\Shared\Enum\PaymentMethod;
 use CnabSispag\Domain\Shared\Enum\PaymentType;
+use CnabSispag\Domain\Shared\Service\BeneficiaryAgencyAccountFormatter;
 use CnabSispag\Domain\Shared\ValueObject\CnabDate;
 use CnabSispag\Domain\Shared\ValueObject\Money;
 
@@ -25,6 +26,9 @@ final readonly class TransferPaymentDto implements PaymentDto
         public string $beneficiaryRegistrationNumber = '',
         public string $bankDocumentNumber = '',
         public ?OptionalSegmentDto $optionalSegments = null,
+        public ?string $beneficiaryAgency = null,
+        public ?string $beneficiaryAccount = null,
+        public ?string $beneficiaryAccountCheckDigit = null,
     ) {
     }
 
@@ -38,7 +42,13 @@ final readonly class TransferPaymentDto implements PaymentDto
             new Money($this->amount),
             CnabDate::fromDateTime($this->paymentDate),
             $this->beneficiaryName,
-            $this->beneficiaryAgencyAccount,
+            BeneficiaryAgencyAccountFormatter::format(
+                $this->beneficiaryBankCode,
+                $this->beneficiaryAgencyAccount,
+                $this->beneficiaryAgency,
+                $this->beneficiaryAccount,
+                $this->beneficiaryAccountCheckDigit,
+            ),
             $this->beneficiaryBankCode,
             $this->chamberCode,
             PaymentSegmentFactory::compose($this->paymentMethod, $paymentType, $this->optionalSegments),

@@ -9,6 +9,7 @@ use CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment;
 use CnabSispag\Domain\Shared\Enum\PaymentMethod;
 use CnabSispag\Domain\Shared\Enum\PaymentType;
 use CnabSispag\Domain\Shared\Enum\PixKeyType;
+use CnabSispag\Domain\Shared\Service\BeneficiaryAgencyAccountFormatter;
 use CnabSispag\Domain\Shared\ValueObject\CnabDate;
 use CnabSispag\Domain\Shared\ValueObject\Money;
 
@@ -29,12 +30,16 @@ final readonly class PixKeyPaymentDto implements PaymentDto
         public string $userInformation = '',
         public string $bankDocumentNumber = '',
         public ?OptionalSegmentDto $optionalSegments = null,
+        public ?string $beneficiaryAgency = null,
+        public ?string $beneficiaryAccount = null,
+        public ?string $beneficiaryAccountCheckDigit = null,
     ) {
     }
 
     public function toRemittancePayment(PaymentType $paymentType): RemittancePayment
     {
         $optional = PaymentSegmentFactory::optionalData($this->optionalSegments);
+        $agencyAccount = $this->resolveBeneficiaryAgencyAccount();
 
         return new PixKeyPayment(
             $this->companyDocumentNumber,
@@ -45,13 +50,31 @@ final readonly class PixKeyPaymentDto implements PaymentDto
             $this->pixKeyType,
             PaymentSegmentFactory::compose(PaymentMethod::PixKey, $paymentType, $this->optionalSegments),
             $optional,
-            $this->beneficiaryAgencyAccount,
+            $agencyAccount,
             $this->beneficiaryBankCode,
             $this->chamberCode,
             $this->beneficiaryRegistrationType,
             \CnabSispag\Domain\Shared\Service\DocumentNormalizer::normalizeRegistrationNumber($this->beneficiaryRegistrationNumber),
             $this->userInformation,
             $this->bankDocumentNumber,
+        );
+    }
+
+    private function resolveBeneficiaryAgencyAccount(): string
+    {
+        if ($this->beneficiaryAgencyAccount === ''
+            && ($this->beneficiaryAgency === null
+                || $this->beneficiaryAccount === null
+                || $this->beneficiaryAccountCheckDigit === null)) {
+            return '';
+        }
+
+        return BeneficiaryAgencyAccountFormatter::format(
+            $this->beneficiaryBankCode,
+            $this->beneficiaryAgencyAccount,
+            $this->beneficiaryAgency,
+            $this->beneficiaryAccount,
+            $this->beneficiaryAccountCheckDigit,
         );
     }
 }

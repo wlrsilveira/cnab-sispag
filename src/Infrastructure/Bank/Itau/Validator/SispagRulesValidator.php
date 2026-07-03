@@ -15,6 +15,7 @@ use CnabSispag\Domain\Shared\Enum\SegmentType;
 use CnabSispag\Domain\Shared\Exception\InvalidBatchException;
 use CnabSispag\Domain\Shared\Exception\InvalidPaymentException;
 use CnabSispag\Domain\Shared\Service\BarcodeValidator;
+use CnabSispag\Domain\Shared\Service\BeneficiaryAgencyAccountFormatter;
 use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
 use CnabSispag\Infrastructure\Bank\Itau\Layout\ItauConstants;
 use CnabSispag\Infrastructure\I18n\MessageCatalog;
@@ -416,6 +417,35 @@ final class SispagRulesValidator
                         ]),
                         $lineNumber,
                         'chamberCode',
+                    );
+                }
+
+                $agencyAccount = substr($segmentA, 23, 20);
+
+                if (!BeneficiaryAgencyAccountFormatter::isValidItauCore($agencyAccount)) {
+                    $violations[] = new Violation(
+                        'transfer_invalid_itau_agency_account',
+                        MessageCatalog::get('validation.transfer_invalid_itau_agency_account', [
+                            'line' => (string) $lineNumber,
+                        ]),
+                        $lineNumber,
+                        'beneficiaryAgencyAccount',
+                    );
+                }
+            }
+
+            if (in_array($method, [PaymentMethod::TedSameHolder, PaymentMethod::TedOtherHolder], true)
+                && $beneficiaryBank !== $itauBankCode) {
+                $agencyAccount = substr($segmentA, 23, 20);
+
+                if (!BeneficiaryAgencyAccountFormatter::isValidOtherBankCore($agencyAccount)) {
+                    $violations[] = new Violation(
+                        'transfer_invalid_ted_agency_account',
+                        MessageCatalog::get('validation.transfer_invalid_ted_agency_account', [
+                            'line' => (string) $lineNumber,
+                        ]),
+                        $lineNumber,
+                        'beneficiaryAgencyAccount',
                     );
                 }
             }
