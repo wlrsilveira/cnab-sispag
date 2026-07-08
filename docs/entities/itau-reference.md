@@ -25,7 +25,7 @@ Mapa das classes públicas e internas relevantes para integradores.
 | `PixKeyPaymentDto` | 45 | A + B |
 | `PixQrCodePaymentDto` | 47 | J + J-52 PIX |
 | `BankSlipPaymentDto` | 30/31 | J + J-52 |
-| `TransferPaymentDto` | 3–7, 41, 43 | A (+ B, C, D, E, F) |
+| `TransferPaymentDto` | 01, 03, 06, 07, 41, 43 | A (+ B, C, D, E, F) |
 | `UtilityPaymentDto` | 13, 16 (O) | O |
 | `TaxPaymentDto` | 16, 17, 18, 22, 35 (N) | N (+ B, W) |
 | `OptionalSegmentDto` | — | Segmentos complementares |
@@ -36,10 +36,10 @@ Mapa das classes públicas e internas relevantes para integradores.
 
 | Case | Valor | Forma CNAB | Perfil |
 |---|---|---|---|
-| `DocSameHolder` | 3 | 03 | Transfer |
-| `DocOtherHolder` | 4 | 04 | Transfer |
+| `CreditOtherHolder` | 1 | 01 | Transfer |
 | `CreditSameHolder` | 6 | 06 | Transfer |
-| `CreditOtherHolder` | 7 | 07 | Transfer |
+| `DocOtherHolder` | 3 | 03 | Transfer |
+| `DocSameHolder` | 7 | 07 | Transfer |
 | `TedSameHolder` | 41 | 41 | Transfer |
 | `TedOtherHolder` | 43 | 43 | Transfer |
 | `PixKey` | 45 | 45 | Transfer |

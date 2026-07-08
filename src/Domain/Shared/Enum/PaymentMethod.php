@@ -6,10 +6,13 @@ namespace CnabSispag\Domain\Shared\Enum;
 
 enum PaymentMethod: int
 {
-    case DocSameHolder = 3;
-    case DocOtherHolder = 4;
+    // Códigos conforme NOTA 5 (Forma de Pagamento) do manual SISPAG Itaú CNAB 240.
+    // 01 = crédito em conta corrente no Itaú; 06 = crédito em conta corrente de mesma titularidade;
+    // 03 = DOC "C" (outro titular); 07 = DOC "D" (mesmo titular); 41/43 = TED.
+    case CreditOtherHolder = 1;
     case CreditSameHolder = 6;
-    case CreditOtherHolder = 7;
+    case DocOtherHolder = 3;
+    case DocSameHolder = 7;
     case TedSameHolder = 41;
     case TedOtherHolder = 43;
     case PixKey = 45;

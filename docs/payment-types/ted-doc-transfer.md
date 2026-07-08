@@ -31,14 +31,16 @@ new TransferPaymentDto(
 
 ## Formas disponíveis
 
-| Enum | Código | Descrição |
+| Enum | Código (NOTA 5) | Descrição |
 |---|---|---|
-| `DocSameHolder` | 3 | DOC mesmo titular |
-| `DocOtherHolder` | 4 | DOC outro titular |
-| `CreditSameHolder` | 6 | Crédito CC mesmo titular |
-| `CreditOtherHolder` | 7 | Crédito CC outro titular |
+| `CreditOtherHolder` | 01 | Crédito em conta corrente no Itaú (outro titular) |
+| `CreditSameHolder` | 06 | Crédito em conta corrente de mesma titularidade |
+| `DocOtherHolder` | 03 | DOC "C" (outro titular) |
+| `DocSameHolder` | 07 | DOC "D" (mesmo titular) |
 | `TedSameHolder` | 41 | TED mesmo titular |
 | `TedOtherHolder` | 43 | TED outro titular |
+
+> **Atenção aos códigos:** conforme a tabela NOTA 5 do manual SISPAG, `07` é **DOC "D"** e **não** "crédito em conta corrente". Para creditar uma conta do próprio Itaú use `CreditOtherHolder` (01) ou `CreditSameHolder` (06). Usar forma DOC/TED com favorecido no Itaú (341) causa rejeição: `DOC/TED PARA BANCO ITAU`, `Nº BANCO PARA ENVIO DE TED/DOC INVÁLIDO` e `FORMA INCOMPATÍVEL COM A TITULARIDADE DO PAGAMENTO`.
 
 ## Câmara de compensação
 
@@ -46,7 +48,7 @@ new TransferPaymentDto(
 |---|---|
 | TED (outros bancos) | 18 |
 | Crédito Itaú (mesmo banco) | 000 |
-| DOC (obsoleto) | 03 (C) ou 07 (D) |
+| DOC (obsoleto) | 000 |
 
 ## Como escolher a forma de pagamento
 
@@ -54,8 +56,8 @@ A biblioteca **não infere** automaticamente TED, DOC ou crédito. Você deve in
 
 | Situação | Forma | `PaymentMethod` | `chamberCode` |
 |---|---|---|---|
-| Favorecido no **Itaú (341)** | Crédito em conta | `CreditSameHolder` (6) ou `CreditOtherHolder` (7) | `0` |
-| Favorecido em **outro banco** | TED | `TedSameHolder` (41) ou `TedOtherHolder` (43) | `18` |
+| Favorecido no **Itaú (341)** | Crédito em conta | `CreditOtherHolder` (01) ou `CreditSameHolder` (06) | `0` |
+| Favorecido em **outro banco** | TED | `TedOtherHolder` (43) ou `TedSameHolder` (41) | `18` |
 
 > **Atenção:** a regra antiga "mesmo banco = TED, banco diferente = DOC" **não se aplica**. DOC foi descontinuado para transferências interbancárias; use TED. Transferências para contas Itaú devem usar **crédito em conta**, não TED.
 
