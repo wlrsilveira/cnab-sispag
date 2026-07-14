@@ -8,9 +8,19 @@ use CnabSispag\Infrastructure\Bank\Itau\Layout\ItauConstants;
 
 final class BeneficiaryAgencyAccountFormatter
 {
-    private const ITAU_CORE_LENGTH = 11;
+    private const FIELD_LENGTH = 20;
 
-    private const OTHER_BANK_CORE_LENGTH = 18;
+    /**
+     * Itaú layout (Nota 11): agência(4) + espaço(1) + conta(6) + espaço(1) + DAC(1) + brancos(7) = 20
+     * Regex: /^\d{4} \d{6} \d {7}$/
+     */
+    private const ITAU_PATTERN = '/^\d{4} \d{6} \d {7}$/';
+
+    /**
+     * Outros bancos layout (Nota 11): agência(5) + espaço(1) + conta(12) + espaço(1) + DAC(1) = 20
+     * Regex: /^\d{5} \d{12} \d$/
+     */
+    private const OTHER_BANK_PATTERN = '/^\d{5} \d{12} \d$/';
 
     public static function format(
         int $bankCode,
@@ -40,20 +50,14 @@ final class BeneficiaryAgencyAccountFormatter
 
     public static function isValidItauCore(string $value): bool
     {
-        if (preg_match('/^\d{11}$/', $value) === 1) {
-            return true;
-        }
-
-        return strlen($value) === 20 && preg_match('/^\d{11} {9}$/', $value) === 1;
+        return strlen($value) === self::FIELD_LENGTH
+            && preg_match(self::ITAU_PATTERN, $value) === 1;
     }
 
     public static function isValidOtherBankCore(string $value): bool
     {
-        if (preg_match('/^\d{18}$/', $value) === 1) {
-            return true;
-        }
-
-        return strlen($value) === 20 && preg_match('/^\d{18} {2}$/', $value) === 1;
+        return strlen($value) === self::FIELD_LENGTH
+            && preg_match(self::OTHER_BANK_PATTERN, $value) === 1;
     }
 
     private static function isItau(int $bankCode): bool
@@ -63,10 +67,8 @@ final class BeneficiaryAgencyAccountFormatter
 
     private static function formatItauCombined(string $combined): string
     {
-        $trimmed = rtrim($combined);
-
-        if (self::isValidItauCore($trimmed)) {
-            return self::padToField(substr($trimmed, 0, self::ITAU_CORE_LENGTH));
+        if (self::isValidItauCore($combined)) {
+            return $combined;
         }
 
         $parts = self::splitParts($combined);
@@ -77,11 +79,15 @@ final class BeneficiaryAgencyAccountFormatter
 
         $digits = DocumentNormalizer::digitsOnly($combined);
 
-        if (strlen($digits) === self::ITAU_CORE_LENGTH) {
-            return self::padToField($digits);
+        if (strlen($digits) === 11) {
+            return self::assembleItau(
+                substr($digits, 0, 4),
+                substr($digits, 4, 6),
+                substr($digits, 10, 1),
+            );
         }
 
-        if (strlen($digits) >= self::OTHER_BANK_CORE_LENGTH) {
+        if (strlen($digits) >= 18) {
             return self::formatItauParts(
                 substr($digits, 0, 5),
                 substr($digits, 5, 12),
@@ -89,8 +95,14 @@ final class BeneficiaryAgencyAccountFormatter
             );
         }
 
-        if (strlen($digits) > self::ITAU_CORE_LENGTH) {
-            return self::padToField(substr($digits, -self::ITAU_CORE_LENGTH));
+        if (strlen($digits) > 11) {
+            $core = substr($digits, -11);
+
+            return self::assembleItau(
+                substr($core, 0, 4),
+                substr($core, 4, 6),
+                substr($core, 10, 1),
+            );
         }
 
         throw new \InvalidArgumentException(
@@ -100,10 +112,8 @@ final class BeneficiaryAgencyAccountFormatter
 
     private static function formatOtherBankCombined(string $combined): string
     {
-        $trimmed = rtrim($combined);
-
-        if (self::isValidOtherBankCore($trimmed)) {
-            return self::padToField(substr($trimmed, 0, self::OTHER_BANK_CORE_LENGTH));
+        if (self::isValidOtherBankCore($combined)) {
+            return $combined;
         }
 
         $parts = self::splitParts($combined);
@@ -114,11 +124,15 @@ final class BeneficiaryAgencyAccountFormatter
 
         $digits = DocumentNormalizer::digitsOnly($combined);
 
-        if (strlen($digits) >= self::OTHER_BANK_CORE_LENGTH) {
-            return self::padToField(substr($digits, 0, self::OTHER_BANK_CORE_LENGTH));
+        if (strlen($digits) >= 18) {
+            return self::assembleOtherBank(
+                substr($digits, 0, 5),
+                substr($digits, 5, 12),
+                substr($digits, 17, 1),
+            );
         }
 
-        if (strlen($digits) === self::ITAU_CORE_LENGTH) {
+        if (strlen($digits) === 11) {
             throw new \InvalidArgumentException(
                 'Invalid TED beneficiaryAgencyAccount for a non-Itaú bank. Expected agency (5), account (12) and check digit (1).',
             );
@@ -145,7 +159,7 @@ final class BeneficiaryAgencyAccountFormatter
             throw new \InvalidArgumentException('beneficiaryAccountCheckDigit is required for Itaú transfers.');
         }
 
-        return self::padToField($normalizedAgency.$normalizedAccount.$normalizedCheckDigit);
+        return self::assembleItau($normalizedAgency, $normalizedAccount, $normalizedCheckDigit);
     }
 
     private static function formatOtherBankParts(string $agency, string $account, string $checkDigit): string
@@ -164,7 +178,23 @@ final class BeneficiaryAgencyAccountFormatter
             throw new \InvalidArgumentException('beneficiaryAccountCheckDigit is required for TED transfers.');
         }
 
-        return self::padToField($normalizedAgency.$normalizedAccount.$normalizedCheckDigit);
+        return self::assembleOtherBank($normalizedAgency, $normalizedAccount, $normalizedCheckDigit);
+    }
+
+    /**
+     * Itaú: AAAA + ' ' + CCCCCC + ' ' + D + 7 brancos = 20
+     */
+    private static function assembleItau(string $agency, string $account, string $dac): string
+    {
+        return $agency.' '.$account.' '.$dac.str_repeat(' ', 7);
+    }
+
+    /**
+     * Outros bancos: AAAAA + ' ' + CCCCCCCCCCCC + ' ' + D = 20
+     */
+    private static function assembleOtherBank(string $agency, string $account, string $dac): string
+    {
+        return $agency.' '.$account.' '.$dac;
     }
 
     /**
@@ -180,10 +210,5 @@ final class BeneficiaryAgencyAccountFormatter
             preg_split('/\s+/', trim($value)) ?: [],
             static fn (string $part): bool => $part !== '',
         ));
-    }
-
-    private static function padToField(string $core): string
-    {
-        return str_pad($core, 20, ' ', STR_PAD_RIGHT);
     }
 }

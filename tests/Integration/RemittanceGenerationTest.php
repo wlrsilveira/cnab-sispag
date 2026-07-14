@@ -135,7 +135,7 @@ final class RemittanceGenerationTest extends TestCase
         $lines = array_values(array_filter(explode("\r\n", $files[0]->content), static fn (string $line): bool => $line !== ''));
         $segmentA = $lines[2];
 
-        self::assertSame('07750211522         ', substr($segmentA, 23, 20));
+        self::assertSame('0775 021152 2       ', substr($segmentA, 23, 20));
         self::assertTrue($this->sispag->validateLayout($files[0]->content)->isValid());
     }
 

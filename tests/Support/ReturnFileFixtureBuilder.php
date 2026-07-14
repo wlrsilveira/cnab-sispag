@@ -61,7 +61,7 @@ final class ReturnFileFixtureBuilder
                 'movementType' => '000',
                 'chamberCode' => '018',
                 'beneficiaryBankCode' => '237',
-                'beneficiaryAgencyAccount' => '00001234567890123456',
+                'beneficiaryAgencyAccount' => '00001 234567890123 6',
                 'beneficiaryName' => 'FORNECEDOR ABC',
                 'companyDocumentNumber' => 'TED001',
                 'paymentDate' => '20062026',

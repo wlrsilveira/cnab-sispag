@@ -9,27 +9,50 @@ use PHPUnit\Framework\TestCase;
 
 final class BeneficiaryAgencyAccountFormatterTest extends TestCase
 {
-    public function test_formats_itau_from_space_separated_other_bank_layout(): void
+    public function test_formats_itau_from_space_separated_parts(): void
+    {
+        $formatted = BeneficiaryAgencyAccountFormatter::format(
+            341,
+            '3741 002115 2',
+        );
+
+        self::assertSame('3741 002115 2       ', $formatted);
+    }
+
+    public function test_formats_itau_from_other_bank_layout_input(): void
     {
         $formatted = BeneficiaryAgencyAccountFormatter::format(
             341,
             '00775 000000021152 2',
         );
 
-        self::assertSame('07750211522         ', $formatted);
+        self::assertSame('0775 021152 2       ', $formatted);
     }
 
-    public function test_formats_itau_from_digit_string_in_other_bank_layout(): void
+    public function test_formats_itau_from_eleven_digit_string(): void
     {
         $formatted = BeneficiaryAgencyAccountFormatter::format(
             341,
-            '007750000000211522',
+            '37410021152',
         );
 
-        self::assertSame('07750211522         ', $formatted);
+        self::assertSame('3741 002115 2       ', $formatted);
     }
 
     public function test_formats_itau_from_explicit_parts(): void
+    {
+        $formatted = BeneficiaryAgencyAccountFormatter::format(
+            341,
+            '',
+            '3741',
+            '02115',
+            '2',
+        );
+
+        self::assertSame('3741 002115 2       ', $formatted);
+    }
+
+    public function test_formats_itau_from_explicit_parts_pads_account(): void
     {
         $formatted = BeneficiaryAgencyAccountFormatter::format(
             341,
@@ -39,12 +62,12 @@ final class BeneficiaryAgencyAccountFormatterTest extends TestCase
             '2',
         );
 
-        self::assertSame('07750211522         ', $formatted);
+        self::assertSame('0775 021152 2       ', $formatted);
     }
 
     public function test_keeps_valid_itau_format_unchanged(): void
     {
-        $input = '07750211522         ';
+        $input = '3741 002115 2       ';
 
         self::assertSame($input, BeneficiaryAgencyAccountFormatter::format(341, $input));
     }
@@ -56,7 +79,7 @@ final class BeneficiaryAgencyAccountFormatterTest extends TestCase
             '01234 567890123456 7',
         );
 
-        self::assertSame('012345678901234567  ', $formatted);
+        self::assertSame('01234 567890123456 7', $formatted);
     }
 
     public function test_formats_ted_from_eighteen_digit_string(): void
@@ -66,7 +89,7 @@ final class BeneficiaryAgencyAccountFormatterTest extends TestCase
             '000012345678901234',
         );
 
-        self::assertSame('000012345678901234  ', $formatted);
+        self::assertSame('00001 234567890123 4', $formatted);
     }
 
     public function test_formats_ted_from_explicit_parts(): void
@@ -79,16 +102,29 @@ final class BeneficiaryAgencyAccountFormatterTest extends TestCase
             '7',
         );
 
-        self::assertSame('012345678901234567  ', $formatted);
+        self::assertSame('01234 567890123456 7', $formatted);
     }
 
-    public function test_rejects_itau_core_with_internal_spaces(): void
+    public function test_validates_itau_core_with_correct_spaces(): void
     {
-        self::assertFalse(BeneficiaryAgencyAccountFormatter::isValidItauCore('00775 000000021152 0'));
+        self::assertTrue(BeneficiaryAgencyAccountFormatter::isValidItauCore('3741 002115 2       '));
+        self::assertTrue(BeneficiaryAgencyAccountFormatter::isValidItauCore('0775 021152 2       '));
     }
 
-    public function test_accepts_valid_itau_core(): void
+    public function test_rejects_itau_core_without_spaces(): void
     {
-        self::assertTrue(BeneficiaryAgencyAccountFormatter::isValidItauCore('07750211522         '));
+        self::assertFalse(BeneficiaryAgencyAccountFormatter::isValidItauCore('37410021152         '));
+        self::assertFalse(BeneficiaryAgencyAccountFormatter::isValidItauCore('07750211522         '));
+    }
+
+    public function test_validates_other_bank_core_with_correct_spaces(): void
+    {
+        self::assertTrue(BeneficiaryAgencyAccountFormatter::isValidOtherBankCore('01234 567890123456 7'));
+        self::assertTrue(BeneficiaryAgencyAccountFormatter::isValidOtherBankCore('00775 000000021152 2'));
+    }
+
+    public function test_rejects_other_bank_core_without_spaces(): void
+    {
+        self::assertFalse(BeneficiaryAgencyAccountFormatter::isValidOtherBankCore('012345678901234567  '));
     }
 }
