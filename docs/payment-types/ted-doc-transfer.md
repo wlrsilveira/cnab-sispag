@@ -97,35 +97,58 @@ new TransferPaymentDto(
 
 ## Campo beneficiaryAgencyAccount
 
-Formato de 20 posições conforme manual (Nota 11):
+Formato de 20 posições conforme **Nota 11** do manual SISPAG:
 
-- **Itaú (341):** agência (4) + conta (6) + DAC
-- **Outros bancos:** agência (5) + conta (12) + DAC
+### Itaú (341)
 
-A biblioteca **normaliza automaticamente** esse campo na geração. Você pode informar:
+```
+0 + AAAA + ' ' + 000000 + CCCCCC + ' ' + D
+```
 
-1. **Campos separados** (recomendado):
+| Posição (no campo) | Conteúdo |
+|---|---|
+| 1 | `0` (fixo fixo) |
+| 2–5 | Agência (4 dígitos) |
+| 6 | Branco |
+| 7–12 | `000000` (zeros fixos) |
+| 13–18 | Conta (6 dígitos) |
+| 19 | Branco |
+| 20 | DAC |
+
+Exemplo — agência `3741`, conta `02115`, dígito `2`:
+
+```
+03741 000000002115 2
+```
+
+### Outros bancos (TED/DOC)
+
+```
+AAAAA + ' ' + CCCCCCCCCCCC + ' ' + D
+```
+
+Exemplo — agência `1234`, conta `567890123456`, dígito `7`:
+
+```
+01234 567890123456 7
+```
+
+A biblioteca **normaliza automaticamente**. Preferência:
 
 ```php
 new TransferPaymentDto(
     paymentMethod: PaymentMethod::CreditOtherHolder,
     beneficiaryAgencyAccount: '',
     beneficiaryBankCode: 341,
-    beneficiaryAgency: '775',
-    beneficiaryAccount: '21152',
+    beneficiaryAgency: '3741',
+    beneficiaryAccount: '02115',   // SEM o dígito
     beneficiaryAccountCheckDigit: '2',
     chamberCode: 0,
     // ...
 );
 ```
 
-2. **String combinada** — a biblioteca converte formatos com espaços ou layout de outros bancos (5+12+1) para o layout correto do Itaú (4+6+1):
-
-```php
-beneficiaryAgencyAccount: '00775 000000021152 2', // gera 07750211522
-```
-
-> **Importante:** não use espaços no meio do campo final. A biblioteca remove e reformat; o validador rejeita remessas com espaços internos no segmento A.
+Se a conta vier com o dígito colado (`021152`) e o dígito separado for o mesmo (`2`), a biblioteca remove o dígito embutido.
 
 ## Regras
 

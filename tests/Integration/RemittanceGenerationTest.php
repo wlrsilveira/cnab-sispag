@@ -122,10 +122,13 @@ final class RemittanceGenerationTest extends TestCase
                     amount: 10.00,
                     paymentDate: new \DateTimeImmutable('2026-06-20'),
                     beneficiaryName: 'RAFAEL ESTEFANO DE LIMA FARFAN',
-                    beneficiaryAgencyAccount: '00775 000000021152 2',
+                    beneficiaryAgencyAccount: '',
                     beneficiaryBankCode: 341,
                     chamberCode: 0,
                     beneficiaryRegistrationNumber: '28249565851',
+                    beneficiaryAgency: '3741',
+                    beneficiaryAccount: '021152', // dígito colado — lib deve separar
+                    beneficiaryAccountCheckDigit: '2',
                 ),
             ],
             PaymentType::Suppliers,
@@ -135,7 +138,8 @@ final class RemittanceGenerationTest extends TestCase
         $lines = array_values(array_filter(explode("\r\n", $files[0]->content), static fn (string $line): bool => $line !== ''));
         $segmentA = $lines[2];
 
-        self::assertSame('0775 021152 2       ', substr($segmentA, 23, 20));
+        // Nota 11 Itaú: 0 + AAAA + ' ' + 000000 + CCCCCC + ' ' + D
+        self::assertSame('03741 000000002115 2', substr($segmentA, 23, 20));
         self::assertTrue($this->sispag->validateLayout($files[0]->content)->isValid());
     }
 

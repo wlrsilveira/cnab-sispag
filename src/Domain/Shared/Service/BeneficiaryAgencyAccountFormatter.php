@@ -6,21 +6,27 @@ namespace CnabSispag\Domain\Shared\Service;
 
 use CnabSispag\Infrastructure\Bank\Itau\Layout\ItauConstants;
 
+/**
+ * Formata o campo "Agência Conta Favorecido" (posições 024–043, 20 bytes)
+ * conforme a Nota 11 do manual SISPAG Itaú CNAB 240.
+ *
+ * Itaú / Unibanco (341 / 409):
+ *   0 + AAAA + ' ' + 000000 + CCCCCC + ' ' + D
+ *   pos: 024=0, 025-028=agência, 029=branco, 030-035=zeros,
+ *        036-041=conta, 042=branco, 043=DAC
+ *
+ * Outros bancos (TED/DOC):
+ *   AAAAA + ' ' + CCCCCCCCCCCC + ' ' + D
+ *   pos: 024-028=agência, 029=branco, 030-041=conta,
+ *        042=branco, 043=DAC
+ */
 final class BeneficiaryAgencyAccountFormatter
 {
     private const FIELD_LENGTH = 20;
 
-    /**
-     * Itaú layout (Nota 11): agência(4) + espaço(1) + conta(6) + espaço(1) + DAC(1) + brancos(7) = 20
-     * Regex: /^\d{4} \d{6} \d {7}$/
-     */
-    private const ITAU_PATTERN = '/^\d{4} \d{6} \d {7}$/';
+    private const ITAU_PATTERN = '/^0\d{4} 000000\d{6} \d$/';
 
-    /**
-     * Outros bancos layout (Nota 11): agência(5) + espaço(1) + conta(12) + espaço(1) + DAC(1) = 20
-     * Regex: /^\d{5} \d{12} \d$/
-     */
-    private const OTHER_BANK_PATTERN = '/^\d{5} \d{12} \d$/';
+    private const OTHER_BANK_PATTERN = '/^\d{5} \d{12} .{1}$/';
 
     public static function format(
         int $bankCode,
@@ -62,7 +68,7 @@ final class BeneficiaryAgencyAccountFormatter
 
     private static function isItau(int $bankCode): bool
     {
-        return $bankCode === (int) ItauConstants::BANK_CODE;
+        return $bankCode === (int) ItauConstants::BANK_CODE || $bankCode === 409;
     }
 
     private static function formatItauCombined(string $combined): string
@@ -79,6 +85,16 @@ final class BeneficiaryAgencyAccountFormatter
 
         $digits = DocumentNormalizer::digitsOnly($combined);
 
+        // Já no formato Itaú compacto sem espaços: 0AAAA000000CCCCCCD (18 dígitos)
+        if (strlen($digits) === 18 && str_starts_with($digits, '0')) {
+            return self::assembleItau(
+                substr($digits, 1, 4),
+                substr($digits, 11, 6),
+                substr($digits, 17, 1),
+            );
+        }
+
+        // 11 dígitos = AAAA + CCCCCC + D (entrada simplificada)
         if (strlen($digits) === 11) {
             return self::assembleItau(
                 substr($digits, 0, 4),
@@ -87,21 +103,12 @@ final class BeneficiaryAgencyAccountFormatter
             );
         }
 
+        // Layout de outros bancos (18 dígitos): AAAAA + CCCCCCCCCCCC + D → converte para Itaú
         if (strlen($digits) >= 18) {
             return self::formatItauParts(
                 substr($digits, 0, 5),
                 substr($digits, 5, 12),
                 substr($digits, 17, 1),
-            );
-        }
-
-        if (strlen($digits) > 11) {
-            $core = substr($digits, -11);
-
-            return self::assembleItau(
-                substr($core, 0, 4),
-                substr($core, 4, 6),
-                substr($core, 10, 1),
             );
         }
 
@@ -132,12 +139,6 @@ final class BeneficiaryAgencyAccountFormatter
             );
         }
 
-        if (strlen($digits) === 11) {
-            throw new \InvalidArgumentException(
-                'Invalid TED beneficiaryAgencyAccount for a non-Itaú bank. Expected agency (5), account (12) and check digit (1).',
-            );
-        }
-
         throw new \InvalidArgumentException(
             'Invalid TED beneficiaryAgencyAccount. Expected agency (5), account (12) and check digit (1).',
         );
@@ -148,6 +149,18 @@ final class BeneficiaryAgencyAccountFormatter
         $agencyDigits = DocumentNormalizer::digitsOnly($agency);
         $accountDigits = DocumentNormalizer::digitsOnly($account);
         $checkDigitDigits = DocumentNormalizer::digitsOnly($checkDigit);
+
+        // Conta pode vir com o dígito colado (ex.: 021152 ou 000000021152).
+        // Se o dígito separado coincide com o último dígito da conta, remove-o.
+        if ($checkDigitDigits !== '' && $accountDigits !== '') {
+            $dac = substr($checkDigitDigits, -1);
+            if (str_ends_with($accountDigits, $dac)) {
+                $withoutDigit = substr($accountDigits, 0, -1);
+                if ($withoutDigit !== '' && preg_match('/[^0]/', $withoutDigit) === 1) {
+                    $accountDigits = $withoutDigit;
+                }
+            }
+        }
 
         $normalizedAgency = str_pad(substr($agencyDigits, -4), 4, '0', STR_PAD_LEFT);
         $normalizedAccount = str_pad(substr($accountDigits, -6), 6, '0', STR_PAD_LEFT);
@@ -182,15 +195,15 @@ final class BeneficiaryAgencyAccountFormatter
     }
 
     /**
-     * Itaú: AAAA + ' ' + CCCCCC + ' ' + D + 7 brancos = 20
+     * Nota 11 (Itaú): 0 + AAAA + ' ' + 000000 + CCCCCC + ' ' + D
      */
     private static function assembleItau(string $agency, string $account, string $dac): string
     {
-        return $agency.' '.$account.' '.$dac.str_repeat(' ', 7);
+        return '0'.$agency.' 000000'.$account.' '.$dac;
     }
 
     /**
-     * Outros bancos: AAAAA + ' ' + CCCCCCCCCCCC + ' ' + D = 20
+     * Nota 11 (outros bancos): AAAAA + ' ' + CCCCCCCCCCCC + ' ' + D
      */
     private static function assembleOtherBank(string $agency, string $account, string $dac): string
     {
