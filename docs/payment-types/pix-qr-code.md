@@ -37,7 +37,9 @@ new PixQrCodePaymentDto(
 | `pixKeyOrUrl` | Sobrescreve chave/URL extraída do QR (opcional) |
 | `txid` | Identificador da transação PIX (opcional, extraído do QR se omitido) |
 
-A biblioteca usa `PixQrCodeParser` para extrair `pixKeyOrUrl` e `txid` do payload EMV quando não informados.
+A biblioteca usa `PixQrCodeParser` para extrair `pixKeyOrUrl`, `txid` e valor (tag `54`) do payload EMV quando não informados.
+
+O parser valida o CRC-16 (tag `63`). Se o `txid` do QR for `***` e a URL for dinâmica (`/cob/` ou `/cobv/`), o identificador do path da URL é usado no lugar — nunca envia `***` no arquivo.
 
 ## Dados do J-52 PIX
 

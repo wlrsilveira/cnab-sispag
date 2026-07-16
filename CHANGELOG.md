@@ -2,6 +2,12 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+## [Unreleased]
+
+### Alterado
+
+- `PixQrCodeParser`: valida CRC-16 do EMV; extrai valor (tag 54); substitui `txid ***` pelo ID do path em URLs `/cob/` e `/cobv/`
+
 ## [1.0.0] - 2026-06-16
 
 ### Adicionado
