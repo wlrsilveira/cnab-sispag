@@ -1,12 +1,14 @@
 # Documentação para integradores
 
-Guias em português para usar a biblioteca **cnab-sispag** (SISPAG Itaú CNAB 240 v086).
+Guias em português para usar a biblioteca **cnab-sispag** (SISPAG Itaú CNAB 240 v086 e API Pagamentos em Lote do Banco do Brasil).
 
 ## Comece aqui
 
 1. [Primeiros passos](./getting-started.md) — instalação e exemplo mínimo
 2. [Guia de integração](./integration-guide.md) — fluxo completo em produção
 3. [Homologação Itaú](./homologation-itau.md) — testes com o banco
+4. [Banco do Brasil (API)](./bb/README.md) — TED, PIX e boletos via Pagamentos em Lote
+5. [Checklist de integração BB](./INTEGRATION_CHECKLIST.md) — o que o sistema consumidor deve implementar
 
 ## Operações
 
@@ -16,6 +18,8 @@ Guias em português para usar a biblioteca **cnab-sispag** (SISPAG Itaú CNAB 24
 | [Retorno](./return-file.md) | Leitura e interpretação do retorno |
 | [Validação](./validation.md) | Validador de layout |
 | [Códigos de ocorrência](./return-codes.md) | Nota 8 traduzida |
+| [Banco do Brasil](./bb/README.md) | Cliente HTTP Pagamentos em Lote |
+| [Checklist integração BB](./INTEGRATION_CHECKLIST.md) | Prompt e tarefas do projeto consumidor |
 
 ## Modalidades de pagamento
 

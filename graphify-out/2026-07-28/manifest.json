@@ -1,0 +1,1027 @@
+{
+  "appms-main.js": {
+    "mtime": 1785258239.7748837,
+    "ast_hash": "c5ea8d032ee945b3703f272581060271",
+    "semantic_hash": ""
+  },
+  "bin/validate-itau": {
+    "mtime": 1781644279.6699061,
+    "ast_hash": "5f16acdc5716293fe436aef9f23ace76",
+    "semantic_hash": ""
+  },
+  "composer.json": {
+    "mtime": 1785261417.0819488,
+    "ast_hash": "46947c67b71c62dc9cbde7c502f8d252",
+    "semantic_hash": ""
+  },
+  "docs/bb/OpenAPI_BB_Pagamentos_em_Lote_v1.json": {
+    "mtime": 1785261085.32829,
+    "ast_hash": "553a97a68b0cff72a265504fb9198033",
+    "semantic_hash": ""
+  },
+  "src/Application/Remittance/Dto/GenerateRemittanceOptionsDto.php": {
+    "mtime": 1781800407.94727,
+    "ast_hash": "18766926e8dc89a44b662e9f26e8b2b3",
+    "semantic_hash": ""
+  },
+  "src/Application/Remittance/Dto/GeneratedRemittanceFile.php": {
+    "mtime": 1781641239.4092808,
+    "ast_hash": "cf670a2bf20d1e1ecebb2123b97843ff",
+    "semantic_hash": ""
+  },
+  "src/Application/Remittance/GenerateRemittanceUseCase.php": {
+    "mtime": 1781800418.2738557,
+    "ast_hash": "a8445b4157afd3dc889774925646ef53",
+    "semantic_hash": ""
+  },
+  "src/Application/Return/ParseReturnFileUseCase.php": {
+    "mtime": 1781642706.0504346,
+    "ast_hash": "256e230e172fa2797b2272d99605fb70",
+    "semantic_hash": ""
+  },
+  "src/Application/Validation/Dto/ValidationResult.php": {
+    "mtime": 1781644162.9013443,
+    "ast_hash": "c5c6f81cc07977317b71345a96d39ff3",
+    "semantic_hash": ""
+  },
+  "src/Application/Validation/Dto/Violation.php": {
+    "mtime": 1781644161.7113402,
+    "ast_hash": "5a3f2b9f0be5d3408867d1c4045c5f60",
+    "semantic_hash": ""
+  },
+  "src/Application/Validation/ValidateLayoutUseCase.php": {
+    "mtime": 1781644164.2815163,
+    "ast_hash": "8ad5646bb3cf8d5beff3ae9cb9099c81",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/BbConfig.php": {
+    "mtime": 1785261103.7509406,
+    "ast_hash": "766474d87e9c5d120d7c0adabedd8618",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/BbPagamentos.php": {
+    "mtime": 1785261282.1573942,
+    "ast_hash": "b16a9bd5939ac7c6708e717499e18242",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Dto/BbBatchItemResultDto.php": {
+    "mtime": 1785261248.5859835,
+    "ast_hash": "e7804390924875afa25fcacab9fffdbf",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Dto/BbBatchResultDto.php": {
+    "mtime": 1785261248.7086298,
+    "ast_hash": "5c9c940d636d060babfb4f389db4b5d8",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Exception/BbApiException.php": {
+    "mtime": 1785261104.6307678,
+    "ast_hash": "fe83e21e734bb5eaaf7778d021308136",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Exception/BbAuthenticationException.php": {
+    "mtime": 1785261365.3597686,
+    "ast_hash": "083865153ea87d688423a1ab177e94b1",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Exception/BbMtlsRequiredException.php": {
+    "mtime": 1785261109.831606,
+    "ast_hash": "9ada17f375aeadcb423c4cc9a904ae31",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Http/BbApiGateway.php": {
+    "mtime": 1785261143.7571,
+    "ast_hash": "161233b9f49952e8be20d71a1f7c02ae",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Http/BbHttpClient.php": {
+    "mtime": 1785261111.5887692,
+    "ast_hash": "a64f0ce316cb52681c57798bfbce0f53",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Http/BbHttpResponse.php": {
+    "mtime": 1785261111.572783,
+    "ast_hash": "71a8e43bf939055dcaeaaa1fb6d11174",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Http/BbOAuthTokenProvider.php": {
+    "mtime": 1785261143.6290011,
+    "ast_hash": "d7e862f2e683e3616d275819cea65dea",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Http/CurlBbHttpClient.php": {
+    "mtime": 1785261159.181312,
+    "ast_hash": "8fbb6ddf2ae28295a5c5f54446a7ab1f",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Mapper/BankSlipBatchRequestMapper.php": {
+    "mtime": 1785261233.1571345,
+    "ast_hash": "66f3f09862136ce6d0fb0038e88c4601",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Mapper/BbDateMapper.php": {
+    "mtime": 1785261191.0510836,
+    "ast_hash": "34e418bb6f85880210acb488c29910e2",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Mapper/CreditAccountParts.php": {
+    "mtime": 1785261178.2391875,
+    "ast_hash": "12d5481c0f7cf2247e79e2843b2c77f8",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Mapper/PaymentTypeMapper.php": {
+    "mtime": 1785261174.557267,
+    "ast_hash": "e502bb40338f385031f4b9fe8ecf9e0a",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Mapper/PixBatchRequestMapper.php": {
+    "mtime": 1785261224.312737,
+    "ast_hash": "d0209637d288d4b4014c39a55b6c0ff9",
+    "semantic_hash": ""
+  },
+  "src/Bank/BancoDoBrasil/Mapper/TransferBatchRequestMapper.php": {
+    "mtime": 1785261211.184348,
+    "ast_hash": "5f58f444ac7107b324fa67f1b9720ce7",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/BankSlipPaymentDto.php": {
+    "mtime": 1781642095.0190282,
+    "ast_hash": "b8408f7f7871d241d1e63855f0d8ebee",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/CompanyDto.php": {
+    "mtime": 1781641217.177445,
+    "ast_hash": "b652c3734dc4eaf2e0c5de34620352be",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/DebitAccountDto.php": {
+    "mtime": 1781641218.455672,
+    "ast_hash": "fa3d5d634778d9730a7749fd1cfb976f",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/OptionalSegmentDto.php": {
+    "mtime": 1781650327.228498,
+    "ast_hash": "57051f3ee05a318812db8cc5a56ee696",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/PaymentDto.php": {
+    "mtime": 1781642074.425526,
+    "ast_hash": "bdace61353e546b64edda6ac447eea42",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/PaymentSegmentFactory.php": {
+    "mtime": 1781642072.9599814,
+    "ast_hash": "c16a5c28495a93761923f2833f14b5cc",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/PixKeyPaymentDto.php": {
+    "mtime": 1783531698.7316027,
+    "ast_hash": "075b33db66869febbbad3cc44014203e",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/PixQrCodePaymentDto.php": {
+    "mtime": 1781642099.4963841,
+    "ast_hash": "90883890d2d35ea5a15036db6da2b05f",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/TaxPaymentDto.php": {
+    "mtime": 1781650327.228881,
+    "ast_hash": "c7ec3e9fd8d41b5dd51ba7faae9af550",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/TransferPaymentDto.php": {
+    "mtime": 1783531698.72846,
+    "ast_hash": "da96f40397cf840225145926df0dbf11",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/Dto/UtilityPaymentDto.php": {
+    "mtime": 1781650327.2292812,
+    "ast_hash": "4b8c6424a61fead2eab2b1b1dfeb5c8f",
+    "semantic_hash": ""
+  },
+  "src/Bank/Itau/ItauSispag.php": {
+    "mtime": 1781800419.5181766,
+    "ast_hash": "8ef6c8a35d35f649a8e45e54ab021f9c",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Batch.php": {
+    "mtime": 1781641148.7330582,
+    "ast_hash": "fab15c64f5aefc55dd889b61236922bc",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/AbstractRemittancePayment.php": {
+    "mtime": 1781642032.7477036,
+    "ast_hash": "1822d6895c9b5e19682e54ff18a1d6dc",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/BankSlipPayment.php": {
+    "mtime": 1781642057.523166,
+    "ast_hash": "5026aa01e73723803ab9e26d9ecbc035",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/PixKeyPayment.php": {
+    "mtime": 1781642044.7595742,
+    "ast_hash": "9712a68e1cd4dfe15536a3e2b378b37d",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/PixQrCodePayment.php": {
+    "mtime": 1781642062.2745335,
+    "ast_hash": "7909141d2373dd28426703789ff3ea84",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/RemittancePayment.php": {
+    "mtime": 1781642014.1774652,
+    "ast_hash": "4683a72d0d2577e21ad3b4c6deae9b72",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/TaxPayment.php": {
+    "mtime": 1781642052.9099336,
+    "ast_hash": "f4ca1520de8730453fcaa8264dae8464",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/TransferPayment.php": {
+    "mtime": 1781642049.010178,
+    "ast_hash": "a54ff037bcfdbf5cc1d30791ba2737fe",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/Payment/UtilityPayment.php": {
+    "mtime": 1781642066.2023442,
+    "ast_hash": "9e327b1a95c48b83eb6302d252f2da6a",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Entity/RemittanceFile.php": {
+    "mtime": 1781800408.9232163,
+    "ast_hash": "f8490442daa0f4ddec9cd44a6a54e5ca",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Service/BatchGrouper.php": {
+    "mtime": 1781642120.7463264,
+    "ast_hash": "feccae609e8d3480de560e5f9b000217",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Service/BatchSegmentRules.php": {
+    "mtime": 1781642146.94263,
+    "ast_hash": "1ba7f03c7903d21fd144ce2eaf922afb",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Service/PaymentSegmentComposer.php": {
+    "mtime": 1781642010.724652,
+    "ast_hash": "e958968e7b0fa96926fa33458046e74a",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Service/PixFileSeparator.php": {
+    "mtime": 1781641159.3142915,
+    "ast_hash": "02a5e630cd0ce2ba619e526779dc1eba",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/Service/RecordSequencer.php": {
+    "mtime": 1781641151.7594275,
+    "ast_hash": "7a5230bc1679eb15eb819452667787e5",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/ValueObject/BatchKey.php": {
+    "mtime": 1781638590.1314437,
+    "ast_hash": "27f9b9c46ac0b13e38aceb1fad7a3b04",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/ValueObject/OptionalSegmentData.php": {
+    "mtime": 1781641961.2560298,
+    "ast_hash": "0d2985c0cf8debf779ac8915baee1846",
+    "semantic_hash": ""
+  },
+  "src/Domain/Remittance/ValueObject/PaymentDetail.php": {
+    "mtime": 1781638590.1311655,
+    "ast_hash": "e2cd4b0bfc7b27f9028b13fd62131069",
+    "semantic_hash": ""
+  },
+  "src/Domain/Return/Entity/ReturnBatch.php": {
+    "mtime": 1781642616.906501,
+    "ast_hash": "0021db10a1688892e1b51fd66c3116a5",
+    "semantic_hash": ""
+  },
+  "src/Domain/Return/Entity/ReturnDetail.php": {
+    "mtime": 1781643869.25603,
+    "ast_hash": "771b24dab5cb40e23069d29efaec62d4",
+    "semantic_hash": ""
+  },
+  "src/Domain/Return/Entity/ReturnFile.php": {
+    "mtime": 1781642618.347058,
+    "ast_hash": "3a82f4411399b0201d800cb162819571",
+    "semantic_hash": ""
+  },
+  "src/Domain/Return/Service/OccurrenceStatusMapper.php": {
+    "mtime": 1781643875.4972384,
+    "ast_hash": "d36b8068e82b02de53a9237054b57490",
+    "semantic_hash": ""
+  },
+  "src/Domain/Return/ValueObject/Occurrence.php": {
+    "mtime": 1781642612.5312104,
+    "ast_hash": "9eeaf8c09857cdcdefb74648266971c7",
+    "semantic_hash": ""
+  },
+  "src/Domain/Return/ValueObject/ParsedTaxData.php": {
+    "mtime": 1781643847.832864,
+    "ast_hash": "739d738f39fb8d6b1e840787abc6f76c",
+    "semantic_hash": ""
+  },
+  "src/Domain/Return/ValueObject/ReturnSegment.php": {
+    "mtime": 1781642613.4466436,
+    "ast_hash": "54d8abda32f3392ecbdf8b864ae93eb8",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/BatchProfile.php": {
+    "mtime": 1781638565.223176,
+    "ast_hash": "4ee09d35403b93088cd5929c77ecc621",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/FileKind.php": {
+    "mtime": 1781638565.2238867,
+    "ast_hash": "033ca34c6531df873b1d88573bf66e3e",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/PaymentMethod.php": {
+    "mtime": 1783532283.6153402,
+    "ast_hash": "12c2870d428b4ea65299fab22662f842",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/PaymentStatus.php": {
+    "mtime": 1781642611.8419788,
+    "ast_hash": "a35d4533d021cf63d2858eea5e3988df",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/PaymentType.php": {
+    "mtime": 1781638565.2235727,
+    "ast_hash": "69acaa545961c8c59203017495aa69a6",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/PixKeyType.php": {
+    "mtime": 1781734399.4884071,
+    "ast_hash": "50266b99d423cf0131c6263a1c04adad",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/SegmentType.php": {
+    "mtime": 1781638565.2226007,
+    "ast_hash": "aeb9d90cccba04ed09eed6d93602a8b0",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Enum/TaxType.php": {
+    "mtime": 1781641108.056588,
+    "ast_hash": "e93a14e2c0cdcfa8d28457d6173f523b",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Exception/DomainException.php": {
+    "mtime": 1781638565.2210133,
+    "ast_hash": "088a0eb138c0cb1a1087dc15f0f7e5f4",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Exception/InvalidBatchException.php": {
+    "mtime": 1781638565.2214832,
+    "ast_hash": "a719a4cd8fc64e3ef3b2aee5f130dce5",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Exception/InvalidLayoutException.php": {
+    "mtime": 1781642611.0287776,
+    "ast_hash": "363c7fbb08c519a4bc54beb5a579419a",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Exception/InvalidPaymentException.php": {
+    "mtime": 1781638565.221807,
+    "ast_hash": "8e96803c7106f23c7c6d85dd9c6dba48",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Exception/MixedPixFileException.php": {
+    "mtime": 1781638565.222064,
+    "ast_hash": "9c2c6daf150a1d643b9a5841468ab2c7",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Service/BarcodeValidator.php": {
+    "mtime": 1781743822.4412813,
+    "ast_hash": "3a25d049b48e4ef608384ed1712c4be5",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Service/BeneficiaryAgencyAccountFormatter.php": {
+    "mtime": 1784049122.4737067,
+    "ast_hash": "85f189eedb9ba02832d0d7ebbeab7590",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/Service/DocumentNormalizer.php": {
+    "mtime": 1781744070.2757423,
+    "ast_hash": "17576c468de2944a3a479fd5f3f631d1",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/ValueObject/BankAccount.php": {
+    "mtime": 1781650327.2296789,
+    "ast_hash": "983ac1087a8ef058f7945a7c68161071",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/ValueObject/CnabDate.php": {
+    "mtime": 1781641103.4903953,
+    "ast_hash": "4a82f1c79d747c83e6abe56e1e5dfe28",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/ValueObject/Money.php": {
+    "mtime": 1781641104.2690325,
+    "ast_hash": "89fe15ee2a262502b0f7f9cf5e156c08",
+    "semantic_hash": ""
+  },
+  "src/Domain/Shared/ValueObject/TaxId.php": {
+    "mtime": 1781650327.2298622,
+    "ast_hash": "049018aef6bc2274bb004ce423d90956",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Builder/TaxSegmentBuilder.php": {
+    "mtime": 1781650327.2300632,
+    "ast_hash": "2bbffe2ba58c1caf9b9b1a8887ec8099",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchHeaderBankSlipRecord.php": {
+    "mtime": 1781640333.606033,
+    "ast_hash": "78008665f489c24c1c53bd655c8b2c54",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchHeaderDefinition.php": {
+    "mtime": 1781640322.967752,
+    "ast_hash": "7aefb67fc87ba37ed68b09d7431b4397",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchHeaderTaxRecord.php": {
+    "mtime": 1781640336.49154,
+    "ast_hash": "ef09292553db031809f83549f3bf6195",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchHeaderTransferRecord.php": {
+    "mtime": 1781640331.8812518,
+    "ast_hash": "d07852c36d152d22764b00c069caf5eb",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchHeaderUtilityRecord.php": {
+    "mtime": 1781640336.2286668,
+    "ast_hash": "998d9a0e2e09c8c2d1623c51490fac53",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchTrailerPixRecord.php": {
+    "mtime": 1781640729.2940476,
+    "ast_hash": "fb84cee5bb1fdae7e0142383239dfd3c",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchTrailerTaxRecord.php": {
+    "mtime": 1781640351.5216217,
+    "ast_hash": "252509691c3ae5fe7964e2b28dbca836",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchTrailerTransferRecord.php": {
+    "mtime": 1781640345.4271703,
+    "ast_hash": "b2eb6b3b075771c5f7a33d096bfeaa24",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/BatchTrailerUtilityRecord.php": {
+    "mtime": 1781640348.7649124,
+    "ast_hash": "d30d8b9e97f7f3a924457b536f3a5204",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/FieldFactory.php": {
+    "mtime": 1781640341.9806015,
+    "ast_hash": "d938ff4d87d1c667b8e6c0d96f16917c",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/FileHeaderRecord.php": {
+    "mtime": 1781800411.2230587,
+    "ast_hash": "0eab1778b0356cd440fb8c37e6b8fe27",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/FileTrailerRecord.php": {
+    "mtime": 1781640331.520273,
+    "ast_hash": "c02115ec342f9132fe59783b82469318",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/ItauConstants.php": {
+    "mtime": 1782423974.451224,
+    "ast_hash": "a9535ed31d24c310acae9332e45e9ea3",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/ItauLayoutRegistry.php": {
+    "mtime": 1781640651.5137062,
+    "ast_hash": "75f8104eb6fb4bb5bdf6d5a27084c489",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/RecordLayout.php": {
+    "mtime": 1781640302.5959163,
+    "ast_hash": "280fd401ab5d0cedab8b782e27cfdb82",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentARecord.php": {
+    "mtime": 1781640361.65271,
+    "ast_hash": "27311ecbc644625ed761f73c0c9b2104",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentBPixRecord.php": {
+    "mtime": 1781640368.7470336,
+    "ast_hash": "dd9ef49a9f19ae3732648a8ecf2efad1",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentBRecord.php": {
+    "mtime": 1781640364.8965364,
+    "ast_hash": "175a96bf8d48d27af1112bc2b44a34cd",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentBTaxRecord.php": {
+    "mtime": 1781640371.3058338,
+    "ast_hash": "76d0b4206bb86997bc77f2d0f22d8b83",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentCRecord.php": {
+    "mtime": 1781640376.68352,
+    "ast_hash": "f6606d20fc77434ea4433e7b5f389fd1",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentDRecord.php": {
+    "mtime": 1781640383.5976183,
+    "ast_hash": "8bd8c353297a3cd57a586549d74deed0",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentERecord.php": {
+    "mtime": 1781640384.7753112,
+    "ast_hash": "771318de116a3cbcaf08819f3a15264a",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentFRecord.php": {
+    "mtime": 1781640386.7236125,
+    "ast_hash": "ccc00e137baf21175195f5c3f573f017",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentJ52PixRecord.php": {
+    "mtime": 1781640400.6379344,
+    "ast_hash": "4211287f3e5e5118c07c35edb4a12da7",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentJ52Record.php": {
+    "mtime": 1781640396.9944196,
+    "ast_hash": "dc3e95d25d26aeaa70c06047c0af6092",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentJRecord.php": {
+    "mtime": 1781744011.5312135,
+    "ast_hash": "ec3bced696347a225a61e66bf7eb29c9",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/DarfDataLayout.php": {
+    "mtime": 1781640617.0613837,
+    "ast_hash": "0a988ad4feb12facadea638ceca663a6",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/DarfSimplesDataLayout.php": {
+    "mtime": 1781640622.2277203,
+    "ast_hash": "fd73a52e23e9ad5d5a15d8eb02174a2e",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/DarjDataLayout.php": {
+    "mtime": 1781640626.5044484,
+    "ast_hash": "fb750c6fcae2ad0e103aab60f1f9ac38",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/DpvatDataLayout.php": {
+    "mtime": 1781640647.5241487,
+    "ast_hash": "bed9cdc3ab9b21d9d76c721faf1dfbd1",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/FgtsDataLayout.php": {
+    "mtime": 1781640642.564751,
+    "ast_hash": "cd8d1dfa0739bacc71dffd487763c993",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/GareSpIcmsDataLayout.php": {
+    "mtime": 1781640630.8554585,
+    "ast_hash": "5d9ac6a5a5bbbf74e5af0ff6c9bfa9ad",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/GpsDataLayout.php": {
+    "mtime": 1781640612.4449549,
+    "ast_hash": "ed914844310e1d76819e8e0dcec9ecc8",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/IpvaDataLayout.php": {
+    "mtime": 1781640636.3853917,
+    "ast_hash": "5d91b6d90754fb6d199bbacd78c6a55f",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/TaxDataLayout.php": {
+    "mtime": 1781640607.088653,
+    "ast_hash": "2b925897f31f29d362d88bb85d5bfd7e",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentN/TaxFieldFactory.php": {
+    "mtime": 1781640753.4867897,
+    "ast_hash": "2a3164f4080d8c20c43cf1dda2c28381",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentNRecord.php": {
+    "mtime": 1781640406.70686,
+    "ast_hash": "8b39c38b1382c3eb6ae60395985959c9",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentORecord.php": {
+    "mtime": 1781640405.0117633,
+    "ast_hash": "8a48912075ecabb168ec37c5a63585e1",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentWRecord.php": {
+    "mtime": 1781640409.0926003,
+    "ast_hash": "e38a3675b745aebb695c3a627ec7d518",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Layout/SegmentZRecord.php": {
+    "mtime": 1781640411.3184295,
+    "ast_hash": "d50d048f0cba796d0268315284bb8c43",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Parser/BarcodeParser.php": {
+    "mtime": 1781743815.0609605,
+    "ast_hash": "a0053534a519d9026f4bb9258393fc3e",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Parser/EmvTlvParser.php": {
+    "mtime": 1781743804.5174258,
+    "ast_hash": "e988b4081ac92a81f26bacf0405f7dbe",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Parser/PixQrCodeParser.php": {
+    "mtime": 1784220532.6270168,
+    "ast_hash": "d51ee6a4a7adb783ea7cacee845b2db2",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Reader/DetailLayoutResolver.php": {
+    "mtime": 1781643911.3666344,
+    "ast_hash": "a061d8d98802cf9ebe286f3a6536f89e",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Reader/ItauReturnReader.php": {
+    "mtime": 1781644009.1904633,
+    "ast_hash": "bc079f3e5db0e650abd9f529f462c66d",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Reader/ReturnFileValidator.php": {
+    "mtime": 1781644017.690567,
+    "ast_hash": "ab1917f9b1ca366f3ad8c91362afd0af",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Reader/TaxSegmentParser.php": {
+    "mtime": 1781643853.5607984,
+    "ast_hash": "28f5df914fde3c32eb1dc42f089d85c9",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Validator/ItauLayoutValidator.php": {
+    "mtime": 1781734527.7157059,
+    "ast_hash": "616b0efa021f05c27d23aaa9f4f13949",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Validator/RecordFieldValidator.php": {
+    "mtime": 1781734561.5801826,
+    "ast_hash": "7438a4eb283d617dc176aedc6501c714",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Validator/SispagRulesValidator.php": {
+    "mtime": 1783531698.7432005,
+    "ast_hash": "3063586c66c6d71e6e74c85d043e1867",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Validator/StructuralValidator.php": {
+    "mtime": 1781644179.154334,
+    "ast_hash": "544b4d499ac1d277291b45ea2effeee6",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Validator/ValidationFileContext.php": {
+    "mtime": 1781734519.7938902,
+    "ast_hash": "ff2f3b076c58c6f110454b8d81248f04",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Bank/Itau/Writer/ItauRemittanceWriter.php": {
+    "mtime": 1782245884.8073325,
+    "ast_hash": "9f4851ea14783a0bb32bc506d42b130c",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Cnab/Encoding/EncodingConverter.php": {
+    "mtime": 1781643872.6681821,
+    "ast_hash": "670e8e376528d42552b52166e1e72dc6",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Cnab/IO/CnabLineReader.php": {
+    "mtime": 1781642648.4171574,
+    "ast_hash": "0127f442d69e398dd61b45e3c3b9e338",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Cnab/Layout/FieldDefinition.php": {
+    "mtime": 1781638607.7009168,
+    "ast_hash": "f3c39fd2ff86bd39fcf407f9df0829f1",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Cnab/Layout/FieldType.php": {
+    "mtime": 1781638607.7002208,
+    "ast_hash": "c0c983ef5bdc9b803df2583eaeff1818",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Cnab/Layout/RecordDefinition.php": {
+    "mtime": 1781640749.0822115,
+    "ast_hash": "82dce60a91c5568a5673680bfd422be0",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Cnab/Parser/RecordParser.php": {
+    "mtime": 1781640753.3131855,
+    "ast_hash": "d26e9d3b81eacdd11a68786a4346c187",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/Cnab/Serializer/RecordFormatter.php": {
+    "mtime": 1781641346.5175722,
+    "ast_hash": "3b241c1cc1e42323b200aef41776bd3a",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/I18n/MessageCatalog.php": {
+    "mtime": 1784049131.5351567,
+    "ast_hash": "f257895ed63e3f00dc1b31474d37e477",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/I18n/OccurrenceTranslator.php": {
+    "mtime": 1781643841.045822,
+    "ast_hash": "8105b9eea486d2b03aaa2b58b7ab96b6",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/I18n/occurrence_codes.php": {
+    "mtime": 1781643836.58009,
+    "ast_hash": "5a712dfcea5cd79e2ae3914e8d171104",
+    "semantic_hash": ""
+  },
+  "tests/Integration/LayoutValidationTest.php": {
+    "mtime": 1782424007.764799,
+    "ast_hash": "c737580e19ddfb83db671d7a5a35c02e",
+    "semantic_hash": ""
+  },
+  "tests/Integration/RemittanceGenerationTest.php": {
+    "mtime": 1784049152.6168182,
+    "ast_hash": "c760cb9386d840c8d02fd17fb84c7202",
+    "semantic_hash": ""
+  },
+  "tests/Integration/ReturnParsingTest.php": {
+    "mtime": 1781643994.6448443,
+    "ast_hash": "291101d2dc505d074cc035a5de320ede",
+    "semantic_hash": ""
+  },
+  "tests/Support/FakeBbHttpClient.php": {
+    "mtime": 1785261286.5922332,
+    "ast_hash": "d9aaf00e4a0d469a29951e8baea6e1b3",
+    "semantic_hash": ""
+  },
+  "tests/Support/LayoutTestHelper.php": {
+    "mtime": 1781640790.8183346,
+    "ast_hash": "e55ffcd69eba35e2dfb6399442d28087",
+    "semantic_hash": ""
+  },
+  "tests/Support/ReturnFileFixtureBuilder.php": {
+    "mtime": 1784045658.5125105,
+    "ast_hash": "890ab41158a36d21b93bf3d91c59b9d3",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Bank/BancoDoBrasil/BankSlipBatchRequestMapperTest.php": {
+    "mtime": 1785261338.4236436,
+    "ast_hash": "daa17fd452866d832e653aa72b035e44",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Bank/BancoDoBrasil/BbPagamentosTest.php": {
+    "mtime": 1785261338.5278254,
+    "ast_hash": "6290e8b33e9f195459f02c032413e0b7",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Bank/BancoDoBrasil/CreditAccountPartsTest.php": {
+    "mtime": 1785261354.8097453,
+    "ast_hash": "d9d59d1e44c7a23d4f014469466403cd",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Bank/BancoDoBrasil/PixBatchRequestMapperTest.php": {
+    "mtime": 1785261322.864023,
+    "ast_hash": "e7bc2949ea1392d638718fe25e4cb407",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Bank/BancoDoBrasil/TransferBatchRequestMapperTest.php": {
+    "mtime": 1785261314.0366971,
+    "ast_hash": "56686dbb94e254256c478a15f5b9866a",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/BarcodeValidatorTest.php": {
+    "mtime": 1781744033.9677632,
+    "ast_hash": "bf1391493ac2c4d09d10adecc964e74d",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/BatchSegmentRulesTest.php": {
+    "mtime": 1781642154.896138,
+    "ast_hash": "84132a7f1181c2bf51f1c3e521f639aa",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/BeneficiaryAgencyAccountFormatterTest.php": {
+    "mtime": 1784049148.7305672,
+    "ast_hash": "77526c4c0dee5996bf85beaa06cd09a3",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/DocumentNormalizerTest.php": {
+    "mtime": 1781650327.2317977,
+    "ast_hash": "5515605fdcbdb15cac1650475150d146",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/OccurrenceStatusMapperTest.php": {
+    "mtime": 1781643999.8573241,
+    "ast_hash": "560f380072b9a1186e24b881a323c9a0",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/PaymentSegmentComposerTest.php": {
+    "mtime": 1781642160.235351,
+    "ast_hash": "9bb144c4e4f146ccd2eb49d3cd178fb5",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/PixFileSeparatorTest.php": {
+    "mtime": 1781638607.6998749,
+    "ast_hash": "2c3e40435e1f2d22ba30e6cbd9b517c6",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/PixKeyTypeTest.php": {
+    "mtime": 1781734435.0028584,
+    "ast_hash": "ea7fd3b6c363ee70fd1f03e02329af11",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Domain/RegistrationValidatorTest.php": {
+    "mtime": 1781744037.2144735,
+    "ast_hash": "407bc8e9a70209372fd30a817792eea3",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/Bank/Itau/ItauLayoutDefinitionTest.php": {
+    "mtime": 1781640664.38967,
+    "ast_hash": "7bff149db1e38c84d9d5010d3f5f07bb",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/Bank/Itau/ItauLayoutRoundTripTest.php": {
+    "mtime": 1781800443.6226535,
+    "ast_hash": "e3c2ba7e00a9c8b5b9273b3914035bb8",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/Bank/Itau/Parser/BarcodeParserTest.php": {
+    "mtime": 1781744028.8136852,
+    "ast_hash": "7b0bd8c8600851bc69d5c11a3cc25b05",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/Bank/Itau/Parser/PixQrCodeParserTest.php": {
+    "mtime": 1784220509.827986,
+    "ast_hash": "bccb059a59b0cac4eeaa507b8a2cde67",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/Bank/Itau/TaxDataLayoutDefinitionTest.php": {
+    "mtime": 1781640701.327451,
+    "ast_hash": "d665759634caedee5dae874bec7b9a03",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/Cnab/RecordParserTest.php": {
+    "mtime": 1781640705.4132013,
+    "ast_hash": "9566c149fabde941f5f64dea58efd1b5",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/OccurrenceTranslatorTest.php": {
+    "mtime": 1781644002.5149102,
+    "ast_hash": "1189c09551d014698d28d8ca050ccbe8",
+    "semantic_hash": ""
+  },
+  "CHANGELOG.md": {
+    "mtime": 1785261416.7927778,
+    "ast_hash": "5698a04e9b8bac5b2e1b603d194764ec",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1785261455.258209,
+    "ast_hash": "c3bf05b45f20d0b868a096960ed1b07e",
+    "semantic_hash": ""
+  },
+  "docs/README.md": {
+    "mtime": 1785261413.1027112,
+    "ast_hash": "b7b492264863684670ddeee79c48e005",
+    "semantic_hash": ""
+  },
+  "docs/bb/README.md": {
+    "mtime": 1785261384.9744759,
+    "ast_hash": "b858987ad099bf73383dfa5e10460467",
+    "semantic_hash": ""
+  },
+  "docs/entities/itau-reference.md": {
+    "mtime": 1783532320.3835166,
+    "ast_hash": "3d13010ac636c297f7a2169e4e6cddc2",
+    "semantic_hash": ""
+  },
+  "docs/getting-started.md": {
+    "mtime": 1781645482.6511273,
+    "ast_hash": "289081a4a57fd6cea020ddc0d45cee35",
+    "semantic_hash": ""
+  },
+  "docs/homologation-itau.md": {
+    "mtime": 1781645483.2341535,
+    "ast_hash": "12121e4d79905d8ac8776b36b5147065",
+    "semantic_hash": ""
+  },
+  "docs/integration-guide.md": {
+    "mtime": 1781644992.7972636,
+    "ast_hash": "98a6cc1c3f79ca0f0519a9e7fc8f3317",
+    "semantic_hash": ""
+  },
+  "docs/payment-types/bank-slip.md": {
+    "mtime": 1781744099.39896,
+    "ast_hash": "70df97831764804693bdd21aadf3146f",
+    "semantic_hash": ""
+  },
+  "docs/payment-types/pix-key.md": {
+    "mtime": 1781734438.92395,
+    "ast_hash": "23fcbbb1e09868739ff16418c0cd4e92",
+    "semantic_hash": ""
+  },
+  "docs/payment-types/pix-qr-code.md": {
+    "mtime": 1784220512.3257813,
+    "ast_hash": "23a215186239c73be5fc500ff689d0ff",
+    "semantic_hash": ""
+  },
+  "docs/payment-types/taxes.md": {
+    "mtime": 1781644979.6472516,
+    "ast_hash": "50580a87ad5531ada7fa8f36dfbf16e7",
+    "semantic_hash": ""
+  },
+  "docs/payment-types/ted-doc-transfer.md": {
+    "mtime": 1784049132.348026,
+    "ast_hash": "98d1ca16f14753da63b79b55c4116eb2",
+    "semantic_hash": ""
+  },
+  "docs/payment-types/utilities-barcode.md": {
+    "mtime": 1781644683.4773486,
+    "ast_hash": "f2ebfca0c1ffd956eb213db4b20bfe80",
+    "semantic_hash": ""
+  },
+  "docs/planning/PLAN.md": {
+    "mtime": 1784641431.6755579,
+    "ast_hash": "da3366f935963218ec7372f430ac9a8c",
+    "semantic_hash": ""
+  },
+  "docs/planning/README.md": {
+    "mtime": 1784641431.65558,
+    "ast_hash": "fd813a9367d41df85249a8c853991eab",
+    "semantic_hash": ""
+  },
+  "docs/planning/architecture.md": {
+    "mtime": 1784641431.6793,
+    "ast_hash": "dbcbc2210901b58943fa4c0fa41ca550",
+    "semantic_hash": ""
+  },
+  "docs/planning/checklist.md": {
+    "mtime": 1784641431.6553555,
+    "ast_hash": "d372302320f4cc8ca285adaaaf888710",
+    "semantic_hash": ""
+  },
+  "docs/planning/conventions.md": {
+    "mtime": 1784641431.6794016,
+    "ast_hash": "484bdb070a15f5d318f5b899c730b192",
+    "semantic_hash": ""
+  },
+  "docs/planning/file-map.md": {
+    "mtime": 1784641431.6551344,
+    "ast_hash": "4a542fbb98c6f87d5a75e358a97706fb",
+    "semantic_hash": ""
+  },
+  "docs/planning/roadmap.md": {
+    "mtime": 1784641431.6793203,
+    "ast_hash": "003fdf933106a6abbc3e3d1be79a544e",
+    "semantic_hash": ""
+  },
+  "docs/planning/segments.md": {
+    "mtime": 1784641431.6755579,
+    "ast_hash": "e3cafd77ab7769803c3b83d0c545150d",
+    "semantic_hash": ""
+  },
+  "docs/remittance.md": {
+    "mtime": 1781800437.3399618,
+    "ast_hash": "62f4fee6409da04cb241bccdd9076e5e",
+    "semantic_hash": ""
+  },
+  "docs/return-codes.md": {
+    "mtime": 1781644616.932308,
+    "ast_hash": "849d2698b8343658515eb72b817a132f",
+    "semantic_hash": ""
+  },
+  "docs/return-file.md": {
+    "mtime": 1781644593.6915007,
+    "ast_hash": "e25b271f5b8ac94f43b7e7e096ee7b47",
+    "semantic_hash": ""
+  },
+  "docs/validation.md": {
+    "mtime": 1784049132.4853938,
+    "ast_hash": "310e2121c225a65292e41f22578f14ae",
+    "semantic_hash": ""
+  },
+  "tests/Fixtures/Rejected/boleto2.txt": {
+    "mtime": 1781743908.588372,
+    "ast_hash": "780e905ac42515ff521a9feaec5670b0",
+    "semantic_hash": ""
+  },
+  "tests/Fixtures/Rejected/pixcc.txt": {
+    "mtime": 1781743908.5902991,
+    "ast_hash": "3ad533efe5941919c4b7029afcbe3b03",
+    "semantic_hash": ""
+  }
+}

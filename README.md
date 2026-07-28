@@ -1,23 +1,24 @@
 # CNAB SISPAG - Fornecedor
 
-Biblioteca PHP **framework-agnostic** para arquivos **SISPAG Itaú CNAB 240 v086** — remessa, retorno e validação.
+Biblioteca PHP **framework-agnostic** para **SISPAG Itaú CNAB 240 v086** (remessa/retorno) e **Pagamentos em Lote do Banco do Brasil** (API REST).
 
-[![Tests](https://img.shields.io/badge/tests-125%20passing-brightgreen)](#testes)
+[![Tests](https://img.shields.io/badge/tests-197%20passing-brightgreen)](#testes)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue)](#requisitos)
 
 ## Funcionalidades
 
 | Recurso | Descrição |
 |---|---|
-| **Remessa** | Gera arquivos para TED, PIX, boletos, concessionárias e tributos |
-| **Retorno** | Interpreta ocorrências, status e autenticação eletrônica |
-| **Validador** | Verifica estrutura, campos e regras SISPAG antes do envio |
-| **Segmentos** | A–Z, J-52, J-52 PIX, sub-layouts de tributos (Anexo C) |
+| **Remessa Itaú** | Gera arquivos CNAB para TED, PIX, boletos, concessionárias e tributos |
+| **Retorno Itaú** | Interpreta ocorrências, status e autenticação eletrônica |
+| **Validador Itaú** | Verifica estrutura, campos e regras SISPAG antes do envio |
+| **API Banco do Brasil** | Envia lotes de TED/DOC, PIX e boletos via Pagamentos em Lote |
 
 ## Requisitos
 
 - PHP 8.2+
-- Extensão `iconv`
+- Extensão `iconv` (Itaú CNAB)
+- Extensão `curl` (cliente BB)
 - Composer
 
 ## Instalação
@@ -26,7 +27,7 @@ Biblioteca PHP **framework-agnostic** para arquivos **SISPAG Itaú CNAB 240 v086
 composer require wlrsilveira/cnab-sispag
 ```
 
-## Uso rápido
+## Uso rápido — Itaú (CNAB)
 
 ```php
 use CnabSispag\Bank\Itau\ItauSispag;
@@ -71,6 +72,27 @@ $result = $sispag->validateLayout(file_get_contents('remessa.rem'));
 php bin/validate-itau remessa.rem
 ```
 
+## Uso rápido — Banco do Brasil (API)
+
+```php
+use CnabSispag\Bank\BancoDoBrasil\BbConfig;
+use CnabSispag\Bank\BancoDoBrasil\BbPagamentos;
+
+$bb = new BbPagamentos(new BbConfig(
+    clientId: $clientId,
+    clientSecret: $clientSecret,
+    appKey: $appKey,
+    sandbox: true,
+    mtlsCertPath: '/run/secrets/bb-client.crt',
+    mtlsKeyPath: '/run/secrets/bb-client.key',
+));
+
+$result = $bb->sendTransferBatch($requestId, $debitAccount, $transfers, PaymentType::Suppliers);
+// também: sendPixBatch(), sendBankSlipBatch(), get*Request(), releasePayments(), cancelPayments()
+```
+
+Guia completo: **[docs/bb/README.md](docs/bb/README.md)**
+
 ## Documentação
 
 Índice completo: **[docs/](docs/README.md)**
@@ -79,6 +101,8 @@ php bin/validate-itau remessa.rem
 |---|---|
 | [Primeiros passos](docs/getting-started.md) | Instalação e exemplo mínimo |
 | [Guia de integração](docs/integration-guide.md) | Fluxo completo em produção |
+| [Banco do Brasil (API)](docs/bb/README.md) | Pagamentos em Lote via REST |
+| [Checklist integração BB](docs/INTEGRATION_CHECKLIST.md) | O que implementar no sistema consumidor |
 | [Remessa](docs/remittance.md) | Geração de arquivos |
 | [Retorno](docs/return-file.md) | Interpretação do retorno |
 | [Validação](docs/validation.md) | O que o validador verifica |
@@ -112,7 +136,7 @@ composer install
 ./vendor/bin/phpunit
 ```
 
-125 testes, 773 assertions — remessa, retorno, validação e layouts.
+197 testes, 949 assertions — remessa, retorno, validação, layouts e cliente BB.
 
 ## Convenções
 
@@ -126,6 +150,7 @@ Documentação de arquitetura e roadmap em [docs/planning/](docs/planning/README
 ## Referência oficial
 
 - [Manual SISPAG Itaú CNAB 240 v086 (PDF)](https://www.itau.com.br/media/dam/m/3b9688b3979b4016/original/Layout-de-Arquivos_CNAB-Versa-o-086_SISPAG.pdf)
+- [OpenAPI BB Pagamentos em Lote v1](docs/bb/OpenAPI_BB_Pagamentos_em_Lote_v1.json)
 
 ## Licença
 

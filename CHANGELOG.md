@@ -4,6 +4,13 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ## [Unreleased]
 
+### Adicionado
+
+- Cliente **Banco do Brasil Pagamentos em Lote** (`BbPagamentos`): TED/DOC, PIX chave e boletos via API REST
+- Auth OAuth2 + `gw-dev-app-key` + mTLS por path de certificado A1 (injetado pelo sistema)
+- OpenAPI oficial em `docs/bb/OpenAPI_BB_Pagamentos_em_Lote_v1.json`
+- Checklist de integração do sistema consumidor em `docs/INTEGRATION_CHECKLIST.md`
+
 ### Alterado
 
 - `PixQrCodeParser`: valida CRC-16 do EMV; extrai valor (tag 54); substitui `txid ***` pelo ID do path em URLs `/cob/` e `/cobv/`
