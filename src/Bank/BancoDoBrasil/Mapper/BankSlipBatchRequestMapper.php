@@ -7,10 +7,16 @@ namespace CnabSispag\Bank\BancoDoBrasil\Mapper;
 use CnabSispag\Bank\Itau\Dto\BankSlipPaymentDto;
 use CnabSispag\Bank\Itau\Dto\DebitAccountDto;
 use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
+use CnabSispag\Infrastructure\Bank\Itau\Parser\BarcodeParser;
 
 final class BankSlipBatchRequestMapper
 {
     public const MAX_ITEMS = 100;
+
+    public function __construct(
+        private readonly BarcodeParser $barcodeParser = new BarcodeParser(),
+    ) {
+    }
 
     /**
      * @param list<BankSlipPaymentDto> $payments
@@ -55,12 +61,7 @@ final class BankSlipBatchRequestMapper
      */
     private function mapPayment(BankSlipPaymentDto $payment): array
     {
-        $barcode = DocumentNormalizer::digitsOnly($payment->barcode);
-        if (strlen($barcode) !== 44) {
-            throw new \InvalidArgumentException(
-                'BB bank slip payments require a 44-digit barcode (linha digitável is not accepted).',
-            );
-        }
+        $barcode = $this->normalizeBarcode($payment->barcode);
 
         $item = [
             'numeroCodigoBarras' => $barcode,
@@ -96,6 +97,24 @@ final class BankSlipBatchRequestMapper
         }
 
         return $item;
+    }
+
+    private function normalizeBarcode(string $barcode): string
+    {
+        $digits = DocumentNormalizer::digitsOnly($barcode);
+        $length = strlen($digits);
+
+        if ($length === 47) {
+            return $this->barcodeParser->linhaDigitavelToBarcode($digits);
+        }
+
+        if ($length === 44) {
+            return $digits;
+        }
+
+        throw new \InvalidArgumentException(
+            'BB bank slip payments require a 44-digit barcode or a 47-digit linha digitável (got '.$length.' digits).',
+        );
     }
 
     private function assertRequestId(int $requestId): void

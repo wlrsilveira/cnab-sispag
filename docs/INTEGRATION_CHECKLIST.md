@@ -65,7 +65,7 @@ Regras importantes:
 - Conta débito: agência, conta, DV
 - TED: preferir `beneficiaryAgency` / `beneficiaryAccount` / `beneficiaryAccountCheckDigit` + `beneficiaryBankCode` + CPF/CNPJ
 - PIX: `PixKeyType` + chave; ou dados bancários se for PIX sem chave
-- Boleto: **código de barras 44 dígitos** (não linha digitável)
+- Boleto: aceita **44** (código de barras) ou **47** (linha digitável); a lib normaliza para 44 antes da API
 - `PaymentType`: Fornecedores / Salários / Diversos
 - Separar lotes por tipo (TED ≠ PIX ≠ boleto)
 - Respeitar limites: TED 350, PIX 320, boletos 100 por request

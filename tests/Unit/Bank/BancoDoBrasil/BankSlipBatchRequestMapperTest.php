@@ -49,17 +49,55 @@ final class BankSlipBatchRequestMapperTest extends TestCase
         self::assertSame('NOSSO1', $item['codigoNossoDocumento']);
     }
 
-    public function testRejectsLinhaDigitavel(): void
+    public function testConvertsLinhaDigitavelToBarcode(): void
     {
         $mapper = new BankSlipBatchRequestMapper();
         $debit = new DebitAccountDto(2, '12345678000199', '1607', '99738672', 'X', 'EMPRESA');
-        $payment = new BankSlipPaymentDto(
+        $linhaDigitavel = '23792372059068217216963003432703315310000519452';
+        $payment = $this->bankSlipPayment($linhaDigitavel);
+
+        $body = $mapper->map(1, $debit, [$payment]);
+
+        self::assertSame(
+            '23793153100005194522372090682172166300343270',
+            $body['lancamentos'][0]['numeroCodigoBarras'],
+        );
+    }
+
+    public function testKeepsFortyFourDigitBarcodeUnchanged(): void
+    {
+        $mapper = new BankSlipBatchRequestMapper();
+        $debit = new DebitAccountDto(2, '12345678000199', '1607', '99738672', 'X', 'EMPRESA');
+        $barcode = '23793153100005194522372090682172166300343270';
+        $payment = $this->bankSlipPayment($barcode);
+
+        $body = $mapper->map(1, $debit, [$payment]);
+
+        self::assertSame($barcode, $body['lancamentos'][0]['numeroCodigoBarras']);
+    }
+
+    public function testRejectsInvalidBarcodeLength(): void
+    {
+        $mapper = new BankSlipBatchRequestMapper();
+        $debit = new DebitAccountDto(2, '12345678000199', '1607', '99738672', 'X', 'EMPRESA');
+        $payment = $this->bankSlipPayment(str_repeat('1', 40));
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'BB bank slip payments require a 44-digit barcode or a 47-digit linha digitável (got 40 digits).',
+        );
+        $mapper->map(1, $debit, [$payment]);
+    }
+
+    private function bankSlipPayment(string $barcode): BankSlipPaymentDto
+    {
+        return new BankSlipPaymentDto(
             PaymentMethod::OtherBankSlip,
             '1',
             10.0,
             new \DateTimeImmutable('2026-05-01'),
             'A',
-            str_repeat('1', 47),
+            $barcode,
             1,
             '12345678901',
             'P',
@@ -68,8 +106,5 @@ final class BankSlipBatchRequestMapperTest extends TestCase
             new \DateTimeImmutable('2026-05-10'),
             10.0,
         );
-
-        $this->expectException(\InvalidArgumentException::class);
-        $mapper->map(1, $debit, [$payment]);
     }
 }

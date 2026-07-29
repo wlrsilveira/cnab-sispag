@@ -112,4 +112,4 @@ Para testes unitários, injete um `BbHttpClient` fake — sem rede e sem certifi
 - `PaymentType::Salaries` → 127  
 - demais → 128  
 - PIX: `PixKeyType` → `formaIdentificacao` 1–4; sem chave com agência/conta → 5 (dados bancários)  
-- Boleto: apenas código de barras **44** dígitos (linha digitável não é aceita)
+- Boleto: aceita código de barras **44** dígitos ou linha digitável **47**; a lib normaliza para 44 antes da API
