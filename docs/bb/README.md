@@ -73,10 +73,18 @@ Os mesmos DTOs de Itaú (`TransferPaymentDto`, `PixKeyPaymentDto`, `BankSlipPaym
 | `sendTransferBatch` | `POST /lotes-transferencias` (máx. 350) |
 | `sendPixBatch` | `POST /lotes-transferencias-pix` (máx. 320) |
 | `sendBankSlipBatch` | `POST /lotes-boletos` (máx. 100) |
+| `sendUtilityBatch` | `POST /lotes-guias-codigo-barras` (máx. 100) |
+| `sendDarfBatch` | `POST /lotes-darf-normal-preto` (máx. 100; exige `codigoContrato`) |
+| `sendGpsBatch` | `POST /lotes-gps` (máx. 100) |
+| `sendGruBatch` | `POST /pagamentos-gru` (máx. 100) |
 | `getTransferRequest` | `GET /{id}/solicitacao` |
 | `getPixRequest` | `GET /lotes-transferencias-pix/{id}/solicitacao` |
 | `getBankSlipRequest` | `GET /lotes-boletos/{id}/solicitacao` |
-| `getTransferPayment` / `getPixPayment` / `getBankSlipPayment` | consultas por lançamento |
+| `getUtilityRequest` | `GET /lotes-guias-codigo-barras/{id}/solicitacao` |
+| `getDarfRequest` | `GET /lotes-darf-preto-normal/{id}/solicitacao` |
+| `getGpsRequest` | `GET /lotes-gps/{id}/solicitacao` |
+| `getGruRequest` | `GET /lotes-gru/{id}/solicitacao` |
+| `getTransferPayment` / `getPixPayment` / `getBankSlipPayment` / `getUtilityPayment` / `getDarfPayment` / `getGpsPayment` / `getGruPayment` | consultas por lançamento |
 | `releasePayments` | `POST /liberar-pagamentos` |
 | `cancelPayments` | `POST /cancelar-pagamentos` |
 | `nextRequestIds` | `GET /proximos-numeros-requisicao` |
@@ -103,7 +111,6 @@ Para testes unitários, injete um `BbHttpClient` fake — sem rede e sem certifi
 ## Fora deste entregável
 
 - PIX QR Code (`PixQrCodePaymentDto`)
-- Guias com código de barras / DARF / GPS / GRU
 - Webhook
 
 ## Mapeamentos úteis
@@ -112,4 +119,7 @@ Para testes unitários, injete um `BbHttpClient` fake — sem rede e sem certifi
 - `PaymentType::Salaries` → 127  
 - demais → 128  
 - PIX: `PixKeyType` → `formaIdentificacao` 1–4; sem chave com agência/conta → 5 (dados bancários)  
-- Boleto: aceita código de barras **44** dígitos ou linha digitável **47**; a lib normaliza para 44 antes da API
+- Boleto: aceita código de barras **44** dígitos ou linha digitável **47**; a lib normaliza para 44 antes da API  
+- Guias / concessionárias (`UtilityPaymentDto`): aceita **44** ou linha digitável de arrecadação **48** (inicia com `8`); a lib normaliza para 44 em `codigoBarras`  
+- DARF / GPS: `TaxPaymentDto` (`DarfNormal`/`DarfSimple` / `Gps`)  
+- GRU: `CnabSispag\Bank\BancoDoBrasil\Dto\GruPaymentDto` (DTO BB — sem equivalente Itaú)

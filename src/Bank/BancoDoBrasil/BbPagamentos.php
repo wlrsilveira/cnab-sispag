@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace CnabSispag\Bank\BancoDoBrasil;
 
 use CnabSispag\Bank\BancoDoBrasil\Dto\BbBatchResultDto;
+use CnabSispag\Bank\BancoDoBrasil\Dto\GruPaymentDto;
 use CnabSispag\Bank\BancoDoBrasil\Http\BbApiGateway;
 use CnabSispag\Bank\BancoDoBrasil\Http\BbHttpClient;
 use CnabSispag\Bank\BancoDoBrasil\Http\BbOAuthTokenProvider;
 use CnabSispag\Bank\BancoDoBrasil\Http\CurlBbHttpClient;
 use CnabSispag\Bank\BancoDoBrasil\Mapper\BankSlipBatchRequestMapper;
+use CnabSispag\Bank\BancoDoBrasil\Mapper\DarfBatchRequestMapper;
+use CnabSispag\Bank\BancoDoBrasil\Mapper\GpsBatchRequestMapper;
+use CnabSispag\Bank\BancoDoBrasil\Mapper\GruBatchRequestMapper;
 use CnabSispag\Bank\BancoDoBrasil\Mapper\PixBatchRequestMapper;
 use CnabSispag\Bank\BancoDoBrasil\Mapper\TransferBatchRequestMapper;
+use CnabSispag\Bank\BancoDoBrasil\Mapper\UtilityBatchRequestMapper;
 use CnabSispag\Bank\Itau\Dto\BankSlipPaymentDto;
 use CnabSispag\Bank\Itau\Dto\DebitAccountDto;
 use CnabSispag\Bank\Itau\Dto\PixKeyPaymentDto;
+use CnabSispag\Bank\Itau\Dto\TaxPaymentDto;
 use CnabSispag\Bank\Itau\Dto\TransferPaymentDto;
+use CnabSispag\Bank\Itau\Dto\UtilityPaymentDto;
 use CnabSispag\Domain\Shared\Enum\PaymentType;
 use CnabSispag\Domain\Shared\Service\DocumentNormalizer;
 
@@ -33,6 +40,14 @@ final class BbPagamentos
 
     private readonly BankSlipBatchRequestMapper $bankSlipMapper;
 
+    private readonly UtilityBatchRequestMapper $utilityMapper;
+
+    private readonly DarfBatchRequestMapper $darfMapper;
+
+    private readonly GpsBatchRequestMapper $gpsMapper;
+
+    private readonly GruBatchRequestMapper $gruMapper;
+
     public function __construct(
         private readonly BbConfig $config,
         ?BbHttpClient $httpClient = null,
@@ -41,6 +56,10 @@ final class BbPagamentos
         ?TransferBatchRequestMapper $transferMapper = null,
         ?PixBatchRequestMapper $pixMapper = null,
         ?BankSlipBatchRequestMapper $bankSlipMapper = null,
+        ?UtilityBatchRequestMapper $utilityMapper = null,
+        ?DarfBatchRequestMapper $darfMapper = null,
+        ?GpsBatchRequestMapper $gpsMapper = null,
+        ?GruBatchRequestMapper $gruMapper = null,
     ) {
         $client = $httpClient ?? new CurlBbHttpClient($config);
         $tokens = $tokenProvider ?? new BbOAuthTokenProvider($config, $client);
@@ -48,6 +67,10 @@ final class BbPagamentos
         $this->transferMapper = $transferMapper ?? new TransferBatchRequestMapper();
         $this->pixMapper = $pixMapper ?? new PixBatchRequestMapper();
         $this->bankSlipMapper = $bankSlipMapper ?? new BankSlipBatchRequestMapper();
+        $this->utilityMapper = $utilityMapper ?? new UtilityBatchRequestMapper();
+        $this->darfMapper = $darfMapper ?? new DarfBatchRequestMapper();
+        $this->gpsMapper = $gpsMapper ?? new GpsBatchRequestMapper();
+        $this->gruMapper = $gruMapper ?? new GruBatchRequestMapper();
     }
 
     /**
@@ -118,6 +141,92 @@ final class BbPagamentos
     }
 
     /**
+     * Guias / concessionárias com código de barras (48 linha digitável ou 44 barcode).
+     *
+     * @param list<UtilityPaymentDto> $payments
+     */
+    public function sendUtilityBatch(
+        int $requestId,
+        DebitAccountDto $debitAccount,
+        array $payments,
+        ?int $paymentContract = null,
+    ): BbBatchResultDto {
+        $body = $this->utilityMapper->map(
+            $requestId,
+            $debitAccount,
+            $payments,
+            $paymentContract ?? $this->config->paymentContract,
+        );
+
+        return BbBatchResultDto::fromUtilityResponse(
+            $this->gateway->request('POST', '/lotes-guias-codigo-barras', $body),
+        );
+    }
+
+    /**
+     * @param list<TaxPaymentDto> $payments
+     */
+    public function sendDarfBatch(
+        int $requestId,
+        DebitAccountDto $debitAccount,
+        array $payments,
+        ?int $paymentContract = null,
+    ): BbBatchResultDto {
+        $body = $this->darfMapper->map(
+            $requestId,
+            $debitAccount,
+            $payments,
+            $paymentContract ?? $this->config->paymentContract,
+        );
+
+        return BbBatchResultDto::fromDarfResponse(
+            $this->gateway->request('POST', '/lotes-darf-normal-preto', $body),
+        );
+    }
+
+    /**
+     * @param list<TaxPaymentDto> $payments
+     */
+    public function sendGpsBatch(
+        int $requestId,
+        DebitAccountDto $debitAccount,
+        array $payments,
+        ?int $paymentContract = null,
+    ): BbBatchResultDto {
+        $body = $this->gpsMapper->map(
+            $requestId,
+            $debitAccount,
+            $payments,
+            $paymentContract ?? $this->config->paymentContract,
+        );
+
+        return BbBatchResultDto::fromGpsResponse(
+            $this->gateway->request('POST', '/lotes-gps', $body),
+        );
+    }
+
+    /**
+     * @param list<GruPaymentDto> $payments
+     */
+    public function sendGruBatch(
+        int $requestId,
+        DebitAccountDto $debitAccount,
+        array $payments,
+        ?int $paymentContract = null,
+    ): BbBatchResultDto {
+        $body = $this->gruMapper->map(
+            $requestId,
+            $debitAccount,
+            $payments,
+            $paymentContract ?? $this->config->paymentContract,
+        );
+
+        return BbBatchResultDto::fromGruResponse(
+            $this->gateway->request('POST', '/pagamentos-gru', $body),
+        );
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function getTransferRequest(int $requestId): array
@@ -139,6 +248,38 @@ final class BbPagamentos
     public function getBankSlipRequest(int $requestId): array
     {
         return $this->gateway->request('GET', '/lotes-boletos/'.$requestId.'/solicitacao');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getUtilityRequest(int $requestId): array
+    {
+        return $this->gateway->request('GET', '/lotes-guias-codigo-barras/'.$requestId.'/solicitacao');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDarfRequest(int $requestId): array
+    {
+        return $this->gateway->request('GET', '/lotes-darf-preto-normal/'.$requestId.'/solicitacao');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getGpsRequest(int $requestId): array
+    {
+        return $this->gateway->request('GET', '/lotes-gps/'.$requestId.'/solicitacao');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getGruRequest(int $requestId): array
+    {
+        return $this->gateway->request('GET', '/lotes-gru/'.$requestId.'/solicitacao');
     }
 
     /**
@@ -175,6 +316,58 @@ final class BbPagamentos
         return $this->gateway->request(
             'GET',
             '/boletos/'.$paymentId,
+            null,
+            $this->debitQuery($debitAccount),
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getUtilityPayment(int $paymentId, ?DebitAccountDto $debitAccount = null): array
+    {
+        return $this->gateway->request(
+            'GET',
+            '/guias-codigo-barras/'.$paymentId,
+            null,
+            $this->debitQuery($debitAccount),
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDarfPayment(int $paymentId, ?DebitAccountDto $debitAccount = null): array
+    {
+        return $this->gateway->request(
+            'GET',
+            '/darf-preto/'.$paymentId,
+            null,
+            $this->debitQuery($debitAccount),
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getGpsPayment(int $paymentId, ?DebitAccountDto $debitAccount = null): array
+    {
+        return $this->gateway->request(
+            'GET',
+            '/gps/'.$paymentId,
+            null,
+            $this->debitQuery($debitAccount),
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getGruPayment(int $paymentId, ?DebitAccountDto $debitAccount = null): array
+    {
+        return $this->gateway->request(
+            'GET',
+            '/gru/'.$paymentId,
             null,
             $this->debitQuery($debitAccount),
         );

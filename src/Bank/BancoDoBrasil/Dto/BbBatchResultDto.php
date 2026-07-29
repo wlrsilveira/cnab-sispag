@@ -99,31 +99,154 @@ final readonly class BbBatchResultDto
      */
     public static function fromBankSlipResponse(array $payload): self
     {
+        return self::fromLancamentosResponse(
+            $payload,
+            requestIdKey: 'numeroRequisicao',
+            requestStateKey: 'estadoRequisicao',
+            fallbackStateKey: 'codigoEstado',
+            totalCountKey: 'quantidadeLancamentos',
+            totalAmountKey: 'valorLancamentos',
+            validCountKey: 'quantidadeLancamentosValidos',
+            validAmountKey: 'valorLancamentosValidos',
+            listKey: 'lancamentos',
+            paymentIdKey: 'codigoIdentificadorPagamento',
+            acceptedKey: 'indicadorAceite',
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     */
+    public static function fromUtilityResponse(array $payload): self
+    {
+        return self::fromLancamentosResponse(
+            $payload,
+            requestIdKey: 'numeroRequisicao',
+            requestStateKey: 'codigoEstado',
+            fallbackStateKey: 'estadoRequisicao',
+            totalCountKey: 'quantidadeLancamentos',
+            totalAmountKey: 'valorLancamentos',
+            validCountKey: 'quantidadeLancamentosValidos',
+            validAmountKey: 'valorLancamentosValidos',
+            listKey: 'lancamentos',
+            paymentIdKey: 'codigoIdentificadorPagamento',
+            acceptedKey: 'indicadorAceite',
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     */
+    public static function fromDarfResponse(array $payload): self
+    {
+        return self::fromLancamentosResponse(
+            $payload,
+            requestIdKey: 'id',
+            requestStateKey: 'codigoEstado',
+            fallbackStateKey: 'estadoRequisicao',
+            totalCountKey: 'quantidadeLancamentos',
+            totalAmountKey: 'valorLancamentos',
+            validCountKey: 'quantidadeLancamentosValidos',
+            validAmountKey: 'valorLancamentosValidos',
+            listKey: 'lancamentos',
+            paymentIdKey: 'codigoIdentificadorPagamento',
+            acceptedKey: 'indicadorMovimentoAceito',
+            fallbackAcceptedKey: 'indicadorAceite',
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     */
+    public static function fromGpsResponse(array $payload): self
+    {
+        return self::fromLancamentosResponse(
+            $payload,
+            requestIdKey: 'numeroRequisicao',
+            requestStateKey: 'codigoEstadoRequisicao',
+            fallbackStateKey: 'codigoEstado',
+            totalCountKey: 'quantidadeTotalLancamento',
+            totalAmountKey: 'valorTotalLancamento',
+            validCountKey: 'quantidadeTotalValido',
+            validAmountKey: 'valorLancamentosValidos',
+            listKey: 'lancamentos',
+            paymentIdKey: 'codigoIdentificadorPagamento',
+            acceptedKey: 'indicadorMovimentoAceito',
+            fallbackAcceptedKey: 'indicadorAceite',
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     */
+    public static function fromGruResponse(array $payload): self
+    {
+        return self::fromLancamentosResponse(
+            $payload,
+            requestIdKey: 'numeroRequisicao',
+            requestStateKey: 'estadoRequisicao',
+            fallbackStateKey: 'codigoEstado',
+            totalCountKey: 'quantidadeTotal',
+            totalAmountKey: 'valorTotal',
+            validCountKey: 'quantidadeTotalValido',
+            validAmountKey: 'valorTotalValido',
+            listKey: 'pagamentos',
+            paymentIdKey: 'idPagamento',
+            acceptedKey: 'indicadorMovimentoAceito',
+            fallbackAcceptedKey: 'indicadorAceite',
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $payload
+     */
+    private static function fromLancamentosResponse(
+        array $payload,
+        string $requestIdKey,
+        string $requestStateKey,
+        string $fallbackStateKey,
+        string $totalCountKey,
+        string $totalAmountKey,
+        string $validCountKey,
+        string $validAmountKey,
+        string $listKey,
+        string $paymentIdKey,
+        string $acceptedKey,
+        string $fallbackAcceptedKey = 'indicadorAceite',
+    ): self {
         $items = [];
-        $list = $payload['lancamentos'] ?? [];
+        $list = $payload[$listKey] ?? [];
         if (is_array($list)) {
             foreach ($list as $row) {
                 if (!is_array($row)) {
                     continue;
                 }
+                $accepted = null;
+                if (isset($row[$acceptedKey]) && is_scalar($row[$acceptedKey])) {
+                    $accepted = (string) $row[$acceptedKey];
+                } elseif (isset($row[$fallbackAcceptedKey]) && is_scalar($row[$fallbackAcceptedKey])) {
+                    $accepted = (string) $row[$fallbackAcceptedKey];
+                }
+
                 $items[] = new BbBatchItemResultDto(
-                    paymentId: self::intOrNull($row['codigoIdentificadorPagamento'] ?? null),
-                    accepted: isset($row['indicadorAceite']) && is_scalar($row['indicadorAceite'])
-                        ? (string) $row['indicadorAceite']
-                        : null,
-                    errorCodes: self::errorCodes($row['errorCodes'] ?? ($row['erros'] ?? [])),
+                    paymentId: self::intOrNull($row[$paymentIdKey] ?? null),
+                    accepted: $accepted,
+                    errorCodes: self::errorCodes($row['errorCodes'] ?? ($row['errors'] ?? ($row['erros'] ?? []))),
                     raw: $row,
                 );
             }
         }
 
+        $state = self::intOrNull($payload[$requestStateKey] ?? null)
+            ?? self::intOrNull($payload[$fallbackStateKey] ?? null);
+
         return new self(
-            requestId: (int) ($payload['numeroRequisicao'] ?? 0),
-            requestState: self::intOrNull($payload['estadoRequisicao'] ?? null),
-            totalCount: self::intOrNull($payload['quantidadeLancamentos'] ?? null),
-            totalAmount: self::floatOrNull($payload['valorLancamentos'] ?? null),
-            validCount: self::intOrNull($payload['quantidadeLancamentosValidos'] ?? null),
-            validAmount: self::floatOrNull($payload['valorLancamentosValidos'] ?? null),
+            requestId: (int) ($payload[$requestIdKey] ?? ($payload['numeroRequisicao'] ?? 0)),
+            requestState: $state,
+            totalCount: self::intOrNull($payload[$totalCountKey] ?? null),
+            totalAmount: self::floatOrNull($payload[$totalAmountKey] ?? null),
+            validCount: self::intOrNull($payload[$validCountKey] ?? null),
+            validAmount: self::floatOrNull($payload[$validAmountKey] ?? null),
             items: $items,
             raw: $payload,
         );

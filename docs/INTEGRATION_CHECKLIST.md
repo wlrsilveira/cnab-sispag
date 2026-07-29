@@ -59,6 +59,10 @@ Mapear entidades internas para os DTOs já usados no Itaú (mesmos tipos):
 | TED/DOC / transferência | `TransferPaymentDto` + `DebitAccountDto` | `sendTransferBatch` |
 | PIX por chave | `PixKeyPaymentDto` + `DebitAccountDto` | `sendPixBatch` |
 | Boleto | `BankSlipPaymentDto` + `DebitAccountDto` | `sendBankSlipBatch` |
+| Concessionária / guia c/ barras | `UtilityPaymentDto` + `DebitAccountDto` | `sendUtilityBatch` |
+| DARF | `TaxPaymentDto` (Darf) + `DebitAccountDto` | `sendDarfBatch` |
+| GPS | `TaxPaymentDto` (Gps) + `DebitAccountDto` | `sendGpsBatch` |
+| GRU | `GruPaymentDto` + `DebitAccountDto` | `sendGruBatch` |
 
 Regras importantes:
 
@@ -66,9 +70,11 @@ Regras importantes:
 - TED: preferir `beneficiaryAgency` / `beneficiaryAccount` / `beneficiaryAccountCheckDigit` + `beneficiaryBankCode` + CPF/CNPJ
 - PIX: `PixKeyType` + chave; ou dados bancários se for PIX sem chave
 - Boleto: aceita **44** (código de barras) ou **47** (linha digitável); a lib normaliza para 44 antes da API
+- Guias/concessionárias: tipicamente começam com `8`; aceita **44** ou **48**; **não** usar `sendBankSlipBatch`
+- DARF exige `paymentContract` / `codigoContrato`
 - `PaymentType`: Fornecedores / Salários / Diversos
-- Separar lotes por tipo (TED ≠ PIX ≠ boleto)
-- Respeitar limites: TED 350, PIX 320, boletos 100 por request
+- Separar lotes por tipo (TED ≠ PIX ≠ boleto ≠ guias ≠ tributos)
+- Respeitar limites: TED 350, PIX 320, demais 100 por request
 
 ### 4. `numeroRequisicao` (requestId)
 
@@ -81,7 +87,7 @@ Regras importantes:
 1. Montar DTOs → `send*Batch`
 2. Salvar resposta: `requestId`, `requestState`, `paymentId` de cada item, `errorCodes`, `isAccepted()`
 3. Se pendente de autorização: orientar liberação no Internet Banking **ou** chamar `releasePayments($requestId)` se o fluxo do cliente usar liberação via API
-4. Job/polling periódico: `getTransferRequest` / `getPixRequest` / `getBankSlipRequest` e/ou `get*Payment`
+4. Job/polling periódico: `get*Request` / `get*Payment` conforme o produto
 5. Cancelamento: `cancelPayments([$paymentIds], $debitAccount)`
 6. Tratar exceções: `BbAuthenticationException`, `BbMtlsRequiredException`, `BbApiException`
 
