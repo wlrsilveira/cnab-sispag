@@ -10,7 +10,7 @@
     "semantic_hash": ""
   },
   "composer.json": {
-    "mtime": 1785347487.405153,
+    "mtime": 1785261417.0819488,
     "ast_hash": "46947c67b71c62dc9cbde7c502f8d252",
     "semantic_hash": ""
   },
@@ -55,92 +55,92 @@
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/BbConfig.php": {
-    "mtime": 1785356804.5272415,
-    "ast_hash": "00877889a871173159d4e5ac75a6777a",
+    "mtime": 1785261103.7509406,
+    "ast_hash": "766474d87e9c5d120d7c0adabedd8618",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/BbPagamentos.php": {
-    "mtime": 1785354534.0939236,
-    "ast_hash": "bc27868ea4cd53b0ee48c808e6a0be5f",
+    "mtime": 1785261282.1573942,
+    "ast_hash": "b16a9bd5939ac7c6708e717499e18242",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Dto/BbBatchItemResultDto.php": {
-    "mtime": 1785347487.4311113,
+    "mtime": 1785261248.5859835,
     "ast_hash": "e7804390924875afa25fcacab9fffdbf",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Dto/BbBatchResultDto.php": {
-    "mtime": 1785354521.9567072,
-    "ast_hash": "a69e7cf1921645cbebc425de7e59c189",
+    "mtime": 1785261248.7086298,
+    "ast_hash": "5c9c940d636d060babfb4f389db4b5d8",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Exception/BbApiException.php": {
-    "mtime": 1785347487.399048,
+    "mtime": 1785261104.6307678,
     "ast_hash": "fe83e21e734bb5eaaf7778d021308136",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Exception/BbAuthenticationException.php": {
-    "mtime": 1785347487.398455,
+    "mtime": 1785261365.3597686,
     "ast_hash": "083865153ea87d688423a1ab177e94b1",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Exception/BbMtlsRequiredException.php": {
-    "mtime": 1785347487.453725,
+    "mtime": 1785261109.831606,
     "ast_hash": "9ada17f375aeadcb423c4cc9a904ae31",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Http/BbApiGateway.php": {
-    "mtime": 1785347487.3993378,
+    "mtime": 1785261143.7571,
     "ast_hash": "161233b9f49952e8be20d71a1f7c02ae",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Http/BbHttpClient.php": {
-    "mtime": 1785347487.3990722,
+    "mtime": 1785261111.5887692,
     "ast_hash": "a64f0ce316cb52681c57798bfbce0f53",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Http/BbHttpResponse.php": {
-    "mtime": 1785347487.3989146,
+    "mtime": 1785261111.572783,
     "ast_hash": "71a8e43bf939055dcaeaaa1fb6d11174",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Http/BbOAuthTokenProvider.php": {
-    "mtime": 1785347487.3993533,
+    "mtime": 1785261143.6290011,
     "ast_hash": "d7e862f2e683e3616d275819cea65dea",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Http/CurlBbHttpClient.php": {
-    "mtime": 1785347487.4442558,
+    "mtime": 1785261159.181312,
     "ast_hash": "8fbb6ddf2ae28295a5c5f54446a7ab1f",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Mapper/BankSlipBatchRequestMapper.php": {
-    "mtime": 1785347533.0598722,
-    "ast_hash": "da7008e52b851570d424b99a54d612ed",
+    "mtime": 1785261233.1571345,
+    "ast_hash": "66f3f09862136ce6d0fb0038e88c4601",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Mapper/BbDateMapper.php": {
-    "mtime": 1785347487.3986394,
+    "mtime": 1785261191.0510836,
     "ast_hash": "34e418bb6f85880210acb488c29910e2",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Mapper/CreditAccountParts.php": {
-    "mtime": 1785347487.3986232,
+    "mtime": 1785261178.2391875,
     "ast_hash": "12d5481c0f7cf2247e79e2843b2c77f8",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Mapper/PaymentTypeMapper.php": {
-    "mtime": 1785347487.4283655,
+    "mtime": 1785261174.557267,
     "ast_hash": "e502bb40338f385031f4b9fe8ecf9e0a",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Mapper/PixBatchRequestMapper.php": {
-    "mtime": 1785347487.3993683,
+    "mtime": 1785261224.312737,
     "ast_hash": "d0209637d288d4b4014c39a55b6c0ff9",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Mapper/TransferBatchRequestMapper.php": {
-    "mtime": 1785347487.4442558,
+    "mtime": 1785261211.184348,
     "ast_hash": "5f58f444ac7107b324fa67f1b9720ce7",
     "semantic_hash": ""
   },
@@ -765,7 +765,7 @@
     "semantic_hash": ""
   },
   "tests/Support/FakeBbHttpClient.php": {
-    "mtime": 1785347487.4003887,
+    "mtime": 1785261286.5922332,
     "ast_hash": "d9aaf00e4a0d469a29951e8baea6e1b3",
     "semantic_hash": ""
   },
@@ -780,27 +780,27 @@
     "semantic_hash": ""
   },
   "tests/Unit/Bank/BancoDoBrasil/BankSlipBatchRequestMapperTest.php": {
-    "mtime": 1785347539.9399517,
-    "ast_hash": "e8ffb433cbcae36da3ea2f519c5271a6",
+    "mtime": 1785261338.4236436,
+    "ast_hash": "daa17fd452866d832e653aa72b035e44",
     "semantic_hash": ""
   },
   "tests/Unit/Bank/BancoDoBrasil/BbPagamentosTest.php": {
-    "mtime": 1785347487.3984325,
+    "mtime": 1785261338.5278254,
     "ast_hash": "6290e8b33e9f195459f02c032413e0b7",
     "semantic_hash": ""
   },
   "tests/Unit/Bank/BancoDoBrasil/CreditAccountPartsTest.php": {
-    "mtime": 1785347487.399376,
+    "mtime": 1785261354.8097453,
     "ast_hash": "d9d59d1e44c7a23d4f014469466403cd",
     "semantic_hash": ""
   },
   "tests/Unit/Bank/BancoDoBrasil/PixBatchRequestMapperTest.php": {
-    "mtime": 1785347487.3987677,
+    "mtime": 1785261322.864023,
     "ast_hash": "e7bc2949ea1392d638718fe25e4cb407",
     "semantic_hash": ""
   },
   "tests/Unit/Bank/BancoDoBrasil/TransferBatchRequestMapperTest.php": {
-    "mtime": 1785347487.405153,
+    "mtime": 1785261314.0366971,
     "ast_hash": "56686dbb94e254256c478a15f5b9866a",
     "semantic_hash": ""
   },
@@ -885,23 +885,23 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1785347487.4284806,
+    "mtime": 1785262191.3509314,
     "ast_hash": "f3c8bdfe9f697b41bec5b70478fc91a1",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785347487.4310458,
+    "mtime": 1785262190.9073946,
     "ast_hash": "a4bc62f5a5744dce914370a36bba08b5",
     "semantic_hash": ""
   },
   "docs/README.md": {
-    "mtime": 1785347487.4198153,
+    "mtime": 1785262187.5159914,
     "ast_hash": "9a79ef0a5c20fefd9a26ef93d634e57b",
     "semantic_hash": ""
   },
   "docs/bb/README.md": {
-    "mtime": 1785354572.3026547,
-    "ast_hash": "095bb494171916080195f5729d1fce6c",
+    "mtime": 1785262188.608399,
+    "ast_hash": "600b7764ebf968dd98f6b2024fc32aff",
     "semantic_hash": ""
   },
   "docs/entities/itau-reference.md": {
@@ -1025,68 +1025,8 @@
     "semantic_hash": ""
   },
   "docs/INTEGRATION_CHECKLIST.md": {
-    "mtime": 1785354573.7196863,
-    "ast_hash": "4d6937457c397e2d8990ea9f02dacfb1",
-    "semantic_hash": ""
-  },
-  "src/Bank/BancoDoBrasil/Dto/GruPaymentDto.php": {
-    "mtime": 1785354484.8691623,
-    "ast_hash": "53cabe8453b5ae814b27e74c43fa988e",
-    "semantic_hash": ""
-  },
-  "src/Bank/BancoDoBrasil/Mapper/BbDebitAccountMapper.php": {
-    "mtime": 1785354483.2025661,
-    "ast_hash": "83f25886eb5fccb6978005b10ee27bd9",
-    "semantic_hash": ""
-  },
-  "src/Bank/BancoDoBrasil/Mapper/DarfBatchRequestMapper.php": {
-    "mtime": 1785354544.0127296,
-    "ast_hash": "916172fddef6fdfae0ba366ad30bda78",
-    "semantic_hash": ""
-  },
-  "src/Bank/BancoDoBrasil/Mapper/GpsBatchRequestMapper.php": {
-    "mtime": 1785354507.5716956,
-    "ast_hash": "253274eba77ae6ead51013e92be2509c",
-    "semantic_hash": ""
-  },
-  "src/Bank/BancoDoBrasil/Mapper/GruBatchRequestMapper.php": {
-    "mtime": 1785354507.69586,
-    "ast_hash": "37c807ba1511e695c03ff546e08b734b",
-    "semantic_hash": ""
-  },
-  "src/Bank/BancoDoBrasil/Mapper/UtilityBatchRequestMapper.php": {
-    "mtime": 1785354484.843931,
-    "ast_hash": "d7d8d2ff64d74ad5f4e1441884badb73",
-    "semantic_hash": ""
-  },
-  "src/Domain/Shared/Service/ArrecadacaoBarcodeParser.php": {
-    "mtime": 1785354479.9219115,
-    "ast_hash": "93d0d269d3f43a07096dbf7d2d983fe3",
-    "semantic_hash": ""
-  },
-  "tests/Unit/Bank/BancoDoBrasil/DarfBatchRequestMapperTest.php": {
-    "mtime": 1785354551.4567566,
-    "ast_hash": "a3f739e747f4adcbf41ba62f82b0106c",
-    "semantic_hash": ""
-  },
-  "tests/Unit/Bank/BancoDoBrasil/GpsBatchRequestMapperTest.php": {
-    "mtime": 1785354554.6114023,
-    "ast_hash": "d023547be20771f0af2f8ac1d4604506",
-    "semantic_hash": ""
-  },
-  "tests/Unit/Bank/BancoDoBrasil/GruBatchRequestMapperTest.php": {
-    "mtime": 1785354555.9206479,
-    "ast_hash": "e59713bd9c6a1ad6fe57a27b50643bc5",
-    "semantic_hash": ""
-  },
-  "tests/Unit/Bank/BancoDoBrasil/UtilityBatchRequestMapperTest.php": {
-    "mtime": 1785354548.4631035,
-    "ast_hash": "a4008c96fff1a8f23a2835778f0fda7e",
-    "semantic_hash": ""
-  },
-  "tests/Unit/Domain/Shared/ArrecadacaoBarcodeParserTest.php": {
-    "mtime": 1785354555.9206479,
-    "ast_hash": "e792a548b0da37d096fe22530888522c",
+    "mtime": 1785262186.7736735,
+    "ast_hash": "66d94c1c9b095c66d10e1095e6ab6d0e",
     "semantic_hash": ""
   }
 }
