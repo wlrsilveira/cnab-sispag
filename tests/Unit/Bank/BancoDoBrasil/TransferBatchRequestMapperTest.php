@@ -84,4 +84,55 @@ final class TransferBatchRequestMapperTest extends TestCase
         self::assertSame(127, PaymentTypeMapper::toBbTipoPagamento(PaymentType::Salaries));
         self::assertSame(128, PaymentTypeMapper::toBbTipoPagamento(PaymentType::Various));
     }
+
+    public function testCreditSameInstitutionOmitsCodigoFinalidadeTed(): void
+    {
+        $mapper = new TransferBatchRequestMapper();
+        $debit = new DebitAccountDto(2, '12345678000199', '1607', '99738672', 'X', 'EMPRESA');
+
+        foreach ([PaymentMethod::CreditSameHolder, PaymentMethod::CreditOtherHolder] as $method) {
+            $payment = new TransferPaymentDto(
+                paymentMethod: $method,
+                companyDocumentNumber: '1001',
+                amount: 10.0,
+                paymentDate: new \DateTimeImmutable('2026-04-10'),
+                beneficiaryName: 'MESMA INSTITUICAO',
+                beneficiaryAgencyAccount: '',
+                beneficiaryBankCode: 1,
+                chamberCode: 0,
+                beneficiaryRegistrationNumber: '12345678901',
+                beneficiaryAgency: '1607',
+                beneficiaryAccount: '99738672',
+                beneficiaryAccountCheckDigit: 'X',
+            );
+
+            $item = $mapper->map(1, $debit, [$payment], PaymentType::Suppliers)['listaTransferencias'][0];
+            self::assertArrayNotHasKey('codigoFinalidadeTED', $item, $method->name);
+            self::assertArrayNotHasKey('codigoFinalidadeDOC', $item, $method->name);
+        }
+    }
+
+    public function testDocSetsCodigoFinalidadeDocNotTed(): void
+    {
+        $mapper = new TransferBatchRequestMapper();
+        $debit = new DebitAccountDto(2, '12345678000199', '1607', '99738672', 'X', 'EMPRESA');
+        $payment = new TransferPaymentDto(
+            paymentMethod: PaymentMethod::DocOtherHolder,
+            companyDocumentNumber: '1001',
+            amount: 10.0,
+            paymentDate: new \DateTimeImmutable('2026-04-10'),
+            beneficiaryName: 'DOC',
+            beneficiaryAgencyAccount: '',
+            beneficiaryBankCode: 237,
+            chamberCode: 700,
+            beneficiaryRegistrationNumber: '12345678901',
+            beneficiaryAgency: '1234',
+            beneficiaryAccount: '56789',
+            beneficiaryAccountCheckDigit: '0',
+        );
+
+        $item = $mapper->map(1, $debit, [$payment], PaymentType::Suppliers)['listaTransferencias'][0];
+        self::assertSame(1, $item['codigoFinalidadeDOC']);
+        self::assertArrayNotHasKey('codigoFinalidadeTED', $item);
+    }
 }

@@ -95,10 +95,13 @@ final class TransferBatchRequestMapper
             $item['documentoCredito'] = $creditDoc;
         }
 
+        // Crédito em conta (mesma instituição): BB erro 29 se codigoFinalidadeTED for enviado.
+        // DOC usa codigoFinalidadeDOC; TED usa codigoFinalidadeTED.
         if ($payment->paymentMethod === PaymentMethod::DocOtherHolder
             || $payment->paymentMethod === PaymentMethod::DocSameHolder) {
             $item['codigoFinalidadeDOC'] = 1;
-        } else {
+        } elseif ($payment->paymentMethod === PaymentMethod::TedOtherHolder
+            || $payment->paymentMethod === PaymentMethod::TedSameHolder) {
             $item['codigoFinalidadeTED'] = PaymentTypeMapper::defaultTedPurpose($paymentType);
         }
 

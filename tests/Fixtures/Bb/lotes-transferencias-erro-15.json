@@ -1,0 +1,21 @@
+{
+  "numeroRequisicao": 1213,
+  "estadoRequisicao": 3,
+  "quantidadeTransferencias": 1,
+  "valorTransferencias": 25.5,
+  "quantidadeTransferenciasValidas": 0,
+  "totalTransferenciasValidas": 0.0,
+  "transferencias": [
+    {
+      "identificadorTransferencia": "90022089731030003",
+      "indicadorAceite": "N",
+      "erros": [15],
+      "numeroCOMPE": "001",
+      "agenciaCredito": 1607,
+      "contaCorrenteCredito": 99738672,
+      "digitoVerificadorContaCorrente": "0",
+      "valorTransferencia": 25.5,
+      "dataTransferencia": 10042026
+    }
+  ]
+}

@@ -285,7 +285,7 @@ final class BbPagamentos
     /**
      * @return array<string, mixed>
      */
-    public function getTransferPayment(int $paymentId, ?DebitAccountDto $debitAccount = null): array
+    public function getTransferPayment(int|string $paymentId, ?DebitAccountDto $debitAccount = null): array
     {
         return $this->gateway->request(
             'GET',
@@ -385,7 +385,7 @@ final class BbPagamentos
     }
 
     /**
-     * @param list<int> $paymentIds
+     * @param list<int|string> $paymentIds
      * @return array<string, mixed>
      */
     public function cancelPayments(
@@ -399,7 +399,13 @@ final class BbPagamentos
 
         $body = [
             'listaPagamentos' => array_map(
-                static fn (int $id): array => ['codigoPagamento' => $id],
+                static function (int|string $id): array {
+                    if (is_string($id) && (!is_numeric($id) || trim($id) === '')) {
+                        throw new \InvalidArgumentException('payment id must be numeric.');
+                    }
+
+                    return ['codigoPagamento' => is_int($id) ? $id : (int) $id];
+                },
                 $paymentIds,
             ),
         ];

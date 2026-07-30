@@ -27,15 +27,19 @@ final readonly class BbBatchResultDto
      */
     public static function fromTransferResponse(array $payload): self
     {
+        // OpenAPI POST /lotes-transferencias: transferencias + identificadorTransferencia.
+        // Algumas respostas/docs usam listaTransferencias + identificadorPagamento.
         $items = [];
-        $list = $payload['listaTransferencias'] ?? [];
+        $list = $payload['transferencias'] ?? $payload['listaTransferencias'] ?? [];
         if (is_array($list)) {
             foreach ($list as $row) {
                 if (!is_array($row)) {
                     continue;
                 }
                 $items[] = new BbBatchItemResultDto(
-                    paymentId: self::intOrNull($row['identificadorPagamento'] ?? null),
+                    paymentId: self::paymentIdOrNull(
+                        $row['identificadorTransferencia'] ?? $row['identificadorPagamento'] ?? null,
+                    ),
                     accepted: isset($row['indicadorAceite']) && is_scalar($row['indicadorAceite'])
                         ? (string) $row['indicadorAceite']
                         : null,
@@ -48,10 +52,16 @@ final readonly class BbBatchResultDto
         return new self(
             requestId: (int) ($payload['numeroRequisicao'] ?? 0),
             requestState: self::intOrNull($payload['estadoRequisicao'] ?? null),
-            totalCount: self::intOrNull($payload['quantidadeTransferencias'] ?? null),
+            totalCount: self::intOrNull(
+                $payload['quantidadeTransferencias'] ?? $payload['totalTransferencias'] ?? null,
+            ),
             totalAmount: self::floatOrNull($payload['valorTransferencias'] ?? null),
-            validCount: self::intOrNull($payload['quantidadeTransferenciasValidas'] ?? null),
-            validAmount: self::floatOrNull($payload['valorTransferenciasValidas'] ?? null),
+            validCount: self::intOrNull(
+                $payload['quantidadeTransferenciasValidas'] ?? null,
+            ),
+            validAmount: self::floatOrNull(
+                $payload['valorTransferenciasValidas'] ?? $payload['totalTransferenciasValidas'] ?? null,
+            ),
             items: $items,
             raw: $payload,
         );
@@ -62,15 +72,19 @@ final readonly class BbBatchResultDto
      */
     public static function fromPixResponse(array $payload): self
     {
+        // PIX (OpenAPI): listaTransferencias + identificadorPagamento.
+        // Fallback transferencias / identificadorTransferencia por simetria com transferências.
         $items = [];
-        $list = $payload['listaTransferencias'] ?? [];
+        $list = $payload['listaTransferencias'] ?? $payload['transferencias'] ?? [];
         if (is_array($list)) {
             foreach ($list as $row) {
                 if (!is_array($row)) {
                     continue;
                 }
                 $items[] = new BbBatchItemResultDto(
-                    paymentId: self::intOrNull($row['identificadorPagamento'] ?? null),
+                    paymentId: self::paymentIdOrNull(
+                        $row['identificadorPagamento'] ?? $row['identificadorTransferencia'] ?? null,
+                    ),
                     accepted: isset($row['indicadorMovimentoAceito']) && is_scalar($row['indicadorMovimentoAceito'])
                         ? (string) $row['indicadorMovimentoAceito']
                         : (isset($row['indicadorAceite']) && is_scalar($row['indicadorAceite'])
@@ -85,10 +99,14 @@ final readonly class BbBatchResultDto
         return new self(
             requestId: (int) ($payload['numeroRequisicao'] ?? 0),
             requestState: self::intOrNull($payload['estadoRequisicao'] ?? null),
-            totalCount: self::intOrNull($payload['quantidadeTransferencias'] ?? null),
+            totalCount: self::intOrNull(
+                $payload['quantidadeTransferencias'] ?? $payload['totalTransferencias'] ?? null,
+            ),
             totalAmount: self::floatOrNull($payload['valorTransferencias'] ?? null),
             validCount: self::intOrNull($payload['quantidadeTransferenciasValidas'] ?? null),
-            validAmount: self::floatOrNull($payload['valorTransferenciasValidas'] ?? null),
+            validAmount: self::floatOrNull(
+                $payload['valorTransferenciasValidas'] ?? $payload['totalTransferenciasValidas'] ?? null,
+            ),
             items: $items,
             raw: $payload,
         );
@@ -229,7 +247,7 @@ final readonly class BbBatchResultDto
                 }
 
                 $items[] = new BbBatchItemResultDto(
-                    paymentId: self::intOrNull($row[$paymentIdKey] ?? null),
+                    paymentId: self::paymentIdOrNull($row[$paymentIdKey] ?? null),
                     accepted: $accepted,
                     errorCodes: self::errorCodes($row['errorCodes'] ?? ($row['errors'] ?? ($row['erros'] ?? []))),
                     raw: $row,
@@ -255,6 +273,40 @@ final readonly class BbBatchResultDto
     private static function intOrNull(mixed $value): ?int
     {
         return is_numeric($value) ? (int) $value : null;
+    }
+
+    /**
+     * IDs BB (ex.: 90022089731030001) são int64; manter string quando vierem como texto
+     * ou quando o cast para int seria impreciso (float / overflow).
+     */
+    private static function paymentIdOrNull(mixed $value): string|int|null
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        if (is_int($value)) {
+            return $value;
+        }
+        if (is_string($value)) {
+            $trimmed = trim($value);
+            if ($trimmed === '' || !is_numeric($trimmed)) {
+                return null;
+            }
+
+            return $trimmed;
+        }
+        if (is_float($value)) {
+            if (!is_finite($value) || floor($value) !== $value) {
+                return null;
+            }
+
+            return sprintf('%.0f', $value);
+        }
+        if (is_numeric($value)) {
+            return (string) $value;
+        }
+
+        return null;
     }
 
     private static function floatOrNull(mixed $value): ?float

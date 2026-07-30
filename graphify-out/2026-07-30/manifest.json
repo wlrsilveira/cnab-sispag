@@ -60,18 +60,18 @@
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/BbPagamentos.php": {
-    "mtime": 1785424915.891374,
-    "ast_hash": "bd9539ae31db6a8f929518b7d7a0b1e8",
+    "mtime": 1785354534.0939236,
+    "ast_hash": "bc27868ea4cd53b0ee48c808e6a0be5f",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Dto/BbBatchItemResultDto.php": {
-    "mtime": 1785424824.1540868,
-    "ast_hash": "2b199bfc1bde2bb606278ac2c019b59f",
+    "mtime": 1785347487.4311113,
+    "ast_hash": "e7804390924875afa25fcacab9fffdbf",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Dto/BbBatchResultDto.php": {
-    "mtime": 1785424842.4333105,
-    "ast_hash": "8e5daf5513d21b9ee6d61f41817d8f4d",
+    "mtime": 1785354521.9567072,
+    "ast_hash": "a69e7cf1921645cbebc425de7e59c189",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Exception/BbApiException.php": {
@@ -140,8 +140,8 @@
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Mapper/TransferBatchRequestMapper.php": {
-    "mtime": 1785424814.52177,
-    "ast_hash": "ca3034f9bf79bac037d5c21aa9af3425",
+    "mtime": 1785347487.4442558,
+    "ast_hash": "5f58f444ac7107b324fa67f1b9720ce7",
     "semantic_hash": ""
   },
   "src/Bank/Itau/Dto/BankSlipPaymentDto.php": {
@@ -800,8 +800,8 @@
     "semantic_hash": ""
   },
   "tests/Unit/Bank/BancoDoBrasil/TransferBatchRequestMapperTest.php": {
-    "mtime": 1785424857.5424998,
-    "ast_hash": "2e34bba69dcb4bc9fcea3e96612fccf0",
+    "mtime": 1785347487.405153,
+    "ast_hash": "56686dbb94e254256c478a15f5b9866a",
     "semantic_hash": ""
   },
   "tests/Unit/Domain/BarcodeValidatorTest.php": {
@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "docs/bb/README.md": {
-    "mtime": 1785424916.5918205,
-    "ast_hash": "4329c68fc0fb8ea498569012dce1fddb",
+    "mtime": 1785354572.3026547,
+    "ast_hash": "095bb494171916080195f5729d1fce6c",
     "semantic_hash": ""
   },
   "docs/entities/itau-reference.md": {
@@ -1087,26 +1087,6 @@
   "tests/Unit/Domain/Shared/ArrecadacaoBarcodeParserTest.php": {
     "mtime": 1785354555.9206479,
     "ast_hash": "e792a548b0da37d096fe22530888522c",
-    "semantic_hash": ""
-  },
-  "tests/Fixtures/Bb/lotes-transferencias-aceite-s.json": {
-    "mtime": 1785424859.6781547,
-    "ast_hash": "20b8f792f457d89e4ef734fdf9f7e18c",
-    "semantic_hash": ""
-  },
-  "tests/Fixtures/Bb/lotes-transferencias-erro-15.json": {
-    "mtime": 1785424875.2084565,
-    "ast_hash": "1fa1f317bcc77c2c1b6e107862c8aedd",
-    "semantic_hash": ""
-  },
-  "tests/Fixtures/Bb/lotes-transferencias-erro-29.json": {
-    "mtime": 1785424862.2735224,
-    "ast_hash": "1de1b877f488aaa3735fd1b3d3beed79",
-    "semantic_hash": ""
-  },
-  "tests/Unit/Bank/BancoDoBrasil/BbBatchResultDtoTest.php": {
-    "mtime": 1785424875.3642757,
-    "ast_hash": "b42fdb8e6fcdf89b2ee7a10945783932",
     "semantic_hash": ""
   }
 }

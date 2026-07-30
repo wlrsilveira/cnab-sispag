@@ -123,3 +123,11 @@ Para testes unitários, injete um `BbHttpClient` fake — sem rede e sem certifi
 - Guias / concessionárias (`UtilityPaymentDto`): aceita **44** ou linha digitável de arrecadação **48** (inicia com `8`); a lib normaliza para 44 em `codigoBarras`  
 - DARF / GPS: `TaxPaymentDto` (`DarfNormal`/`DarfSimple` / `Gps`)  
 - GRU: `CnabSispag\Bank\BancoDoBrasil\Dto\GruPaymentDto` (DTO BB — sem equivalente Itaú)
+
+## Transferências — cuidados (homologação)
+
+- **Crédito mesma instituição** (`CreditSameHolder` / `CreditOtherHolder`): **não** envia `codigoFinalidadeTED` (BB erro **29**).
+- **TED** (`TedSameHolder` / `TedOtherHolder`): envia `codigoFinalidadeTED`.
+- **DOC**: envia `codigoFinalidadeDOC`.
+- Resposta de `POST /lotes-transferencias`: lista em `transferencias`, id em `identificadorTransferencia` (`BbBatchItemResultDto::$paymentId` é `string|int|null`).
+- Erros frequentes: **15** dígito inválido, **29** finalidade TED, **34** CNPJ.

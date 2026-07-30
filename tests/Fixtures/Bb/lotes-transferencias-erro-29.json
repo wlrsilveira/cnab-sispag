@@ -1,0 +1,22 @@
+{
+  "numeroRequisicao": 1212,
+  "estadoRequisicao": 3,
+  "quantidadeTransferencias": 1,
+  "valorTransferencias": 10.0,
+  "quantidadeTransferenciasValidas": 0,
+  "valorTransferenciasValidas": 0.0,
+  "transferencias": [
+    {
+      "identificadorTransferencia": 90022089731030002,
+      "indicadorAceite": "N",
+      "erros": [29],
+      "numeroCOMPE": "001",
+      "agenciaCredito": 1607,
+      "contaCorrenteCredito": 99738672,
+      "digitoVerificadorContaCorrente": "X",
+      "valorTransferencia": 10.0,
+      "dataTransferencia": 10042026,
+      "codigoFinalidadeTED": 5
+    }
+  ]
+}
