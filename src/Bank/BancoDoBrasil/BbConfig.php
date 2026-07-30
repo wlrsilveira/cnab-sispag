@@ -29,6 +29,8 @@ final readonly class BbConfig
         'pagamentos-lote.boletos-info',
         'pagamentos-lote.guias-codigo-barras-requisicao',
         'pagamentos-lote.guias-codigo-barras-info',
+        'pagamentos-lote.pagamentos-guias-sem-codigo-barras-requisicao',
+        'pagamentos-lote.pagamentos-guias-sem-codigo-barras-info',
         'pagamentos-lote.lotes-requisicao',
         'pagamentos-lote.lotes-info',
         'pagamentos-lote.pagamentos-info',

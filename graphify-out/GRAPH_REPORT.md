@@ -1,66 +1,65 @@
 # Graph Report - cnab-sispag  (2026-07-30)
 
 ## Corpus Check
-- 220 files · ~69,481 words
+- 221 files · ~69,709 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1538 nodes · 3180 edges · 82 communities (60 shown, 22 thin omitted)
+- 1544 nodes · 3188 edges · 104 communities (71 shown, 33 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 193 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `98d64040`
+- Built from commit: `391bb988`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment
 - ItauReturnReader
-- TaxSegmentParser.php
-- BbConfig
-- ItauLayoutValidator
-- FieldFactory
+- FieldFactory.php
+- BbPagamentos.php
+- RecordParser
+- RecordLayout
 - ReturnFileFixtureBuilder
-- RecordDefinition
-- BankSlipPayment
+- BatchHeaderDefinition
+- Money
 - DocumentNormalizer
-- CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout
+- CnabSispag\Infrastructure\Bank\Itau\Layout\SegmentN\TaxDataLayout
 - PixKeyPayment
 - LayoutValidationTest
 - composer.json
 - DebitAccountDto
 - PixQrCodeParser
 - BarcodeParser
-- RecordFieldValidator.php
+- LayoutTestHelper.php
 - BeneficiaryAgencyAccountFormatter
-- ItauRemittanceWriter.php
+- RecordDefinition
+- CnabDate
+- EncodingConverter
 - CnabSispag\Domain\Shared\Enum\TaxType
-- TaxSegmentBuilder.php
-- BankSlipBatchRequestMapperTest
 - RemittanceGenerationTest
-- DocumentNormalizerTest
+- BatchProfile.php
 - Referência de entidades Itaú
 - OptionalSegmentData
-- CnabSispag\Domain\Shared\Enum\PaymentType
+- CnabSispag\Domain\Shared\Enum\PaymentMethod
 - OptionalSegmentDto
 - MessageCatalog
 - BatchSegmentRulesTest
-- planning/README.md
-- PaymentMethod.php
+- CnabSispag\Domain\Shared\Enum\PaymentType
 - O que é verificado
-- BbPagamentos.php
+- BbPagamentosTest
 - Checklist detalhado
 - CNAB SISPAG - Fornecedor
 - BankSlipBatchRequestMapper
 - Códigos mais frequentes
 - TED, DOC e crédito em conta (formas 3–7, 41, 43)
-- RegistrationValidatorTest
-- CnabSispag\Domain\Shared\Enum\PaymentMethod
+- .__construct
+- CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout
 - Homologação Itaú
 - Segmentos e regras de combinação
 - Geração de remessa
-- DocumentNormalizer.php
+- ItauReturnReader.php
 - Guia de integração
 - Arquitetura DDD
 - Mapa de arquivos do repositório
@@ -74,26 +73,48 @@
 - Roadmap de implementação
 - Prompt pronto (colar no agente do sistema)
 - PixKeyPaymentDto
-- GruBatchRequestMapper
+- BbDebitAccountMapper
 - PaymentSegmentComposer
 - [1.0.0] - 2026-06-16
 - Banco do Brasil — Pagamentos em Lote (API)
 - Primeiros passos
 - PIX por chave (forma 45)
 - PIX QR Code (forma 47)
-- GruBatchRequestMapperTest.php
+- FieldFactory
 - Documentação para integradores
-- RecordParserTest
-- TransferPaymentDto
+- BbHttpResponse
+- TransferBatchRequestMapper
 - PHPUnit\Framework\TestCase
 - BbBatchItemResultDto
-- Money
+- TransferPayment
 - BbBatchResultDto
+- ItauLayoutValidator
 - Convenções de idioma e código
 - BbDateMapper
+- PixQrCodePayment
 - RecordSequencer
-- BbDebitAccountMapper
-- UtilityBatchRequestMapperTest
+- ValidationResult
+- LayoutTestHelper
+- RemittancePayment.php
+- UtilityBatchRequestMapper
+- RecordFieldValidator
+- CnabLineReader
+- BbConfigTest
+- ReturnFileValidator
+- TransferBatchRequestMapperTest
+- Planejamento — cnab-sispag
+- BatchTrailerTaxRecord
+- BatchTrailerTransferRecord
+- BatchTrailerUtilityRecord
+- FileTrailerRecord
+- SegmentARecord
+- SegmentBPixRecord
+- SegmentBTaxRecord
+- SegmentFRecord
+- SegmentJ52PixRecord
+- SegmentJ52Record
+- SegmentORecord
+- SegmentZRecord
 
 ## God Nodes (most connected - your core abstractions)
 1. `RecordDefinition` - 86 edges
@@ -122,46 +143,54 @@
 ## Import Cycles
 - None detected.
 
-## Communities (82 total, 22 thin omitted)
+## Communities (104 total, 33 thin omitted)
 
 ### Community 0 - "CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment"
-Cohesion: 0.07
-Nodes (18): CnabSispag\Bank\Itau\Dto\PaymentDto, CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment, GeneratedRemittanceFile, GenerateRemittanceOptionsDto, GenerateRemittanceUseCase, DateTimeImmutable, CompanyDto, toRemittancePayment() (+10 more)
+Cohesion: 0.05
+Nodes (22): CnabSispag\Bank\Itau\Dto\PaymentDto, CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment, GeneratedRemittanceFile, GenerateRemittanceOptionsDto, GenerateRemittanceUseCase, DateTimeImmutable, ParseReturnFileUseCase, CompanyDto (+14 more)
 
 ### Community 1 - "ItauReturnReader"
-Cohesion: 0.06
-Nodes (16): CnabSispag\Domain\Shared\Enum\PaymentStatus, CnabSispag\Domain\Shared\Enum\SegmentType, ParseReturnFileUseCase, ReturnDetail, OccurrenceStatusMapper, PaymentStatus, Occurrence, ParsedTaxData (+8 more)
-
-### Community 2 - "TaxSegmentParser.php"
-Cohesion: 0.06
-Nodes (10): DarfDataLayout, DarfSimplesDataLayout, DarjDataLayout, DpvatDataLayout, FgtsDataLayout, GareSpIcmsDataLayout, GpsDataLayout, IpvaDataLayout (+2 more)
-
-### Community 3 - "BbConfig"
-Cohesion: 0.06
-Nodes (17): BbHttpClient, CnabSispag\Bank\BancoDoBrasil\Http\BbHttpClient, RuntimeException, BbConfig, BbApiException, BbAuthenticationException, BbMtlsRequiredException, self (+9 more)
-
-### Community 4 - "ItauLayoutValidator"
 Cohesion: 0.07
-Nodes (12): ValidationResult, ValidateLayoutUseCase, TaxDataLayout, TaxType, TaxSegmentParser, ItauLayoutValidator, PaymentMethod, SegmentType (+4 more)
+Nodes (14): CnabSispag\Domain\Shared\Enum\PaymentStatus, CnabSispag\Domain\Shared\Enum\SegmentType, ReturnDetail, OccurrenceStatusMapper, PaymentStatus, Occurrence, ReturnSegment, ItauReturnReader (+6 more)
 
-### Community 5 - "FieldFactory"
-Cohesion: 0.04
-Nodes (25): CnabSispag\Infrastructure\Cnab\Layout\FieldType, RecordLayout, BatchTrailerPixRecord, BatchTrailerTaxRecord, BatchTrailerTransferRecord, BatchTrailerUtilityRecord, FieldFactory, FieldType (+17 more)
-
-### Community 7 - "RecordDefinition"
-Cohesion: 0.07
-Nodes (11): BatchHeaderBankSlipRecord, BatchHeaderDefinition, BatchHeaderTaxRecord, BatchHeaderTransferRecord, BatchHeaderUtilityRecord, FileHeaderRecord, definition(), SegmentWRecord (+3 more)
-
-### Community 8 - "BankSlipPayment"
+### Community 2 - "FieldFactory.php"
 Cohesion: 0.08
-Nodes (3): BankSlipPayment, PixQrCodePayment, TaxId
+Nodes (8): CnabSispag\Infrastructure\Cnab\Layout\FieldType, DarjDataLayout, DpvatDataLayout, FgtsDataLayout, GareSpIcmsDataLayout, IpvaDataLayout, TaxFieldFactory, TaxDataLayout
 
-### Community 10 - "CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout"
+### Community 3 - "BbPagamentos.php"
+Cohesion: 0.11
+Nodes (9): BbHttpClient, RuntimeException, BbConfig, BbApiException, BbAuthenticationException, BbMtlsRequiredException, self, CurlBbHttpClient (+1 more)
+
+### Community 4 - "RecordParser"
+Cohesion: 0.24
+Nodes (4): TaxDataLayout, TaxType, TaxSegmentParser, RecordParser
+
+### Community 5 - "RecordLayout"
+Cohesion: 0.07
+Nodes (11): RecordLayout, BatchHeaderBankSlipRecord, BatchTrailerPixRecord, FileHeaderRecord, SegmentBRecord, SegmentCRecord, SegmentDRecord, SegmentERecord (+3 more)
+
+### Community 6 - "ReturnFileFixtureBuilder"
 Cohesion: 0.12
-Nodes (6): CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout, CnabSispag\Infrastructure\Bank\Itau\Layout\SegmentN\TaxDataLayout, ItauLayoutRegistry, ItauLayoutDefinitionTest, ItauLayoutRoundTripTest, TaxDataLayoutDefinitionTest
+Nodes (5): TaxType, TaxSegmentBuilder, RecordFormatter, ReturnParsingTest, ReturnFileFixtureBuilder
+
+### Community 7 - "BatchHeaderDefinition"
+Cohesion: 0.14
+Nodes (4): BatchHeaderDefinition, BatchHeaderTaxRecord, BatchHeaderTransferRecord, BatchHeaderUtilityRecord
+
+### Community 8 - "Money"
+Cohesion: 0.11
+Nodes (3): BankSlipPayment, Money, TaxId
+
+### Community 9 - "DocumentNormalizer"
+Cohesion: 0.07
+Nodes (3): DocumentNormalizer, DocumentNormalizerTest, RegistrationValidatorTest
+
+### Community 10 - "CnabSispag\Infrastructure\Bank\Itau\Layout\SegmentN\TaxDataLayout"
+Cohesion: 0.16
+Nodes (4): CnabSispag\Infrastructure\Bank\Itau\Layout\SegmentN\TaxDataLayout, ItauLayoutRegistry, ItauLayoutRoundTripTest, TaxDataLayoutDefinitionTest
 
 ### Community 11 - "PixKeyPayment"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (6): CnabSispag\Domain\Shared\Enum\PixKeyType, PaymentMethod, PixKeyPayment, PixKeyType, PixKeyType, PixKeyTypeTest
 
 ### Community 13 - "composer.json"
@@ -169,55 +198,59 @@ Cohesion: 0.07
 Nodes (26): autoload, autoload-dev, psr-4, psr-4, config, sort-packages, description, homepage (+18 more)
 
 ### Community 15 - "PixQrCodeParser"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (3): EmvTlvParser, PixQrCodeParser, PixQrCodeParserTest
 
 ### Community 16 - "BarcodeParser"
 Cohesion: 0.09
 Nodes (4): BarcodeValidator, BarcodeParser, BarcodeValidatorTest, BarcodeParserTest
 
-### Community 20 - "CnabSispag\Domain\Shared\Enum\TaxType"
-Cohesion: 0.17
-Nodes (3): CnabSispag\Domain\Shared\Enum\TaxType, TaxPayment, TaxType
+### Community 20 - "CnabDate"
+Cohesion: 0.11
+Nodes (5): TaxPayment, UtilityPayment, CnabDate, DateTimeInterface, self
 
-### Community 21 - "TaxSegmentBuilder.php"
-Cohesion: 0.23
-Nodes (3): TaxSegmentBuilder, EncodingConverter, RecordFormatter
+### Community 22 - "CnabSispag\Domain\Shared\Enum\TaxType"
+Cohesion: 0.11
+Nodes (5): CnabSispag\Domain\Shared\Enum\TaxType, ParsedTaxData, DarfDataLayout, DarfSimplesDataLayout, GpsDataLayout
+
+### Community 24 - "BatchProfile.php"
+Cohesion: 0.13
+Nodes (9): Exception, allowedSegments(), allows(), SegmentType, DomainException, InvalidBatchException, InvalidLayoutException, InvalidPaymentException (+1 more)
 
 ### Community 25 - "Referência de entidades Itaú"
 Cohesion: 0.11
 Nodes (19): API pública, Constantes Itaú, DTOs de entrada (remessa), Entidades de retorno, Enums, Exceções, Layouts CNAB (Infrastructure), Métodos (+11 more)
 
 ### Community 26 - "OptionalSegmentData"
-Cohesion: 0.07
-Nodes (9): RemittancePayment, AbstractRemittancePayment, amount(), optionalSegments(), paymentDate(), toPaymentDetail(), OptionalSegmentData, self (+1 more)
+Cohesion: 0.12
+Nodes (4): RemittancePayment, AbstractRemittancePayment, OptionalSegmentData, self
 
-### Community 27 - "CnabSispag\Domain\Shared\Enum\PaymentType"
-Cohesion: 0.17
-Nodes (5): CnabSispag\Domain\Shared\Enum\PaymentType, PaymentSegmentFactory, CnabDate, DateTimeInterface, self
+### Community 27 - "CnabSispag\Domain\Shared\Enum\PaymentMethod"
+Cohesion: 0.12
+Nodes (6): CnabSispag\Domain\Shared\Enum\FileKind, CnabSispag\Domain\Shared\Enum\PaymentMethod, BatchKey, self, PaymentDetail, ValidationFileContext
 
 ### Community 28 - "OptionalSegmentDto"
-Cohesion: 0.19
-Nodes (8): PaymentDto, BankSlipPaymentDto, DateTimeInterface, OptionalSegmentDto, DateTimeInterface, PixQrCodePaymentDto, DateTimeInterface, UtilityPaymentDto
+Cohesion: 0.10
+Nodes (12): PaymentDto, BankSlipPaymentDto, DateTimeInterface, OptionalSegmentDto, PaymentSegmentFactory, DateTimeInterface, PixQrCodePaymentDto, DateTimeInterface (+4 more)
 
 ### Community 29 - "MessageCatalog"
-Cohesion: 0.06
-Nodes (25): CnabSispag\Domain\Shared\Enum\BatchProfile, CnabSispag\Domain\Shared\Enum\FileKind, Exception, BatchGrouper, PaymentType, BatchSegmentRules, BatchProfile, FileKind (+17 more)
+Cohesion: 0.27
+Nodes (4): FileKind, SispagRulesValidator, ValidationBatchContext, MessageCatalog
 
-### Community 32 - "planning/README.md"
-Cohesion: 0.29
-Nodes (4): Planejamento — cnab-sispag, Referência externa, Status rápido (v1.0.0 — 2026-06-16), Índice
+### Community 30 - "BatchSegmentRulesTest"
+Cohesion: 0.10
+Nodes (8): CnabSispag\Domain\Shared\Enum\BatchProfile, BatchSegmentRules, BatchProfile, FileKind, PaymentMethod, PaymentType, BatchSegmentRulesTest, PaymentMethod
 
-### Community 33 - "PaymentMethod.php"
-Cohesion: 0.14
-Nodes (9): GpsBatchRequestMapper, DateTimeInterface, TaxPaymentDto, batchProfile(), formCode(), fromFormCode(), BatchProfile, self (+1 more)
+### Community 33 - "CnabSispag\Domain\Shared\Enum\PaymentType"
+Cohesion: 0.12
+Nodes (9): CnabSispag\Domain\Shared\Enum\PaymentType, DateTimeInterface, TransferPaymentDto, ReturnBatch, batchProfile(), formCode(), fromFormCode(), BatchProfile (+1 more)
 
 ### Community 34 - "O que é verificado"
 Cohesion: 0.12
 Nodes (16): 1. Estrutura do arquivo, 2. Campos (picture e fixos), 3. Regras SISPAG, 4. Regras PIX por chave (forma 45), 5. Transferências TED e crédito em conta (formas 6, 7, 41, 43), 6. Boletos (formas 30 e 31), 7. PIX QR Code (forma 47), 8. Segmento J-52 / J-52 PIX (remessa) (+8 more)
 
 ### Community 36 - "Checklist detalhado"
-Cohesion: 0.13
+Cohesion: 0.14
 Nodes (14): API pública, Application, Checklist detalhado, Documentação integradores, Domain — Remittance, Domain — Return, Domain — Shared, Infrastructure — CNAB (+6 more)
 
 ### Community 37 - "CNAB SISPAG - Fornecedor"
@@ -232,9 +265,13 @@ Nodes (14): Boletos e código de barras, Cancelamento, Catálogo completo, Consu
 Cohesion: 0.15
 Nodes (13): Campo beneficiaryAgencyAccount, Como escolher a forma de pagamento, Câmara de compensação, Exemplo TED, Formas disponíveis, Itaú (341), Outros bancos (TED/DOC), Regras (+5 more)
 
-### Community 42 - "CnabSispag\Domain\Shared\Enum\PaymentMethod"
+### Community 41 - ".__construct"
 Cohesion: 0.18
-Nodes (6): CnabSispag\Domain\Shared\Enum\PaymentMethod, PaymentMethod, BatchKey, self, DetailLayoutResolver, PaymentMethod
+Nodes (5): BbApiGateway, BbHttpClient, BbOAuthTokenProvider, BbHttpClient, GpsBatchRequestMapper
+
+### Community 42 - "CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout"
+Cohesion: 0.36
+Nodes (3): CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout, DetailLayoutResolver, PaymentMethod
 
 ### Community 43 - "Homologação Itaú"
 Cohesion: 0.17
@@ -247,6 +284,10 @@ Nodes (12): Combinações por pagamento (ordem obrigatória), Implementação at
 ### Community 45 - "Geração de remessa"
 Cohesion: 0.17
 Nodes (12): Agrupamento automático, Assinatura, CompanyDto, DebitAccountDto, DTOs comuns, Erros comuns na geração, Formato do arquivo, GenerateRemittanceOptionsDto (+4 more)
+
+### Community 46 - "ItauReturnReader.php"
+Cohesion: 0.16
+Nodes (4): Violation, self, tryFromSegmentCode(), ItauConstants
 
 ### Community 47 - "Guia de integração"
 Cohesion: 0.18
@@ -293,24 +334,24 @@ Cohesion: 0.17
 Nodes (12): 1. Dependência e infra, 2. Wiring / DI, 3. Adapter do domínio do sistema → DTOs da lib, 4. `numeroRequisicao` (requestId), 5. Fluxo operacional a implementar, 6. UX / produto, 7. Testes no sistema, 8. Fora de escopo (por enquanto) (+4 more)
 
 ### Community 59 - "PixKeyPaymentDto"
-Cohesion: 0.35
-Nodes (3): PixBatchRequestMapper, DateTimeInterface, PixKeyPaymentDto
+Cohesion: 0.17
+Nodes (4): PixBatchRequestMapper, DateTimeInterface, PixKeyPaymentDto, PixBatchRequestMapperTest
 
-### Community 60 - "GruBatchRequestMapper"
-Cohesion: 0.21
-Nodes (5): GruPaymentDto, DateTimeInterface, GruBatchRequestMapper, UtilityBatchRequestMapper, ArrecadacaoBarcodeParser
+### Community 60 - "BbDebitAccountMapper"
+Cohesion: 0.13
+Nodes (5): GruPaymentDto, DateTimeInterface, BbDebitAccountMapper, GruBatchRequestMapper, GruBatchRequestMapperTest
 
 ### Community 61 - "PaymentSegmentComposer"
-Cohesion: 0.42
-Nodes (3): PaymentSegmentComposer, PaymentMethod, PaymentType
+Cohesion: 0.20
+Nodes (4): PaymentSegmentComposer, PaymentMethod, PaymentType, PaymentSegmentComposerTest
 
 ### Community 62 - "[1.0.0] - 2026-06-16"
 Cohesion: 0.25
 Nodes (7): [1.0.0] - 2026-06-16, Adicionado, Adicionado, Alterado, Changelog, Especificações técnicas, [Unreleased]
 
 ### Community 63 - "Banco do Brasil — Pagamentos em Lote (API)"
-Cohesion: 0.22
-Nodes (9): Ambientes, Banco do Brasil — Pagamentos em Lote (API), Certificado A1 (agnóstico), Fora deste entregável, Mapeamentos úteis, Métodos da fachada, Requisitos, Transferências — cuidados (homologação) (+1 more)
+Cohesion: 0.20
+Nodes (10): Ambientes, Banco do Brasil — Pagamentos em Lote (API), Certificado A1 (agnóstico), Fora deste entregável, Mapeamentos úteis, Métodos da fachada, Requisitos, Scopes OAuth (`BbConfig::DEFAULT_SCOPES`) (+2 more)
 
 ### Community 64 - "Primeiros passos"
 Cohesion: 0.25
@@ -324,25 +365,33 @@ Nodes (8): Campos importantes, Exemplo, PIX por chave (forma 45), Regras, Retorn
 Cohesion: 0.25
 Nodes (8): Campos importantes, Dados do J-52 PIX, Exemplo, PIX QR Code (forma 47), Regras, Retorno, Segmentos gerados, Ver também
 
+### Community 67 - "FieldFactory"
+Cohesion: 0.27
+Nodes (4): FieldFactory, FieldType, FieldDefinition, FieldType
+
 ### Community 68 - "Documentação para integradores"
 Cohesion: 0.29
 Nodes (7): Comece aqui, Documentação para integradores, Modalidades de pagamento, Nota sobre versão de layout, Operações, Planejamento interno, Referência
 
-### Community 70 - "TransferPaymentDto"
-Cohesion: 0.14
-Nodes (6): PaymentTypeMapper, PaymentType, TransferBatchRequestMapper, DateTimeInterface, TransferPaymentDto, TransferBatchRequestMapperTest
+### Community 69 - "BbHttpResponse"
+Cohesion: 0.21
+Nodes (4): CnabSispag\Bank\BancoDoBrasil\Http\BbHttpClient, request(), BbHttpResponse, FakeBbHttpClient
+
+### Community 70 - "TransferBatchRequestMapper"
+Cohesion: 0.36
+Nodes (3): PaymentTypeMapper, PaymentType, TransferBatchRequestMapper
 
 ### Community 71 - "PHPUnit\Framework\TestCase"
-Cohesion: 0.09
-Nodes (6): PHPUnit\Framework\TestCase, ItauSispag, PixBatchRequestMapperTest, PaymentSegmentComposerTest, PixFileSeparatorTest, ArrecadacaoBarcodeParserTest
-
-### Community 74 - "Money"
-Cohesion: 0.10
-Nodes (3): TransferPayment, UtilityPayment, Money
+Cohesion: 0.19
+Nodes (5): PHPUnit\Framework\TestCase, GpsBatchRequestMapperTest, PixFileSeparatorTest, ArrecadacaoBarcodeParserTest, ItauLayoutDefinitionTest
 
 ### Community 75 - "BbBatchResultDto"
 Cohesion: 0.11
 Nodes (3): BbBatchResultDto, self, BbBatchResultDtoTest
+
+### Community 76 - "ItauLayoutValidator"
+Cohesion: 0.33
+Nodes (3): ItauLayoutValidator, PaymentMethod, SegmentType
 
 ### Community 78 - "Convenções de idioma e código"
 Cohesion: 0.29
@@ -352,25 +401,37 @@ Nodes (7): Convenções de idioma e código, Exceções, MessageCatalog, Namespa
 Cohesion: 0.20
 Nodes (3): BbDateMapper, DateTimeInterface, DarfBatchRequestMapper
 
+### Community 84 - "RemittancePayment.php"
+Cohesion: 0.22
+Nodes (4): amount(), optionalSegments(), paymentDate(), toPaymentDetail()
+
+### Community 85 - "UtilityBatchRequestMapper"
+Cohesion: 0.20
+Nodes (3): UtilityBatchRequestMapper, ArrecadacaoBarcodeParser, UtilityBatchRequestMapperTest
+
+### Community 91 - "Planejamento — cnab-sispag"
+Cohesion: 0.50
+Nodes (4): Planejamento — cnab-sispag, Referência externa, Status rápido (v1.0.0 — 2026-06-16), Índice
+
 ## Knowledge Gaps
-- **263 isolated node(s):** `name`, `description`, `type`, `license`, `homepage` (+258 more)
+- **264 isolated node(s):** `name`, `description`, `type`, `license`, `homepage` (+259 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **22 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **33 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `RecordDefinition` connect `RecordDefinition` to `TaxSegmentParser.php`, `ItauLayoutValidator`, `FieldFactory`, `CnabSispag\Infrastructure\Bank\Itau\Layout\RecordLayout`, `RecordFieldValidator.php`, `ItauRemittanceWriter.php`, `TaxSegmentBuilder.php`?**
+- **Why does `RecordDefinition` connect `RecordDefinition` to `FieldFactory.php`, `RecordParser`, `RecordLayout`, `ReturnFileFixtureBuilder`, `BatchHeaderDefinition`, `LayoutTestHelper.php`, `CnabSispag\Domain\Shared\Enum\TaxType`, `LayoutTestHelper`, `RecordFieldValidator`, `BatchTrailerTaxRecord`, `BatchTrailerTransferRecord`, `BatchTrailerUtilityRecord`, `FileTrailerRecord`, `SegmentARecord`, `SegmentBPixRecord`, `SegmentBTaxRecord`, `SegmentFRecord`, `SegmentJ52PixRecord`, `SegmentJ52Record`, `SegmentORecord`, `SegmentZRecord`?**
   _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **Why does `DocumentNormalizer` connect `DocumentNormalizer` to `CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment`, `PaymentMethod.php`, `ItauLayoutValidator`, `BankSlipBatchRequestMapper`, `TransferPaymentDto`, `BankSlipPayment`, `RegistrationValidatorTest`, `PixKeyPayment`, `OptionalSegmentDto`, `DebitAccountDto`, `BbDateMapper`, `DocumentNormalizer.php`, `CreditAccountParts`, `BbDebitAccountMapper`, `DocumentNormalizerTest`, `PixKeyPaymentDto`, `GruBatchRequestMapper`, `MessageCatalog`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
-- **Why does `OptionalSegmentData` connect `OptionalSegmentData` to `PHPUnit\Framework\TestCase`, `BankSlipPayment`, `Money`, `PixKeyPayment`, `PaymentSegmentComposer`, `CnabSispag\Domain\Shared\Enum\TaxType`, `CnabSispag\Domain\Shared\Enum\PaymentType`, `OptionalSegmentDto`, `MessageCatalog`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+- **Why does `DocumentNormalizer` connect `DocumentNormalizer` to `CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment`, `BankSlipBatchRequestMapper`, `TransferBatchRequestMapper`, `Money`, `.__construct`, `PixKeyPayment`, `OptionalSegmentDto`, `DebitAccountDto`, `BbDateMapper`, `ItauReturnReader.php`, `CreditAccountParts`, `UtilityBatchRequestMapper`, `RecordFieldValidator`, `PixKeyPaymentDto`, `BbDebitAccountMapper`, `MessageCatalog`?**
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+- **Why does `DebitAccountDto` connect `DebitAccountDto` to `CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment`, `CnabSispag\Domain\Shared\Enum\PaymentType`, `BbPagamentos.php`, `BankSlipBatchRequestMapper`, `TransferBatchRequestMapper`, `PHPUnit\Framework\TestCase`, `.__construct`, `BbBatchResultDto`, `BbDebitAccountMapper`, `BbDateMapper`, `ItauReturnReader.php`, `UtilityBatchRequestMapper`, `DarfBatchRequestMapperTest`, `RemittanceGenerationTest`, `PixKeyPaymentDto`, `OptionalSegmentDto`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Are the 51 inferred relationships involving `DocumentNormalizer` (e.g. with `.cancelPayments()` and `.checkDigit()`) actually correct?**
   _`DocumentNormalizer` has 51 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `name`, `description`, `type` to the rest of the system?**
-  _263 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _264 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `CnabSispag\Domain\Remittance\Entity\Payment\RemittancePayment` be split into smaller, more focused modules?**
-  _Cohesion score 0.06612021857923497 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected._
 - **Should `ItauReturnReader` be split into smaller, more focused modules?**
-  _Cohesion score 0.05952380952380952 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06594071385359952 - nodes in this community are weakly interconnected._

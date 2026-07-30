@@ -89,6 +89,22 @@ Os mesmos DTOs de Itaú (`TransferPaymentDto`, `PixKeyPaymentDto`, `BankSlipPaym
 | `cancelPayments` | `POST /cancelar-pagamentos` |
 | `nextRequestIds` | `GET /proximos-numeros-requisicao` |
 
+## Scopes OAuth (`BbConfig::DEFAULT_SCOPES`)
+
+A lib já pede, por padrão, os scopes necessários para todos os métodos da fachada. O consumidor **não** precisa injetar scopes extras só para DARF/GPS/GRU.
+
+| Produto | Endpoints | Scopes |
+|---|---|---|
+| Transferências | `POST /lotes-transferencias`, consultas | `transferencias-requisicao`, `transferencias-info` |
+| PIX | `POST /lotes-transferencias-pix`, consultas | `transferencias-pix-requisicao`, `transferencias-pix-info`, `pix-info` |
+| Boletos | `POST /lotes-boletos`, consultas | `boletos-requisicao`, `boletos-info` |
+| Guias com código de barras | `POST /lotes-guias-codigo-barras`, consultas | `guias-codigo-barras-requisicao`, `guias-codigo-barras-info` |
+| **DARF / GPS / GRU (consulta)** | `POST /lotes-darf-normal-preto`, `POST /lotes-gps`, `GET …/solicitacao` (DARF/GPS/GRU) | **`pagamentos-guias-sem-codigo-barras-requisicao`**, **`pagamentos-guias-sem-codigo-barras-info`** |
+| GRU (envio) | `POST /pagamentos-gru` | `lotes-requisicao` (já no default) |
+| Lotes / pagamentos / cancelar | liberar, cancelar, lançamentos, etc. | `lotes-*`, `pagamentos-info`, `cancelar-requisicao`, `lancamentos-info` |
+
+Sem `pagamentos-guias-sem-codigo-barras-*`, a API responde **Scopes Not Granted** em `sendDarfBatch` / `sendGpsBatch` (e nas consultas DARF/GPS/GRU).
+
 ## Certificado A1 (agnóstico)
 
 A lib **não** lê `.env` nem cloud storage. O sistema:
