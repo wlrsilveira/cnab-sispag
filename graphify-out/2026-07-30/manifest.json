@@ -55,8 +55,8 @@
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/BbConfig.php": {
-    "mtime": 1785356804.5272415,
-    "ast_hash": "00877889a871173159d4e5ac75a6777a",
+    "mtime": 1785429210.7116275,
+    "ast_hash": "9ff3a06912c8e10c4aee733be17f57f8",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/BbPagamentos.php": {
@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "docs/bb/README.md": {
-    "mtime": 1785424916.5918205,
-    "ast_hash": "4329c68fc0fb8ea498569012dce1fddb",
+    "mtime": 1785429216.6227968,
+    "ast_hash": "f43000ac0ce6495d1638e7a243985cfb",
     "semantic_hash": ""
   },
   "docs/entities/itau-reference.md": {
@@ -1107,6 +1107,11 @@
   "tests/Unit/Bank/BancoDoBrasil/BbBatchResultDtoTest.php": {
     "mtime": 1785424875.3642757,
     "ast_hash": "b42fdb8e6fcdf89b2ee7a10945783932",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Bank/BancoDoBrasil/BbConfigTest.php": {
+    "mtime": 1785429217.845913,
+    "ast_hash": "fc74cd58bafbb5de93259f30fa6e09be",
     "semantic_hash": ""
   }
 }

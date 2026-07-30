@@ -65,8 +65,8 @@
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Dto/BbBatchItemResultDto.php": {
-    "mtime": 1785424824.1540868,
-    "ast_hash": "2b199bfc1bde2bb606278ac2c019b59f",
+    "mtime": 1785431353.7343473,
+    "ast_hash": "db43f30240d2bc1b0524d96d59b7dedd",
     "semantic_hash": ""
   },
   "src/Bank/BancoDoBrasil/Dto/BbBatchResultDto.php": {
@@ -1112,6 +1112,21 @@
   "tests/Unit/Bank/BancoDoBrasil/BbConfigTest.php": {
     "mtime": 1785429217.845913,
     "ast_hash": "fc74cd58bafbb5de93259f30fa6e09be",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/I18n/BbErrorTranslator.php": {
+    "mtime": 1785431341.2421792,
+    "ast_hash": "e0ecb54b3a8359c427f394ce24958fc6",
+    "semantic_hash": ""
+  },
+  "src/Infrastructure/I18n/bb_error_codes.php": {
+    "mtime": 1785431331.7779033,
+    "ast_hash": "b1375409f5390bf6c46f7683e30dbf87",
+    "semantic_hash": ""
+  },
+  "tests/Unit/Infrastructure/BbErrorTranslatorTest.php": {
+    "mtime": 1785431375.465148,
+    "ast_hash": "8358c37603fa2d716b2800be57b6dce5",
     "semantic_hash": ""
   }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CnabSispag\Bank\BancoDoBrasil\Dto;
 
+use CnabSispag\Infrastructure\I18n\BbErrorTranslator;
+
 final readonly class BbBatchItemResultDto
 {
     /**
@@ -21,5 +23,13 @@ final readonly class BbBatchItemResultDto
     public function isAccepted(): bool
     {
         return strtoupper((string) $this->accepted) === 'S';
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function errorDescriptions(): array
+    {
+        return BbErrorTranslator::translateMany($this->errorCodes);
     }
 }
